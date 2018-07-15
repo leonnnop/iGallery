@@ -119,6 +119,22 @@
         ]
       }
     },
+    
+    created() {
+      this.axios.get('http://10.0.1.61:51738/api/products/1')
+          ///// 箭头函数会改变this的作用域
+          .then((response) => {
+            this.tableData = [];
+            this.totalElements = response.data.totalElements;
+            let content = response.data.content;
+            
+              
+            
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    },
 
     methods: {
       getSrc(src) {
