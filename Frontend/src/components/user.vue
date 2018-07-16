@@ -127,9 +127,6 @@
             this.tableData = [];
             this.totalElements = response.data.totalElements;
             let content = response.data.content;
-            
-              
-            
           })
           .catch(function (error) {
             console.log(error);

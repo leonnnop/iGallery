@@ -52,7 +52,6 @@
     top: 0;
     z-index: 999;
   }
-
 </style>
 
 <script>
@@ -72,9 +71,9 @@
     },
     methods: {
       handleTopBarSelect(key, keyPath) {
-        console.log('/'+key);
+        console.log('/' + key);
 
-        this.$router.push('/'+key);
+        this.$router.push('/' + key);
 
       },
       handleScroll() {
@@ -89,5 +88,4 @@
     },
 
   };
-
 </script>
