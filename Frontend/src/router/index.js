@@ -1,18 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+// import HelloWorld from '@/components/HelloWorld'
 import mainPage from '@/components/mainPage'
 import leaderBoard from '@/components/leaderBoard'
 import blogs from '@/components/blogs'
 import user from '@/components/user'
 import users from '@/components/users'
 import topic from '@/components/topic'
+import register from '@/components/register'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [{
-      path: '/',
+    path: '/',
+      name: 'register',
+      component: register,
+  },
+    {
+      path: '/main',
       name: 'mainPage',
       component: mainPage,
 

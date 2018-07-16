@@ -73,7 +73,7 @@
       handleTopBarSelect(key, keyPath) {
         console.log('/' + key);
 
-        this.$router.push('/' + key);
+        this.$router.push('/main/' + key);
 
       },
       handleScroll() {
