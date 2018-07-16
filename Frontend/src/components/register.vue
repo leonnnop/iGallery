@@ -1,7 +1,7 @@
 <template>
     <el-container id="background">
         <el-row :gutter="40" type="flex" :align="'middle'" style="height:100%;width:100%;">
-            <el-col :span="7" :offset="5" id="imageCon">
+            <el-col :span="7" :offset="6" id="imageCon">
                 <img src="../image/example.png" alt="example pic" height="600">
             </el-col>
             <el-col :span="6" id="boxCon" style="width:375px">
