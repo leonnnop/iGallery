@@ -3,25 +3,28 @@
     <el-col>
       <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
-          <i class="el-icon-edit"></i>
+          <img src="../image/logo.png" alt="logo" height="30">
         </el-col>
         <el-col :span="3">
-          <span>iGallery</span>
+          <!-- <span>iGallery</span> -->
+          <img src="../image/iga_exa.png" alt="example pic" height="35">
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           <el-menu :default-active="topBarActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleTopBarSelect" style="margin-top:-12px">
-            <el-menu-item index="user">个人中心</el-menu-item>
-            <el-submenu index="recommend">
-              <template slot="title">推荐</template>
+            <el-menu-item index="user">首页</el-menu-item>
+            <!-- <el-submenu index="recommend">
+              <template slot="title">个人主页</template>
               <el-menu-item index="blogs">博文</el-menu-item>
               <el-menu-item index="users">用户</el-menu-item>
               <el-menu-item index="topic">话题</el-menu-item>
-            </el-submenu>
-            <el-menu-item index="leaderBoard">排行榜</el-menu-item>
+            </el-submenu> -->
+            <el-menu-item index="blogs">我的主页</el-menu-item>
+
+            <el-menu-item index="photoWall">发现</el-menu-item>
           </el-menu>
         </el-col>
 
-        <el-col :span="5" :offset="2">
+        <el-col :span="5" :offset="4">
           <el-input placeholder="请输入搜索内容" v-model="searchInput" clearable> </el-input>
         </el-col>
         <el-col :span="2" :offset="1">
