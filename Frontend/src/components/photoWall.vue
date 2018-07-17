@@ -11,7 +11,15 @@
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
-            <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            <el-row>
+              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            </el-row>
+            <el-row style="margin-top:10%">
+              {{item.text}}
+            </el-row>
+            <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+            </el-row>
           </el-card>
         </el-col>
         <el-col :span="6">
@@ -23,7 +31,15 @@
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
-            <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            <el-row>
+              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            </el-row>
+            <el-row style="margin-top:10%">
+              {{item.text}}
+            </el-row>
+            <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+            </el-row>
           </el-card>
         </el-col>
         <el-col :span="6">
@@ -35,7 +51,15 @@
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
-            <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            <el-row>
+              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            </el-row>
+            <el-row style="margin-top:10%">
+              {{item.text}}
+            </el-row>
+            <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+            </el-row>
           </el-card>
         </el-col>
         <el-col :span="6">
@@ -47,7 +71,15 @@
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
-            <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            <el-row>
+              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+            </el-row>
+            <el-row style="margin-top:10%">
+              {{item.text}}
+            </el-row>
+            <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+            </el-row>
           </el-card>
         </el-col>
       </el-row>
@@ -109,64 +141,88 @@
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           }
         ],
         items_col_2: [{
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           }
         ],
         items_col_3: [{
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           }
         ],
         items_col_4: [{
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           },
           {
             userName: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
             likeState: false,
+            text: 'test 文案 阿拉拉。',
+            likeNum: 5
           }
         ],
       }
@@ -190,8 +246,10 @@
         item.likeState = !item.likeState
         if (item.likeState) {
           item.likeIMG = require('../image/like.png')
+          item.likeNum++
         } else {
           item.likeIMG = require('../image/unlike.png')
+          item.likeNum--
         }
       },
       getNaturalWidth(id) {
