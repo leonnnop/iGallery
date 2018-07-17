@@ -10,6 +10,7 @@ import topic from '@/components/topic'
 import register from '@/components/register'
 import Login from '@/components/Login'
 import photoWall from '@/components/photoWall'
+import ForgetPsw from '@/components/ForgetPsw'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
     path: '/register',
     name: 'register',
     component: register
+  },
+  {
+    path: '/forgetpsw',
+    name: 'ForgetPsw',
+    component: ForgetPsw
   },
     {
       path: '/main',
