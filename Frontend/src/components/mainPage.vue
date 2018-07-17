@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 950px; border: 1px solid #eee">
     <el-col>
-      <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:50px;">
+      <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
           <i class="el-icon-edit"></i>
         </el-col>
@@ -9,7 +9,7 @@
           <span>iGallery</span>
         </el-col>
         <el-col :span="6">
-          <el-menu :default-active="topBarActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleTopBarSelect">
+          <el-menu :default-active="topBarActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleTopBarSelect" style="margin-top:-12px">
             <el-menu-item index="user">个人中心</el-menu-item>
             <el-submenu index="recommend">
               <template slot="title">推荐</template>
