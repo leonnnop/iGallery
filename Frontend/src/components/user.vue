@@ -1,35 +1,37 @@
 <template>
   <el-container>
-    <el-row :gutter="20" style="width:100%">
-      <el-col :span="8">
-        <el-card class="box-card" style="height:300px;">
-          <div slot="header" class="clearfix">
-            <img class="user-img" src="../image/a.jpg" alt="头像" />
-            <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i>
-            <span style="font-size:18px;">{{this.userName}}</span>
-          </div>
+    <el-row style="width:100%" type="flex" justify="center">
 
-          <div style="font-weight:bold;font-size: 10px;">简介：</div>
-          <div>这个用户很懒，</div>
-          <div>但能吃。</div>
-          <div> </div>
-          <div> </div>
-        </el-card>
-      </el-col>
+      <el-row :gutter="20" style="width:800px" type="flex" justify="center">
+        <el-col :span="8">
+          <el-card class="box-card" style="height:300px;">
+            <div slot="header" class="clearfix">
+              <img class="user-img" src="../image/a.jpg" alt="头像" />
+              <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i>
+              <span style="font-size:18px;">{{this.userName}}</span>
+            </div>
 
-      <el-col :span="16">
-        <el-card v-for="card in cards" :key="card.name" class="box-card">
+            <div style="font-weight:bold;font-size: 10px;">简介：</div>
+            <div>这个用户很懒，</div>
+            <div>但能吃。</div>
+            <div> </div>
+            <div> </div>
+          </el-card>
+        </el-col>
 
-          <!-- <img :src="getSrc(card.src)" alt="头像" /> -->
-          <img v-if="card.index == 0" src="../image/user_img.jpg" class="box-img" alt="头像" />
-          <img v-if="card.index == 1" src="../image/gaojin_ciyun.png" class="box-img" alt="头像" />
-          <img v-if="card.index == 2" src="../image/gaojin_radar.png" style="width:300px; float:right;" class="box-img" alt="头像" />
+        <el-col :span="16">
+          <el-card v-for="card in cards" :key="card.name" class="box-card">
 
-        </el-card>
+            <!-- <img :src="getSrc(card.src)" alt="头像" /> -->
+            <img v-if="card.index == 0" src="../image/user_img.jpg" class="box-img" alt="头像" />
+            <img v-if="card.index == 1" src="../image/gaojin_ciyun.png" class="box-img" alt="头像" />
+            <img v-if="card.index == 2" src="../image/gaojin_radar.png" style="width:300px; float:right;" class="box-img" alt="头像" />
 
-      </el-col>
+          </el-card>
+
+        </el-col>
+      </el-row>
     </el-row>
-
   </el-container>
 </template>
 
@@ -71,7 +73,6 @@
     width: 500px;
     height: 300px;
   }
-
 </style>
 
 <script>
@@ -119,18 +120,18 @@
         ]
       }
     },
-    
+
     created() {
       this.axios.get('http://10.0.1.61:51738/api/products/1')
-          ///// 箭头函数会改变this的作用域
-          .then((response) => {
-            this.tableData = [];
-            this.totalElements = response.data.totalElements;
-            let content = response.data.content;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        ///// 箭头函数会改变this的作用域
+        .then((response) => {
+          this.tableData = [];
+          this.totalElements = response.data.totalElements;
+          let content = response.data.content;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
 
     methods: {
@@ -193,5 +194,4 @@
       next();
     }
   }
-
 </script>

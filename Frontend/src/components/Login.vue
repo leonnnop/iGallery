@@ -1,9 +1,12 @@
 <template>
   <div class="LoginForm" style="text-align:center">
-      <el-card class="box-card">
-  <div slot="header" class="clearfix">
+      <el-card class="box-card" style="width:400px;">
+  <!-- <div slot="header" class="clearfix">
       <h1>登陆</h1>
-  </div>
+  </div> -->
+  <el-row style="margin-top:30px;">
+    <img src="../image/iga_exa.png" alt="logo" height="50">
+  </el-row>
     <el-row type="flex" justify="center">
       <el-col :span="18">
         

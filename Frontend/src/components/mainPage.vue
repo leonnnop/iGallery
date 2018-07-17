@@ -37,7 +37,7 @@
 
 
       <el-row type="flex" justify="center">
-        <el-col style="width:800px;height:800px;">
+        <el-col style="width:100%;height:800px;">
           <router-view></router-view>
         </el-col>
       </el-row>

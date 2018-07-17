@@ -8,6 +8,8 @@ import user from '@/components/user'
 import users from '@/components/users'
 import topic from '@/components/topic'
 import register from '@/components/register'
+import Login from '@/components/Login'
+import photoWall from '@/components/photoWall'
 
 Vue.use(Router)
 
@@ -16,6 +18,15 @@ export default new Router({
     path: '/',
       name: 'register',
       component: register,
+  },{
+    path: '/login',
+      name: 'Login',
+      component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: register
   },
     {
       path: '/main',
@@ -42,6 +53,10 @@ export default new Router({
         path: 'topic',
         name: 'topic',
         component: topic        
+      },{
+        path: 'photowall',
+        name: 'photowall',
+        component: photoWall   
       } ]
 
     },

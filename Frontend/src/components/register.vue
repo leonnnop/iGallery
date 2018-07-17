@@ -7,7 +7,7 @@
             <el-col :span="6" id="boxCon" style="width:375px">
                 <el-row class="box-color-grey" style="height:500px;padding: 20px;">
                     <el-row type="flex" :justify="'center'" style="width:100%;">
-                        <img src="../image/ins_ex.jpg" alt="example pic" height="50">
+                        <img src="../image/iga_exa.png" alt="example pic" height="50">
                     </el-row>
                     <el-row type="flex" :justify="'center'" style="margin-bottom:20px;">
                         <p>注册 iGallery，分享精彩视界</p>
