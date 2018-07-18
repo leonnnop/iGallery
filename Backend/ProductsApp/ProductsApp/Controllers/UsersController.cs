@@ -155,5 +155,89 @@ namespace ProductsApp.Controllers
             return response;
         }
 
+
+        /// <summary>
+        /// 查找用户邮箱是否存在
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage SearchEmail(string email)
+        {
+            //返回信息
+            string mess = "false";
+            HttpResponseMessage response = Request.CreateResponse();
+
+            //连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            //SQL操作
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select * from USERS where EMAIL='" + email + "'";
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            if (rd.Read()) //存在
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                mess = "true";
+            }
+            else
+            {
+                response.StatusCode = HttpStatusCode.NotFound;
+                mess = "false";
+            }
+            conn.Close();
+            response.Content = new StringContent(mess);
+            return response;
+        }
+        /// <summary>
+        /// 修改用户密码
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="NewPassword"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public HttpResponseMessage ChangePassword(string email, string NewPassword)
+        {
+            string mess = "true";
+            HttpResponseMessage response = Request.CreateResponse();
+
+            //连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            //SQL操作
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "update USERS set PASSWORD ='" + NewPassword + "' where EMAIL='" + email + "'";
+            cmd.Connection = conn;
+            if (cmd.ExecuteNonQuery() != 0)
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                mess = "true";
+            }
+            else
+            {
+                response.StatusCode = HttpStatusCode.Forbidden;
+                mess = "false";
+            }
+            conn.Close();
+            response.Content = new StringContent(mess, Encoding.Unicode);
+            return response;
+        }
     }
 }
