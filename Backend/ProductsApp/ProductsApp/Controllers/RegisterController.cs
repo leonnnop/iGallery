@@ -15,11 +15,10 @@ namespace ProductsApp.Controllers
     public class RegisterController : ApiController
     {
         [HttpPost]
-        public HttpResponseMessage Register([FromBody]User_register user)
+        public IHttpActionResult Register([FromBody]User_register user)
         {
-            //创建返回信息
-            string status="success";
-            HttpResponseMessage response = Request.CreateResponse();
+            //创建返回信息，先假设注册成功
+            int status = 0;
 
             //连接数据库
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
@@ -40,8 +39,7 @@ namespace ProductsApp.Controllers
             OracleDataReader rd = cmd.ExecuteReader();
             if(rd.HasRows)//邮箱已注册
             {
-                response.StatusCode = HttpStatusCode.Forbidden;
-                status = "used email address ";
+                status = 1;
             }
             else//邮箱未注册
             {
@@ -57,14 +55,9 @@ namespace ProductsApp.Controllers
                     "values('"+id.ToString()+"','"+user.Email+"','"+user.Password+"','"+user.Username+"','null','null')";
 
                 int result = cmd.ExecuteNonQuery();
-                if (result == 1)//插入成功
+                if (result != 1)//插入出现错误
                 {
-                    response.StatusCode = HttpStatusCode.OK;
-                }
-                else//插入失败
-                {
-                    status = "internal server error";
-                    response.StatusCode = HttpStatusCode.InternalServerError;
+                    status = 2;
                 }
             }
 
@@ -72,8 +65,7 @@ namespace ProductsApp.Controllers
             conn.Close();
 
             //返回信息
-           response.Content = new StringContent(status, Encoding.Unicode);
-           return response;
+           return Ok(status);
         }
     }
 }
