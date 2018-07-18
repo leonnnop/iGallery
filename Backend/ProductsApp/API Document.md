@@ -31,24 +31,16 @@
 
 请求地址：/api/Users/SendMail
 
-说明：邮箱验证，只传邮箱地址即可，其他可为空
+说明：邮箱验证，传邮箱地址,
 
-请求方式：Post
+请求方式：Get
 
 支持格式：json
 
-参数类型：Users
-
-| 类型   | 属性     |
-| :----- | -------- |
-| string | ID       |
-| string | Email    |
-| string | Password |
-| string | Username |
-| string | Bio      |
-| string | Photo    |
+参数类型：string
 
 返回类型：string
+
 返回内容：验证码
 
 

@@ -128,12 +128,12 @@ namespace ProductsApp.Controllers
         }
 
         //邮箱验证
-        [HttpPost]
-        public HttpResponseMessage SendMail([FromBody]User user)
+        [HttpGet]
+        public HttpResponseMessage SendMail(String Email)
         {
             MailMessage message = new MailMessage();    //创建一个邮件信息的对象
             message.From = new MailAddress("1871373978@qq.com");
-            message.To.Add(user.EMAIL);
+            message.To.Add(Email);
             message.Subject = "欢迎注册iGallery";
             Random r = new Random();
             string yzm = null;
