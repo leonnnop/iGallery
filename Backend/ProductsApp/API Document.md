@@ -2,21 +2,22 @@
 
 请求地址：/api/Register
 
-说明：注册用户
+说明：注册用户，只传用户名、邮箱、密码即可，其他设为空
 
 请求方式：Post
 
 支持格式：json
 
-参数
+参数类型：Users
 
 | 类型   | 属性     |
 | :----- | -------- |
+| string | ID       |
 | string | Email    |
-| string | Username |
 | string | Password |
-
-返回
+| string | Username |
+| string | Bio      |
+| string | Photo    |
 
 返回类型：int
 
