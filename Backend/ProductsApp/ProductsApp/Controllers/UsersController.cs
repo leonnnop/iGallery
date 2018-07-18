@@ -127,5 +127,33 @@ namespace ProductsApp.Controllers
             return response;
         }
 
+        //邮箱验证
+        [HttpPost]
+        public HttpResponseMessage SendMail([FromBody]User user)
+        {
+            MailMessage message = new MailMessage();    //创建一个邮件信息的对象
+            message.From = new MailAddress("1871373978@qq.com");
+            message.To.Add(user.EMAIL);
+            message.Subject = "欢迎注册iGallery";
+            Random r = new Random();
+            string yzm = null;
+            Random rd = new Random();
+            yzm += rd.Next(100000, 999999);
+            message.Body = "您的验证码为 " + yzm;
+            message.IsBodyHtml = false;              //是否为html格式
+            message.Priority = MailPriority.High;    //发送邮件的优先等级
+            SmtpClient sc = new SmtpClient();        //简单邮件传输协议
+            sc.Host = "smtp.qq.com";                 //指定发送邮件端口
+            sc.Port = 25;
+            sc.UseDefaultCredentials = true;
+            sc.EnableSsl = false;
+            sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
+            sc.Send(message);   //发送邮件
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
+            string result = Newtonsoft.Json.JsonConvert.SerializeObject(yzm);
+            response.Content = new StringContent(result);
+            return response;
+        }
+
     }
 }

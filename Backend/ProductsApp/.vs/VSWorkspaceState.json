@@ -5,6 +5,6 @@
     "\\ProductsApp\\Controllers",
     "\\ProductsApp\\Models"
   ],
-  "SelectedNode": "\\ProductsApp\\Controllers\\RegisterController.cs",
+  "SelectedNode": "\\ProductsApp\\Controllers\\UsersController.cs",
   "PreviewInSolutionExplorer": false
 }
