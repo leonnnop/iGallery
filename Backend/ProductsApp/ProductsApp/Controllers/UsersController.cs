@@ -239,5 +239,110 @@ namespace ProductsApp.Controllers
             response.Content = new StringContent(mess, Encoding.Unicode);
             return response;
         }
+
+
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="email">string</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetUserInfo(string email)
+        {
+            string result = null;
+            HttpResponseMessage response = Request.CreateResponse();
+
+            //todo:连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            //执行数据库操作
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select t.* from USERS t where email='" + email + "'";
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            if (rd.Read())//数据库中有此用户，返回其个人信息
+            {
+                Users user = new Users();
+                user.ID = rd["ID"].ToString();
+                user.Email = rd["EMAIL"].ToString();
+                user.Username = rd["USERNAME"].ToString();
+                user.Password = rd["PASSWORD"].ToString();
+                user.Bio = rd["BIO"].ToString();
+                user.Photo = rd["PHOTO"].ToString();
+                result = JsonConvert.SerializeObject(user);
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            else//查无此人，返回错误状态码404
+            {
+                result = "NotFound";
+                response.StatusCode = HttpStatusCode.NotFound;
+            }
+            response.Content = new StringContent(result, Encoding.Unicode);
+            rd.Close();
+            conn.Close();
+            return response;
+        }
+
+
+        /// <summary>
+        /// 修改用户信息
+        /// </summary>
+        /// <param name="user">Users</param>
+        /// <returns></returns>
+        [HttpPut]
+        public HttpResponseMessage ModifyUserInfo([FromBody]Users user)
+        {
+            //将更新信息存入新建object
+            Users newUser = new Users();
+            newUser.Email = user.Email;
+            newUser.Username = user.Username;
+            newUser.Password = user.Password;
+            newUser.Bio = user.Bio;
+            newUser.Photo = user.Password;
+
+            HttpResponseMessage response = Request.CreateResponse();
+
+            //todo:连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            //执行数据库操作
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "update USERS set email='" + user.Email + "', username='" + user.Username + "', password='" + user.Password + "' where email='" + user.Email + "'";
+            cmd.Connection = conn;
+
+            int executeResult = cmd.ExecuteNonQuery();
+            if (executeResult == 1)//修改成功，返回成功状态码202
+            {
+                response.StatusCode = HttpStatusCode.NoContent;
+            }
+            else//修改失败，返回失败状态码404
+            {
+                response.StatusCode = HttpStatusCode.NotFound;
+            }
+
+            conn.Close();
+            return response;
+        }
+
+
     }
 }
