@@ -21,9 +21,16 @@
                         </el-input>
                     </el-row>
                     <el-row type="flex" :justify="'center'">
+                        <el-form :model="ruleForm" ref="ruleForm" class="form">
+                            <el-form-item label="" prop="password">
+                                <el-input type="password" v-model="ruleForm.password" placeholder="密码"></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-row>
+                    <!-- <el-row type="flex" :justify="'center'">
                         <el-input placeholder="密码" v-model="keyword" clearable>
                         </el-input>
-                    </el-row>
+                    </el-row> -->
                     <el-row type="flex" :justify="'center'" style="margin-top:20px;">
                         <el-button type="primary" plain size="medium" style="width:60%" @click="registerButtonClick">注册</el-button>
                     </el-row>
@@ -120,6 +127,10 @@
                 email: '',
                 username: '',
                 keyword: '',
+                ruleForm: {
+                    email: '',
+                    password: ''
+                },
             }
         },
 
@@ -145,25 +156,40 @@
                 this.$router.push('/login');
             },
             resultHandler(result) {
-                if (result) {
+                // if (result == 'success') {
+                //     this.$message({
+                //         message: '注册成功！将在三秒后跳转至登录界面！',
+                //         type: 'success'
+                //     });
+                //     setTimeout(jumpLogIn, 1000);
+                // } else {
+                //     this.$message.error('注册失败！请重试！');
+                // }
+                if (result == 0) {
                     this.$message({
                         message: '注册成功！将在三秒后跳转至登录界面！',
                         type: 'success'
                     });
-                    setTimeout(jumpLogIn, 1000);
+                    setTimeout(this.jumpLogIn, 3000);
+                } else if (result == 1) {
+                    this.$message.error('注册失败！该邮箱已被注册！请重试，或直接登录。');
                 } else {
-                    this.$message.error('注册失败！请重试！');
+                    this.$message.error('注册失败，服务器内部错误，请重试');
                 }
             },
             registerButtonClick() {
                 if (this.isEmail(this.email)) {
-                    this.axios.post('/user', {
-                            username: this.username,
-                            keyword: this.keyword,
-                            email: this.email
-                        })
+                    // this.axios.get('http://10.0.1.61:50192/api/values/5')
+                    this.axios.post('http://10.0.1.95:54468/api/Register',{
+                        Email:this.email,
+                        Username:this.username,
+                        Password:this.ruleForm.password
+                    })
+                    // this.axios.get('http://10.0.1.94:53101/api/Products?email=1225248841@qq.com&password=123456789')
                         .then((response) => {
-                            let result = response.data.result;
+                            let result = response.data
+                            console.log(result)
+                            this.resultHandler(result)
                         })
                         .catch();
                 } else {
