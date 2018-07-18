@@ -75,20 +75,24 @@
             </el-row>
 
             <el-row>
-              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%">
-              
+              <img src="../image/comment-unlike.png" alt="bottomlike" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/uncollect.png" alt="collect" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/forward.png" alt="forward" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/user-more.png" alt="more" height="30px" width="30px" style="margin-right:4%;float:right">
             </el-row>
 
-            <el-row>
+            <el-col style="padding:5px 15px">
+              <!-- 简介 -->
+              <el-row style="font-size:14px">
+                {{card.bio}}
+              </el-row>
+              <!-- tag -->
+              <el-row>
 
-            </el-row>
-
-            <el-row>
-
-            </el-row>
+              </el-row>
+            </el-col>
 
           </el-row>
-
         </el-col>
       </el-row>
 
@@ -265,6 +269,7 @@
             id: 1,
             index: 0,
             title: '',
+            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
             userName: 'leonnnop',
             src: require('../image/ins1.png')
           },
@@ -272,6 +277,7 @@
             id: 2,
             index: 1,
             title: '',
+            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
             userName: 'leonnnop',
             src: require('../image/ins2.png')
           },
@@ -279,6 +285,7 @@
             id: 3,
             index: 2,
             title: '',
+            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
             userName: 'leonnnop',
             src: require('../image/ins3.png')
           },
