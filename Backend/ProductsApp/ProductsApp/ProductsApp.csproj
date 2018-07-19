@@ -94,19 +94,44 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\ProductsApp.dll" />
+    <Content Include="bin\ProductsApp.pdb" />
     <Content Include="Global.asax" />
+    <Content Include="obj\Debug\ProductsApp.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\ProductsApp.dll" />
+    <Content Include="obj\Debug\ProductsApp.pdb" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\DisplayMomentsController.cs" />
+    <Compile Include="Controllers\MomentController.cs" />
+    <Compile Include="Controllers\Moment_TagController.cs" />
+    <Compile Include="Controllers\TagController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\User_register.cs" />
+    <Compile Include="Models\Coment.cs" />
+    <Compile Include="Models\DisplayedComment.cs" />
+    <Compile Include="Models\DisplayedMoment.cs" />
+    <Compile Include="Models\Forward.cs" />
+    <Compile Include="Models\Moment.cs" />
+    <Compile Include="Models\Moment_Tag.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\Users.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="obj\Release\ProductsApp.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Release\ProductsApp.csprojResolveAssemblyReference.cache" />
+    <Content Include="obj\Debug\ProductsApp.csprojResolveAssemblyReference.cache" />
+    <Content Include="obj\Debug\ProductsApp.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\ProductsApp.csproj.CopyComplete" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -117,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

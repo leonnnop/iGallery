@@ -1,7 +1,8 @@
 ------
 
-## 请求地址：/api/Moment/InsertMoment
-（孙晓青）
+## 发表动态（孙晓青）
+
+请求地址：/api/Moment/InsertMoment
 
 说明：发表动态（将新动态插入数据库）
 
@@ -32,8 +33,9 @@
 ------
 ------
 
-（李璐）
-## 请求地址：/api/Moment/ForwardMoment
+# 转发动态（李璐）
+
+请求地址：/api/Moment/ForwardMoment
 
 说明：转发动态（将转发者的id和转发动态的id建立联系，加入数据库）
 
