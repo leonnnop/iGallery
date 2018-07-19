@@ -9,6 +9,8 @@ using System.Text;
 using System.Web.Http;
 //using Oracle.DataAccess.Client;
 using Oracle.ManagedDataAccess.Client;
+using System.Net.Mail;
+using Newtonsoft.Json;
 
 namespace ProductsApp.Controllers
 {
@@ -78,8 +80,8 @@ namespace ProductsApp.Controllers
         /// </summary>
         /// <param name="Login_user">Users</param>
         /// <returns></returns>
-        [HttpPost]
-        public HttpResponseMessage TestAccount([FromBody]Users Login_user)//测试输入邮箱和密码是否正确
+        [HttpGet]
+        public HttpResponseMessage Login(string Email, string Password)//测试输入邮箱和密码是否正确
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -92,14 +94,14 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select Password from USERS t where email='" + Login_user.Email + "'";//根据邮箱查找该用户的正确密码
+            cmd.CommandText = "select Password from USERS t where email='" + Email + "'";//根据邮箱查找该用户的正确密码
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read())
             {
                 string password = rd["Password"].ToString();
                 conn.Close();
-                if (password == Login_user.Password) return Right();//如果用户输入的密码正确
+                if (password == Password) return Right();//如果用户输入的密码正确
                 else return Wrong();
             }
             else return No_user();//未找到此用户名
@@ -108,21 +110,21 @@ namespace ProductsApp.Controllers
         public HttpResponseMessage Right()//返回true
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-            string result = "Success!";
+            string result = "0";
             response.Content = new StringContent(result);
             return response;
         }
         public HttpResponseMessage Wrong()//返回true
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            string result = "Wrong email or password!";
+            string result = "1";
             response.Content = new StringContent(result);
             return response;
         }
         public HttpResponseMessage No_user()//返回false
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            string result = "User not found!";
+            string result = "2";
             response.Content = new StringContent(result);
             return response;
         }
@@ -381,87 +383,88 @@ namespace ProductsApp.Controllers
             response.Content = new StringContent(state, Encoding.Unicode);//返回状态码
             return response;
         }
-    }
-    /// <summary>
-    /// 返回关注列表
-    /// </summary>
-    /// <param name="user">Users</param>
-    /// <returns></returns>
-    [HttpPost]
-    public IHttpActionResult FollowList([FromBody]Users user)       //返回关注列表
-    {
-        string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-        OracleConnection conn = new OracleConnection(connStr);
-        try
+
+        /// <summary>
+        /// 返回关注列表
+        /// </summary>
+        /// <param name="user">Users</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult FollowList([FromBody]Users user)       //返回关注列表
         {
-            conn.Open();
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-        OracleCommand cmd = new OracleCommand();
-        cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + user.ID + "'";//找到该用户所关注的用户的ID
-        cmd.Connection = conn;
-        OracleDataReader rd = cmd.ExecuteReader();
-        List<Users> following_list = new List<Users>();
-        while (rd.Read())
-        {
-            string followed_id = rd["FOLLOWING_ID"].ToString();
-            cmd.CommandText = "select * from User where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + user.ID + "'";//找到该用户所关注的用户的ID
             cmd.Connection = conn;
-            OracleDataReader rd1 = cmd.ExecuteReader();
-            if (rd1.Read())
+            OracleDataReader rd = cmd.ExecuteReader();
+            List<Users> following_list = new List<Users>();
+            while (rd.Read())
+            {
+                string followed_id = rd["FOLLOWING_ID"].ToString();
+                cmd.CommandText = "select * from User where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+                cmd.Connection = conn;
+                OracleDataReader rd1 = cmd.ExecuteReader();
+                if (rd1.Read())
+                {
+                    Users temp = new Users();
+                    temp.ID = rd1["ID"].ToString();
+                    temp.Email = rd1["EMAIL"].ToString();
+                    temp.Password = rd1["PASSWORD"].ToString();
+                    temp.Bio = rd1["BIO"].ToString();
+                    temp.Photo = rd1["PHOTO"].ToString();
+                    following_list.Add(temp);
+                }
+                rd1.Close();
+            }
+            rd.Close();
+            conn.Close();
+            return Json<List<Users>>(following_list);
+        }
+        /// <summary>
+        /// 返回搜索匹配用户
+        /// </summary>
+        /// <param name="keyword">String</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult search_user(string keyword)
+        {
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select * from USERS where ID like'%" + keyword + "%'";//查找匹配的字符串
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            List<Users> User_list = new List<Users>();                               //用户列表
+            while (rd.Read())
             {
                 Users temp = new Users();
-                temp.ID = rd1["ID"].ToString();
-                temp.Email = rd1["EMAIL"].ToString();
-                temp.Password = rd1["PASSWORD"].ToString();
-                temp.Bio = rd1["BIO"].ToString();
-                temp.Photo = rd1["PHOTO"].ToString();
-                following_list.Add(temp);
+                temp.ID = rd["ID"].ToString();
+                temp.Email = rd["EMAIL"].ToString();
+                temp.Password = rd["PASSWORD"].ToString();
+                temp.Bio = rd["BIO"].ToString();
+                temp.Photo = rd["PHOTO"].ToString();
+                User_list.Add(temp);
             }
-            rd1.Close();
+            rd.Close();
+            conn.Close();
+            return Json<List<Users>>(User_list);
         }
-        rd.Close();
-        conn.Close();
-        return Json<List<Users>>(following_list);
-    }
-    /// <summary>
-    /// 返回搜索匹配用户
-    /// </summary>
-    /// <param name="keyword">String</param>
-    /// <returns></returns>
-    [HttpGet]
-    public IHttpActionResult search_user(string keyword)
-    {
-        string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-        OracleConnection conn = new OracleConnection(connStr);
-        try
-        {
-            conn.Open();
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-        OracleCommand cmd = new OracleCommand();
-        cmd.CommandText = "select * from USERS where ID like'%" + keyword + "%'";//查找匹配的字符串
-        cmd.Connection = conn;
-        OracleDataReader rd = cmd.ExecuteReader();
-        List<Users> User_list = new List<Users>();                               //用户列表
-        while (rd.Read())
-        {
-            Users temp = new Users();
-            temp.ID = rd["ID"].ToString();
-            temp.Email = rd["EMAIL"].ToString();
-            temp.Password = rd["PASSWORD"].ToString();
-            temp.Bio = rd["BIO"].ToString();
-            temp.Photo = rd["PHOTO"].ToString();
-            User_list.Add(temp);
-        }
-        rd.Close();
-        conn.Close();
-        return Json<List<Users>>(User_list);
     }
 }
