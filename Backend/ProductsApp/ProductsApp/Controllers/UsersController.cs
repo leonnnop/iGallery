@@ -7,8 +7,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Net.Mail;
 //using Oracle.DataAccess.Client;
 using Oracle.ManagedDataAccess.Client;
+
 
 namespace ProductsApp.Controllers
 {
@@ -129,42 +131,9 @@ namespace ProductsApp.Controllers
 
         //邮箱验证
         [HttpGet]
-        public HttpResponseMessage SendMail(String Email)
+        public HttpResponseMessage VerifyMail(String Email)
         {
-            MailMessage message = new MailMessage();    //创建一个邮件信息的对象
-            message.From = new MailAddress("1871373978@qq.com");
-            message.To.Add(Email);
-            message.Subject = "欢迎注册iGallery";
-            Random r = new Random();
-            string yzm = null;
-            Random rd = new Random();
-            yzm += rd.Next(100000, 999999);
-            message.Body = "您的验证码为 " + yzm;
-            message.IsBodyHtml = false;              //是否为html格式
-            message.Priority = MailPriority.High;    //发送邮件的优先等级
-            SmtpClient sc = new SmtpClient();        //简单邮件传输协议
-            sc.Host = "smtp.qq.com";                 //指定发送邮件端口
-            sc.Port = 25;
-            sc.UseDefaultCredentials = true;
-            sc.EnableSsl = false;
-            sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
-            sc.Send(message);   //发送邮件
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
-            string result = Newtonsoft.Json.JsonConvert.SerializeObject(yzm);
-            response.Content = new StringContent(result);
-            return response;
-        }
-
-
-        /// <summary>
-        /// 查找用户邮箱是否存在
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public HttpResponseMessage SearchEmail(string email)
-        {
-            //返回信息
+            //返回信息,首先假设邮箱不存在
             string mess = "false";
             HttpResponseMessage response = Request.CreateResponse();
 
@@ -186,8 +155,34 @@ namespace ProductsApp.Controllers
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read()) //存在
             {
+
+                MailMessage message = new MailMessage();    //创建一个邮件信息的对象
+                message.From = new MailAddress("1871373978@qq.com");
+                message.To.Add(Email);
+                message.Subject = "欢迎注册iGallery";
+                Random r = new Random();
+                string yzm = null;
+                Random rd = new Random();
+                yzm += rd.Next(100000, 999999);
+                message.Body = "您的验证码为 " + yzm;
+                message.IsBodyHtml = false;              //是否为html格式
+                message.Priority = MailPriority.High;    //发送邮件的优先等级
+                SmtpClient sc = new SmtpClient();        //简单邮件传输协议
+                sc.Host = "smtp.qq.com";                 //指定发送邮件端口
+                sc.Port = 25;
+                sc.UseDefaultCredentials = true;
+                sc.EnableSsl = false;
+                sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
+                try
+                {
+                    sc.Send(message);
+                }   //发送邮件
+                catch (Exception ex)
+                {
+                    throw (ex);
+                }
                 response.StatusCode = HttpStatusCode.OK;
-                mess = "true";
+                mess = yzm;
             }
             else
             {
