@@ -14,6 +14,7 @@ namespace ProductsApp.Controllers
 {
     public class Moment_TagController : ApiController
     {
+        DBAccess Access = new DBAccess();
         /// <summary>
         /// 通过Tag的内容得到与之相关的所有动态
         /// </summary>
@@ -24,37 +25,18 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public Tuple<List<Moment>,int> Followers(int Page, int PageSize, string TagContent)
         {
-            //HttpRequestMessage response = new HttpRequestMessage();
-            
-            //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-
             //动态ID的数据集
             DataSet MIDSet = new DataSet();
             //动态的数据集
-            DataSet MSet = new DataSet();
-            //SQL操作
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select MOMENT_ID from MOMENT_TAG where TAG ='" + TagContent + "'";
-            cmd.Connection = conn;
+            //DataSet MSet = new DataSet();
+            string select = Access.Select("MOMENT_ID", "MOMENT_TAG", "TAG = '" + TagContent + "'");
+            MIDSet = Access.GetDataSet(select, "MOMENT_TAG", PageSize, Page);
             //动态的数组
             List<Moment> moments = new List<Moment>();
-            OracleDataAdapter Orda = new OracleDataAdapter(cmd);
-            Orda.Fill(MIDSet, PageSize * (Page - 1),PageSize,"MOMENT_TAG");
             foreach (DataRow row in MIDSet.Tables[0].Rows)
             {
-                cmd.CommandText = "select * from MOMENT where ID ='" + row[0] + "'";
-                cmd.Connection = conn;
-                OracleDataReader rd = cmd.ExecuteReader();
+                select = Access.Select("*", "MOMENT", "ID = '" + row[0] + "'");
+                OracleDataReader rd = Access.GetDataReader(select);
                 while(rd.Read())
                 {
                     string id = rd["ID"].ToString();
@@ -68,16 +50,9 @@ namespace ProductsApp.Controllers
                     moments.Add(new Moment(id, sender_id, content, likes, forwards, collects, comments, time));
                 }
             }
-            cmd.CommandText = "select * from FOLLOW_TAG where TAG ='" + TagContent + "'";
-            cmd.Connection = conn;
-            OracleDataReader r = cmd.ExecuteReader();
-            int Flowers = 0;
-            while(r.Read())
-            {
-                Flowers++;
-            }
-            conn.Close();
-
+            select = Access.Select("*", "FOLLOW_TAG", "TAG = '" + TagContent + "'");
+            int Flowers = Access.GetRecordCount(select);
+            
             Tuple<List<Moment>, int> result = new Tuple<List<Moment>, int>(null, 0);
             if (moments.Count != 0)
             {
