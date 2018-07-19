@@ -8,7 +8,7 @@
         <el-col :span="18">
           <el-form ref="ruleForm" :rules="rules" :model="ruleForm">
             <el-form-item prop="email">
-              <el-input v-model="ruleForm.email" placeholder="邮箱" clearable></el-input>
+              <el-input v-model="ruleForm.email" placeholder="邮箱" clearable :disabled="notEditEmail"></el-input>
             </el-form-item>
             <el-form-item>
               <el-row v-if="showButton">
@@ -106,48 +106,46 @@
         },
         isEmailValid: false,
         showButton: true,
+        notEditEmail:false
       };
     },
     methods: {
       emailHandler: function (formName) {
-        //验证邮箱
-        //.....
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-        //     this.$axios.post('/users', qs.stringify(this.ruleForm.email))
-        //       .then((response) => {
-        //         if (response.data.code) {
-        //           this.isEmailValid = true;
-        //           this.showButton = false;
-        //         } else {
-        //           this.$message.error('用户不存在！');
-        //         }
-        //       })
-        //       .catch((error) => {
-        //         console.log(error);
-        //       })
-        //   } else {
-        //     this.$message.error('邮箱不合法，请重新输入！');
-        //     return false;
-        //   }
-        // });
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.isEmailValid = true;
-            this.showButton = false;
+            this.$axios.post('http://10.0.1.95:54468/api/Users/SearchEmail',{
+                  params: {
+                    email: this.ruleForm.email
+                  }
+              })
+              .then((response) => {
+                if (response.data) {
+                  this.isEmailValid = true;
+                  this.showButton = false;
+                  this.notEditEmail=true;
+                } else {
+                  this.$message.error('用户不存在，请重新输入！');
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              })
           } else {
             this.$message.error('邮箱不合法，请重新输入！');
             return false;
           }
-        })
+        });
 
       },
       finishHandler: function (formName) {
           this.$refs[formName].validate((valid) => {
           if (valid) {
-              this.$axios.post('/users',qs.stringify({password:this.password})).
+              this.$axios.put('http://10.0.1.95:54468/api/Users/ChangePassword',{
+                  email:this.ruleForm.email,
+                  NewPassword:this.ruleForm.password
+              }).
               then((response) => {
-                  let result = response.data.result;
+                  let result = response.data;
                   this.resultHandler(result);
               })
               .catch((error) => {
@@ -167,7 +165,6 @@
             message: '密码重置成功！将在三秒后跳转至登录界面！',
             type: 'success'
           });
-
           setTimeout(this.toLogin, 3000);
         } else {
           this.$message.error('密码重置失败，请重试！');
@@ -181,7 +178,6 @@
         }).then(() => {
           this.toLogin();
         }).catch();
-
       }
     }
   }
