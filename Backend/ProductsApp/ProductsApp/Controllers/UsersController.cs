@@ -149,7 +149,7 @@ namespace ProductsApp.Controllers
             }
             //SQL操作
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where EMAIL='" + email + "'";
+            cmd.CommandText = "select * from USERS where EMAIL='" + Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read()) //存在
@@ -160,8 +160,8 @@ namespace ProductsApp.Controllers
                 message.Subject = "欢迎注册iGallery";
                 Random r = new Random();
                 string yzm = null;
-                Random rd = new Random();
-                yzm += rd.Next(100000, 999999);
+                Random rde = new Random();
+                yzm += rde.Next(100000, 999999);
                 message.Body = "您的验证码为 " + yzm;
                 message.IsBodyHtml = false;              //是否为html格式
                 message.Priority = MailPriority.High;    //发送邮件的优先等级

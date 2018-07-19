@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data;
-using System.Data.OracleClient;
-//using Oracle.ManagedDataAccess.Client;
+//using System.Data.OracleClient;
+using Oracle.ManagedDataAccess.Client;
 namespace iGallery
 {
     public class DBAccess

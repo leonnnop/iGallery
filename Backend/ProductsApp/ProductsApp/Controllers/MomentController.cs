@@ -68,47 +68,50 @@ namespace ProductsApp.Controllers
             response.Content = new StringContent(result);
             return response;
         }
-    }
-    //搜索与关键词有关动态
-    [HttpGet]
-    public IHttpActionResult Search(string keyword)
-    {
-        string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-        OracleConnection conn = new OracleConnection(connStr);
-        try
+
+
+        //搜索与关键词有关动态
+        [HttpGet]
+        public IHttpActionResult Search(string keyword)
         {
-            conn.Open();
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-        OracleCommand cmd = new OracleCommand();
-        cmd.CommandText = "select MOMENT_ID from Moment_tag where tag like '%" + keyword + "%'";
-        cmd.Connection = conn;
-        OracleDataReader rd = cmd.ExecuteReader();
-        List<Moment> moment_list = new List<Moment>();
-        while (rd.Read())
-        {
-            string moment_id = rd["MOMENT_ID"].ToString();
-            cmd.CommandText = "select * from Moment where ID='" + moment_id + "'";
-            OracleDataReader rd1 = cmd.ExecuteReader();
-            if (rd1.Read())
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
             {
-                string ID = rd1["ID"].ToString();
-                string Sender_id = rd1["SENGER_ID"].ToString();
-                string Content = rd1["CONTENE"].ToString();
-                int Like_num = Convert.ToInt32(rd1["LIKE_NUM"]);
-                int Forward_num = Convert.ToInt32(rd1["FORWARD_NUM"]);
-                int Collect_num = Convert.ToInt32(rd1["COLLECT_NUM"]);
-                int Comment_num = Convert.ToInt32(rd1["COMMENT_NUM"]);
-                string Time = rd1["SEND_TIME"].ToString();
-                Moment temp = new Moment(ID, Sender_id, Content, Like_num, Forward_num, Collect_num, Comment_num, Time);
-                moment_list.Add(temp);
+                conn.Open();
             }
-            rd1.Close();
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select MOMENT_ID from Moment_tag where tag like '%" + keyword + "%'";
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            List<Moment> moment_list = new List<Moment>();
+            while (rd.Read())
+            {
+                string moment_id = rd["MOMENT_ID"].ToString();
+                cmd.CommandText = "select * from Moment where ID='" + moment_id + "'";
+                OracleDataReader rd1 = cmd.ExecuteReader();
+                if (rd1.Read())
+                {
+                    string ID = rd1["ID"].ToString();
+                    string Sender_id = rd1["SENGER_ID"].ToString();
+                    string Content = rd1["CONTENE"].ToString();
+                    int Like_num = Convert.ToInt32(rd1["LIKE_NUM"]);
+                    int Forward_num = Convert.ToInt32(rd1["FORWARD_NUM"]);
+                    int Collect_num = Convert.ToInt32(rd1["COLLECT_NUM"]);
+                    int Comment_num = Convert.ToInt32(rd1["COMMENT_NUM"]);
+                    string Time = rd1["SEND_TIME"].ToString();
+                    Moment temp = new Moment(ID, Sender_id, Content, Like_num, Forward_num, Collect_num, Comment_num, Convert.ToDateTime(Time));
+                    moment_list.Add(temp);
+                }
+                rd1.Close();
+            }
+            conn.Close();
+            return Json<List<Moment>>(moment_list);
         }
-        conn.Close();
-        return Json<List<Moment>>(moment_list);
+
     }
 }
