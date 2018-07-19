@@ -1,5 +1,5 @@
 <template>
-    <div class="forget-psw">
+  <div class="forget-psw">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span style="font-size:18px;">重置密码</span>
@@ -27,26 +27,26 @@
               </el-row>
             </el-form-item>
           </el-form>
-              <el-row type="flex" justify="end" v-if="showButton">
-                <el-col :span="5">
-                  <el-button @click="cancelHandler" plain>取消</el-button>
+          <el-row type="flex" justify="end" v-if="showButton">
+            <el-col :span="5">
+              <el-button @click="cancelHandler" plain>取消</el-button>
+            </el-col>
+          </el-row>
+
+          <div v-if="isEmailValid">
+            <el-form ref="passwordForm" :rules="passwordRules" :model="passwordForm" status-icon>
+              <el-row>
+                <el-col :span="18">
+                  <el-form-item prop="password">
+                    <el-input type="password" v-model="passwordForm.password" placeholder="新密码" maxlength="20"></el-input>
+                  </el-form-item>
+                  <el-form-item prop="checkPassword">
+                    <el-input type="password" v-model="passwordForm.checkPassword" placeholder="确认密码" maxlength="20"></el-input>
+                  </el-form-item>
                 </el-col>
               </el-row>
 
-            <div v-if="isEmailValid">
-              <el-form ref="passwordForm" :rules="passwordRules" :model="passwordForm" status-icon>
-                <el-row>
-                  <el-col :span="18">
-                    <el-form-item prop="password">
-                  <el-input type="password" v-model="passwordForm.password" placeholder="新密码" maxlength="20"  ></el-input>
-                </el-form-item>
-                <el-form-item prop="checkPassword">
-                  <el-input type="password" v-model="passwordForm.checkPassword" placeholder="确认密码" maxlength="20"  ></el-input>
-                </el-form-item>
-                  </el-col>
-                </el-row>
-                
-                <el-form-item>
+              <el-form-item>
                 <el-row v-if="isEmailValid">
                   <el-col :span="5">
                     <el-button @click="cancelHandler" plain>取消</el-button>
@@ -54,10 +54,10 @@
                   <el-col :span="5" :offset="14">
                     <el-button type="primary" plain @click="finishHandler('passwordForm')">完成</el-button>
                   </el-col>
-              </el-row>
+                </el-row>
               </el-form-item>
-              </el-form>
-            </div>
+            </el-form>
+          </div>
         </el-col>
       </el-row>
     </el-card>
@@ -87,26 +87,27 @@
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
-          
+
         }
       };
       var validateVerifyCode = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入验证码'));
-        } else if (value !== this.checkVerifyCode) {
+        } else if (value != this.checkVerifyCode) {
+          console.log('value:'+value+'check:'+this.checkVerifyCode)
           callback(new Error('验证码错误!'));
         } else {
           callback(this.changeBtnVisible());
         }
       };
       return {
-        email:'',
-        checkVerifyCode:'',
+        email: '',
+        checkVerifyCode: '',
         emailForm: {
           email: ''
         },
         verifyCodeForm: {
-          verifyCode:''
+          verifyCode: ''
         },
         passwordForm: {
           password: '',
@@ -121,13 +122,14 @@
             {
               pattern: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
               message: '请输入合法邮箱'
-            }]
+            }
+          ]
         },
         verifyCodeRules: {
           verifyCode: [{
-              validator:validateVerifyCode,
-              trigger: 'blur'
-            }]
+            validator: validateVerifyCode,
+            trigger: 'blur'
+          }]
         },
         passwordRules: {
           password: [{
@@ -148,24 +150,29 @@
         },
         isEmailValid: false,
         showButton: true,
-        verifyBtn:false
+        verifyBtn: false
       };
     },
     methods: {
       verifyEmailHandler: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.email='';
-            this.checkVerifyCode='';
-            this.$axios.get('http://10.0.1.95:54468/api/Users/VerifyMail',{
-                  params: {
-                    email: this.emailForm.email
-                  }
+            this.email = '';
+            this.checkVerifyCode = '';
+            this.axios.get('http://10.0.1.8:54468/api/Users/VerifyMail', {
+                params: {
+                  email: this.emailForm.email
+                }
               })
               .then((response) => {
-                if (response.data!==false) {
-                  this.email=this.emailForm.email;
-                  this.checkVerifyCode=response.data;
+                if (response.data !== false) {
+                  this.email = this.emailForm.email;
+                  this.checkVerifyCode = response.data;
+                  console.log(this.checkVerifyCode)
+                  this.$message({
+                    message: '已发送验证码请查看邮件。',
+                    type: 'success'
+                  });
                 } else {
                   this.$message.error('用户不存在，请重新输入！');
                 }
@@ -181,18 +188,19 @@
 
       },
       finishHandler: function (formName) {
-          this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate((valid) => {
           if (valid) {
-              this.$axios.put('http://10.0.1.95:54468/api/Users/ChangePassword',{
-                  email:this.email,
-                  NewPassword:this.passwordForm.password
-              }).
-              then((response) => {
-                  let result = response.data;
-                  this.resetHandler(result);
+            this.axios.put('http://10.0.1.8:54468/api/Users/ChangePassword?email='+this.email+'&NewPassword='+this.passwordForm.password            // , {
+            //   email: this.email,
+            //   NewPassword: this.passwordForm.password
+            // }
+            ).
+            then((response) => {
+                let result = response.data;
+                this.resetHandler(result);
               })
               .catch((error) => {
-                  console.log(error);
+                console.log(error);
               })
           } else {
             this.$message.error('密码不合法，请重新输入！')
@@ -213,7 +221,7 @@
           this.$message.error('密码重置失败，请重试！');
         }
       },
-      cancelHandler:function(){
+      cancelHandler: function () {
         this.$confirm('放弃重置密码?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -222,19 +230,18 @@
           this.toLogin();
         }).catch();
       },
-      changeBtnVisible:function(){
-        this.isEmailValid=true;
-        this.showButton=false;
-        this.verifyBtn=false;
+      changeBtnVisible: function () {
+        this.isEmailValid = true;
+        this.showButton = false;
+        this.verifyBtn = false;
       },
       beforeRouteLeave(to, from, next) {
-        this.email='';
-        this.checkVerifyCode='';
+        this.email = '';
+        this.checkVerifyCode = '';
         next();
       }
     }
   }
-
 </script>
 
 <style scoped>
@@ -253,12 +260,11 @@
     margin: 50px auto;
     font-size: 14px;
   }
-  .forget-psw{
+
+  .forget-psw {
     overflow: hidden;
     height: 750px;
     background-color: #fafafa;
     text-align: center;
   }
-  
-
 </style>

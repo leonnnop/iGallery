@@ -68,7 +68,6 @@ namespace ProductsApp.Controllers
             response.Content = new StringContent(result);
             return response;
         }
-<<<<<<< HEAD
 
 
         //搜索与关键词有关动态
@@ -114,7 +113,5 @@ namespace ProductsApp.Controllers
             return Json<List<Moment>>(moment_list);
         }
 
-=======
->>>>>>> b31ac4c3f2c77432d52798241944493d2079fe11
     }
 }

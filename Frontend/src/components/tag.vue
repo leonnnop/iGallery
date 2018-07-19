@@ -1,17 +1,19 @@
 <template>
     <el-container>
         <el-row style="width:100%" type="flex" justify="center">
-            <el-col>
-                <el-row>
-                    <el-col>
-                        <div class="user-img border">
+            <el-col style="width:100%">
+                <el-row style="width:100%" type="flex" justify="start" align="middle">
+                    <el-col style="width:100%">
+                        <div class="user-img border" style="margin-left:12%">
                             <img class="user-img img-border" src="../image/a.jpg" alt="头像" />
                         </div>
                     </el-col>
-
+                    <el-col style="font-size:26px;color:#262626;margin-left:-61%">
+                        {{this.tagName}}
+                    </el-col>
                 </el-row>
                 <el-row style="width:100%" type="flex" justify="center">
-                    <el-row :gutter="30" style="width:90%;margin:30px;">
+                    <el-row :gutter="35" style="width:85%;margin:30px;">
                         <el-col :span="6">
                             <el-card class="box-card" :key="item" v-for="item in items_col_1">
                                 <div slot="header" class="clearfix">
@@ -22,7 +24,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -42,7 +44,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -62,7 +64,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -82,7 +84,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -101,20 +103,26 @@
 </template>
 
 <style scoped>
+    .user-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 150px;
+    }
+
     .border {
         position: relative;
         border: 1px solid transparent;
-        border-radius: 50px;
+        border-radius: 150px;
         background: linear-gradient(45deg, #f9a357, #db3579 40%, #c73894 95%);
         background-clip: padding-box;
-        padding: 4px;
+        padding: 5px;
         /* just to show box-shadow still works fine */
         /* box-shadow: 0 3px 9px black, inset 0 0 9px white; */
     }
 
     .img-border {
         border: white solid;
-        border-radius: 50px;
+        border-radius: 150px;
         border-width: 2px;
         margin: -2px;
     }
@@ -162,6 +170,7 @@
     export default {
         data() {
             return {
+                tagName:'#ExampleTag',
                 tableData: [],
                 userName: 'Leonnnop',
                 cards: [],
