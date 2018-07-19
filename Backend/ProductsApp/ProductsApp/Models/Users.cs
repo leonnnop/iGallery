@@ -14,4 +14,14 @@ namespace ProductsApp.Models
         public string Bio { get; set; }
         public string Photo { get; set; }
     }
+    /*测试
+    
+    "ID":"",
+	"Email":"",
+	"Password":"",
+    "Username":"",
+    "Bio":"",
+    "Photo":""
+
+    */
 }
