@@ -27,4 +27,16 @@ namespace ProductsApp.Models
         public int CommentNum { get; set; }
         public DateTime Time { get; set; }
     }
+    /*测试
+    
+	"ID":"",
+	"SenderID":"",
+	"Content":"",
+	"LikeNum":0,
+	"ForwardNum":0,
+	"CollectNum":0,
+	"CommentNum":0,
+	"Time":""
+
+    */
 }
