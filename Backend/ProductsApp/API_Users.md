@@ -1,4 +1,4 @@
-------
+﻿------
 
 请求地址：/api/Users/Users
 
@@ -28,7 +28,24 @@
 | 2      | 插入数据库时出错 |
 
 ------
+# 登录 #（陈阳）
+请求地址：/api/Users/TestAccount   
+请求方式：Post   
+支持格式：json    
 
+
+> 参数（body中）：Users
+
+> 返回消息：
+| 状态码                         | 说明             |
+| ------                         | ---------------- |
+| Success！                      |   登录成功       |
+| Wrong email or password        | 用户名或密码错误 |
+| User not found!                | 找不到此用户     |
+  
+------
+
+（苏昭帆）
 请求地址：api/Users/SearchEmail
 说明：查询用户邮箱，参数为字符串，用户邮箱
 
@@ -52,6 +69,7 @@
 
 ------
 
+（苏昭帆）
 请求地址：api/Users/ChangePassword
 说明：修改用户密码，参数为字符串，用户邮箱，用户新密码
 
@@ -74,27 +92,19 @@
 | false      | 修改不成功   |
 ------
 
-<<<<<<< Updated upstream
+#邮箱验证#（李璐）
 请求地址：/api/Users/SendMail
 
-说明：邮箱验证，只传邮箱地址即可，其他可为空
+说明：邮箱验证，传邮箱地址,
 
-请求方式：Post
+请求方式：Get
 
 支持格式：json
 
-参数类型：Users
-
-| 类型   | 属性     |
-| :----- | -------- |
-| string | ID       |
-| string | Email    |
-| string | Password |
-| string | Username |
-| string | Bio      |
-| string | Photo    |
+参数类型：string
 
 返回类型：string
+
 返回内容：验证码
 
 
@@ -176,6 +186,51 @@
 
 
 ------
+
+# 关注用户 #（陈阳）
+请求地址：/api/Users/Follow
+请求方式：Post   
+支持格式：json    
+
+
+> 参数（body中）：Users（被关注和关注两个用户）  
+
+
+> 返回消息：  
+
+| 状态码 | 说明 |  
+| -- | -- |  
+| 0 | 关注成功 |  
+| 1 | 关注失败 |  
+
+
+------
+# 查看关注列表 #（陈阳）
+请求地址：/api/Users/FollowList
+请求方式：Post   
+支持格式：json    
+
+
+> 参数（body中）：Users
+
+
+> 返回消息：用户列表 （List）
+
+
+# 查找匹配用户 #（陈阳）
+请求地址：/api/Users/search_user
+请求方式：Get  
+
+
+> 参数：string(关键词)
+
+
+> 返回消息：用户列表 （List）
+
+
 =======
+
 >>>>>>> Stashed changes
+
+
 
