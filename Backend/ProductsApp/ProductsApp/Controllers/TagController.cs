@@ -6,10 +6,10 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Data;
 using System.Text;
-using System.Data.OracleClient;
-//using Oracle.ManagedDataAccess.Client;
+//using System.Data.OracleClient;
+using Oracle.ManagedDataAccess.Client;
 
-namespace iGallery.Controllers
+namespace ProductsApp.Controllers
 {
     public class TagController : ApiController
     {
