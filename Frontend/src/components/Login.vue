@@ -83,7 +83,7 @@ import qs from 'qs'
           console.log(this.ruleForm);
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$axios.post("/users",qs.stringify(this.ruleForm))
+            this.axios.get("http://10.0.1.70:32149/api/Account?email=2@qq.com&name=user2&password=key123456")
               .then((response) => {
                 if(response.data.code){
                     this.$router.push('/mainPage');

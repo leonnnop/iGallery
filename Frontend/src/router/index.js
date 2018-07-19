@@ -11,6 +11,7 @@ import register from '@/components/register'
 import Login from '@/components/Login'
 import photoWall from '@/components/photoWall'
 import ForgetPsw from '@/components/ForgetPsw'
+import MomentDetail from '@/components/MomentDetail'
 
 Vue.use(Router)
 
@@ -63,7 +64,11 @@ export default new Router({
         path: 'photowall',
         name: 'photowall',
         component: photoWall   
-      } ]
+      },{
+        path: 'momentDetail',
+        name: 'MomentDetail',
+        component: MomentDetail
+      }]
 
     },
 

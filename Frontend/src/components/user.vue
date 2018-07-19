@@ -1,41 +1,182 @@
 <template>
   <el-container>
-    <el-row style="width:100%" type="flex" justify="center">
+    <el-row style="width:100%" type="flex" justify="left">
+      <el-col class="fixed">
+        <el-row class="box-card" style="height:500px;width:280px;margin-left:64%;">
+          <!-- <div slot="header" class="clearfix"> -->
+          <el-row class="usr" type="flex" align="middle">
+            <el-col>
+              <div class="user-img border">
+                <img class="user-img img-border" src="../image/a.jpg" alt="头像" />
+              </div>
+            </el-col>
+            <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
+            <el-col style="margin-left:-70%;width:50%;overflow:hidden">
+              <span style="font-size:16px; font-weight:bold">{{this.userName}}</span>
+              <span style="font-size:14px; color:#999999">{{this.userName}}</span>
+            </el-col>
+          </el-row>
+          <!-- </div> -->
+          <hr class="hr" />
+          <!-- <div style="font-weight:bold;font-size: 10px;">简介：</div>
+          <div>这个用户很懒，</div>
+          <div>但能吃。</div>
+          <div> </div>
+          <div> </div> -->
+          <el-row style="color:#999999;font-weight:bold;margin-bottom:10px;width:280px;">
+            关注用户
+          </el-row>
+          <!-- <div class="inset-shadow"> -->
+          <el-row style="overflow-y:auto;overflow-x:hidden;height:340px;width:260px;margin-bottom:12px;">
+            <el-row :key="item" v-for="item in followings" type="flex" align="middle" style="margin-bottom:12px">
+              <el-col>
+                <div class="user-img border">
+                  <img class="user-img img-border" src="../image/a.jpg" alt="头像" />
+                </div>
+              </el-col>
+              <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
+              <el-col style="margin-left:-70%;width:50%;overflow:hidden">
+                <span style="font-size:16px; font-weight:bold">{{item.userName}}</span>
+                <span style="font-size:14px; color:#999999">{{item.userName}}</span>
+              </el-col>
+            </el-row>
+          </el-row>
+          <!-- </div> -->
+          <hr class="hr outset-shadow" />
 
-      <el-row :gutter="20" style="width:800px" type="flex" justify="center">
-        <el-col :span="8">
-          <el-card class="box-card" style="height:300px;">
-            <div slot="header" class="clearfix">
-              <img class="user-img" src="../image/a.jpg" alt="头像" />
-              <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i>
-              <span style="font-size:18px;">{{this.userName}}</span>
-            </div>
+          <el-row style="font-size:14px;margin-bottom:5px">
+            关注 iGallery，分享精彩视界
+          </el-row>
+          <el-row style="font-size:14px">
+            © 2018 IGALLERY Uni
+          </el-row>
+        </el-row>
+      </el-col>
 
-            <div style="font-weight:bold;font-size: 10px;">简介：</div>
-            <div>这个用户很懒，</div>
-            <div>但能吃。</div>
-            <div> </div>
-            <div> </div>
-          </el-card>
-        </el-col>
+      <el-row style="width:600px;margin-left:18%;" type="flex" justify="center">
+        <el-col>
+          <el-row v-for="card in cards" :key="card.name" class="box-color-grey">
+            <el-row>
+              <el-row class="usr" type="flex" align="middle" style="padding:7px 15px">
+                <el-col>
+                  <div class="small-user-img small-border">
+                    <img class="small-user-img small-img-border" src="../image/a.jpg" alt="头像" />
+                  </div>
+                </el-col>
+                <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
+                <el-col style="margin-left:-91%;width:20%;overflow:hidden;margin-top:5px">
+                  <span style="font-size:16px; font-weight:bold">{{card.userName}}</span>
+                  <span style="font-size:14px; color:#999999">{{card.userName}}</span>
+                </el-col>
+              </el-row>
+            </el-row>
+            <el-row>
+              <img :src="card.src" width="600px" class="box-img" alt="头像" />
+            </el-row>
 
-        <el-col :span="16">
-          <el-card v-for="card in cards" :key="card.name" class="box-card">
+            <el-row>
+              <img src="../image/comment-unlike.png" alt="bottomlike" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/uncollect.png" alt="collect" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/forward.png" alt="forward" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/user-more.png" alt="more" height="30px" width="30px" style="margin-right:4%;float:right">
+            </el-row>
 
-            <!-- <img :src="getSrc(card.src)" alt="头像" /> -->
-            <img v-if="card.index == 0" src="../image/user_img.jpg" class="box-img" alt="头像" />
-            <img v-if="card.index == 1" src="../image/gaojin_ciyun.png" class="box-img" alt="头像" />
-            <img v-if="card.index == 2" src="../image/gaojin_radar.png" style="width:300px; float:right;" class="box-img" alt="头像" />
+            <el-col style="padding:5px 15px">
+              <!-- 简介 -->
+              <el-row style="font-size:14px">
+                {{card.bio}}
+              </el-row>
+              <!-- tag -->
+              <el-row>
 
-          </el-card>
+              </el-row>
+            </el-col>
 
+          </el-row>
         </el-col>
       </el-row>
+
     </el-row>
   </el-container>
 </template>
 
 <style scoped>
+  .box-color-grey {
+    border-color: #e6e6e6;
+    border-style: solid;
+    border-width: thin;
+    margin-bottom: 60px;
+    background-color: white;
+    /* padding: 20px; */
+  }
+
+  .inset-shadow {
+    /* border-radius: 50%; */
+    /* width: 180px; */
+    /* height: 180px; */
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: relative;
+  }
+
+  .inset-shadow:after {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 30px 10px rgba(255, 255, 255, .7) inset;
+  }
+
+  .hr {
+    border-top: 1px solid #efefef;
+    height: 0px;
+    margin: 10px 0 12px;
+    width: 100%;
+    padding: 0;
+  }
+
+  .border {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #f9a357, #db3579 40%, #c73894 95%);
+    background-clip: padding-box;
+    padding: 4px;
+    /* just to show box-shadow still works fine */
+    /* box-shadow: 0 3px 9px black, inset 0 0 9px white; */
+  }
+
+  .img-border {
+    border: white solid;
+    border-radius: 50px;
+    border-width: 2px;
+    margin: -2px;
+  }
+
+  .small-border {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #f9a357, #db3579 40%, #c73894 95%);
+    background-clip: padding-box;
+    padding: 3px;
+    /* just to show box-shadow still works fine */
+    /* box-shadow: 0 3px 9px black, inset 0 0 9px white; */
+  }
+
+  .small-img-border {
+    border: white solid;
+    border-radius: 30px;
+    border-width: 1px;
+    margin: -1px;
+  }
+
+  .fixed {
+    position: fixed;
+  }
+
   .text {
     font-size: 14px;
   }
@@ -54,15 +195,16 @@
     clear: both
   }
 
-  .box-card {
-    width: 100%;
-    margin-top: 20px;
+  .user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px
   }
 
-  .user-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 100px
+  .small-user-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px
   }
 
   div {
@@ -70,8 +212,7 @@
   }
 
   .box-img {
-    width: 500px;
-    height: 300px;
+    width: 600px;
   }
 </style>
 
@@ -79,6 +220,31 @@
   export default {
     data() {
       return {
+        followings: [{
+            userName: 'leonnnop'
+
+          },
+          {
+            userName: 'leonnnop'
+
+          },
+          {
+            userName: 'leonnnop'
+
+          },
+          {
+            userName: 'leonnnop'
+
+          },
+          {
+            userName: 'leonnnop'
+
+          },
+          {
+            userName: 'leonnnop'
+
+          },
+        ],
         tableData: [{
           date: '2016-05-02',
           name: '王小虎',
@@ -103,19 +269,25 @@
             id: 1,
             index: 0,
             title: '',
-            src: '../image/user_img.jpg'
+            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+            userName: 'leonnnop',
+            src: require('../image/ins1.png')
           },
           {
             id: 2,
             index: 1,
             title: '',
-            src: '../image/gaojin_ciyun.png'
+            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+            userName: 'leonnnop',
+            src: require('../image/ins2.png')
           },
           {
             id: 3,
             index: 2,
             title: '',
-            src: '../image/gaojin_ciyun.png'
+            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+            userName: 'leonnnop',
+            src: require('../image/ins3.png')
           },
         ]
       }

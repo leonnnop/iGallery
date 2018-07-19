@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 950px; border: 1px solid #eee">
+  <el-container style="height: 1200px; border: 1px solid #eee;background-color;background-color: #fafafa;">
     <el-col>
       <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
@@ -39,8 +39,8 @@
       </el-row>
 
 
-      <el-row type="flex" justify="center">
-        <el-col style="width:100%;height:800px;">
+      <el-row type="flex" justify="center" style="margin-top:30px">
+        <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
           <router-view></router-view>
         </el-col>
       </el-row>
@@ -54,6 +54,9 @@
     position: fixed;
     top: 0;
     z-index: 999;
+  }
+  .mainContentScroll {
+    margin-top: 55px
   }
 </style>
 
