@@ -74,7 +74,7 @@
 | false      | 修改不成功   |
 ------
 
-<<<<<<< Updated upstream
+#邮箱验证#（李璐）
 请求地址：/api/Users/SendMail
 
 说明：邮箱验证，传邮箱地址,
