@@ -180,10 +180,13 @@
             registerButtonClick() {
                 if (this.isEmail(this.email)) {
                     // this.axios.get('http://10.0.1.61:50192/api/values/5')
-                    this.axios.post('http://10.0.1.95:54468/api/Register',{
+                    this.axios.post('http://10.0.1.8:54468/api/Users/Register',{
                         Email:this.email,
                         Username:this.username,
-                        Password:this.ruleForm.password
+                        Password:this.ruleForm.password,
+                        ID:'',
+                        Bio: '',
+                        Photo:'',
                     })
                     // this.axios.get('http://10.0.1.94:53101/api/Products?email=1225248841@qq.com&password=123456789')
                         .then((response) => {
