@@ -343,6 +343,88 @@ namespace ProductsApp.Controllers
             return response;
         }
 
-
+        /// <summary>
+        /// 关注用户
+        /// </summary>
+        /// <param name="follow">Users</param>
+        /// <param name="followed">Users</param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage Follow([FromBody]Users follow, [FromBody]Users followed)//把关注用户和被关注用户加入关注联系集
+        {
+            string state = "0";//状态码0：成功，1：关注失败
+            HttpResponseMessage response = Request.CreateResponse();
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + follow.ID + "," + followed.ID + ")";//插入数据库
+            cmd.Connection = conn;
+            int result = cmd.ExecuteNonQuery();
+            if (result == 1)//插入成功
+            {
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            else           //插入失败
+            {
+                state = "1";
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+            conn.Close();
+            response.Content = new StringContent(state, Encoding.Unicode);//返回状态码
+            return response;
+        }
+    }
+    /// <summary>
+    /// 返回关注列表
+    /// </summary>
+    /// <param name="user">Users</param>
+    /// <returns></returns>
+    [HttpPost]
+    public IHttpActionResult FollowList([FromBody]Users user)       //返回关注列表
+    {
+        string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+        OracleConnection conn = new OracleConnection(connStr);
+        try
+        {
+            conn.Open();
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        OracleCommand cmd = new OracleCommand();
+        cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + user.ID + "'";//找到该用户所关注的用户的ID
+        cmd.Connection = conn;
+        OracleDataReader rd = cmd.ExecuteReader();
+        List<Users> following_list = new List<Users>();
+        while (rd.Read())
+        {
+            string followed_id = rd["FOLLOWING_ID"].ToString();
+            cmd.CommandText = "select * from User where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+            cmd.Connection = conn;
+            OracleDataReader rd1 = cmd.ExecuteReader();
+            if (rd1.Read())
+            {
+                Users temp = new Users();
+                temp.ID = rd1["ID"].ToString();
+                temp.Email = rd1["EMAIL"].ToString();
+                temp.Password = rd1["PASSWORD"].ToString();
+                temp.Bio = rd1["BIO"].ToString();
+                temp.Photo = rd1["PHOTO"].ToString();
+                following_list.Add(temp);
+            }
+            rd1.Close();
+        }
+        rd.Close();
+        conn.Close();
+        return Json<List<Users>>(following_list);
     }
 }
