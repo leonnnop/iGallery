@@ -1,7 +1,7 @@
 <template>
-    <div style="margin:30px 0;">
+    <div style="margin-bottom:30px;">
         <el-row>
-            <el-col :span="10" :offset="3">
+            <el-col :span="10" :offset="4">
                 <el-carousel height="500px" :interval="0" indicator-position="outside">
                     <el-carousel-item v-for="(img,index) in moment.imgList" :key="index">
                         <div class="pic">
@@ -15,22 +15,42 @@
                         <el-row type="flex" align="middle" style="color:#a2a2a2;">
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img :src="likeSrc" alt="likeButton" class="op-img" @click="likeHandler">{{this.moment.likeNum}}
+                                    <img :src="likeSrc" alt="like" class="op-img hover-cursor" @click="likeHandler">
+                                    <span @click="likeListVisible = true" class="hover-cursor">{{moment.likeNum}}</span>
+                                    <el-dialog title="" :visible.sync="likeListVisible" width="40%">
+                                        <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">点赞</span>
+                                        <div style="height:400px;overflow:hidden;overflow-y:auto;">
+                                        <div style="border-bottom:1px solid rgb(235,238,245);"></div>
+                                        <div v-for="(likeUser,index) in likeUsers" :key="index" class="like-user-li">
+                                            <el-row type="flex" justify="center" align="middle">
+                                                <el-col :span="3" :offset="1" style="height:50px;"><img src="../image/a.jpg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.userPage)"></el-col>
+                                                <el-col :span="16">
+                                                    <el-row>{{likeUser.username}}</el-row>
+                                                    <el-row style="font-size:12px;margin-top:5px;">{{likeUser.profile}}</el-row>
+                                                </el-col>
+                                                <el-col :span="3">
+                                                    <el-button plain size="small" @click="followHandler(likeUser,likeUser.isFollowed)" :class="{followed:likeUser.isFollowed}" v-if="likeUser.userId!==userId">{{likeUser.followState}}</el-button>
+                                                </el-col>
+                                            </el-row>
+                                        </div>
+                                        </div>
+                                    </el-dialog>
+
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/forward.png" alt="likeButton" class="op-img" @click="forwardHandler">{{this.moment.forwardNum}}
+                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor" @click="forwardHandler">{{moment.forwardNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/comment.png" alt="likeButton" class="op-img">{{this.moment.commentNum}}
+                                    <img src="../image/comment.png" alt="comment" class="op-img hover-cursor">{{moment.commentNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img :src="collectSrc" alt="collectNum" class="op-img" @click="collectHandler">{{this.moment.collectNum}}
+                                    <img :src="collectSrc" alt="collect" class="op-img hover-cursor" @click="collectHandler">{{moment.collectNum}}
                                 </el-row>
                             </el-col>
                         </el-row>
@@ -43,7 +63,7 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img src="../image/a.jpg" alt="" style="width:40px;height:40px;border-radius:80px;">
+                                <img src="../image/a.jpg" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment">
@@ -66,11 +86,11 @@
                             <el-row type="flex" align="middle">
                                 <el-col :span="3">
 
-                                    <img src="../image/a.jpg" alt="" class="show-comment-img" style="cursor:pointer" @click="jumpToUser(comment.userPage)">
+                                    <img src="../image/a.jpg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.userPage)">
 
                                 </el-col>
                                 <el-col :span="3">
-                                    <span style="cursor:pointer" @click="jumpToUser(comment.userPage)">{{comment.username}}</span>
+                                    <span class="hover-cursor" @click="jumpToUser(comment.userPage)">{{comment.username}}</span>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -122,19 +142,19 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img src="../image/a.jpg" alt="头像" style="width:80px;height:80px;border-radius:80px;cursor:pointer" @click="jumpToUser(this.userPage)">
+                                <img src="../image/a.jpg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.userPage)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
                                     <el-col :span="10" :offset="2">
-                                        <span style="cursor:pointer" @click="jumpToUser(this.moment.userPage)">{{this.moment.username}}</span>
+                                        <span class="hover-cursor" @click="jumpToUser(moment.userPage)">{{moment.username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button size="small" plain round @click="followHandler" style="">{{this.followState}}</el-button>
+                                        <el-button plain size="small" @click="followHandler(moment,moment.isFollowed)" :class="{followed:moment.isFollowed}">{{moment.followState}}</el-button>
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col :span="20" :offset="2" style="font-size:12px;color:#999">{{this.moment.sendTime}}</el-col>
+                                    <el-col :span="20" :offset="2" style="font-size:12px;color:#999">{{moment.sendTime}}</el-col>
 
                                 </el-row>
                             </el-col>
@@ -143,7 +163,7 @@
                     </div>
                     <div id="content">
                         <div id="text">
-                            <p style="margin:0">{{this.moment.text}}</p>
+                            <p style="margin:0">{{moment.text}}</p>
                             <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag.url)">#{{tag.name}}</el-button>
                         </div>
                     </div>
@@ -159,9 +179,68 @@
         name: 'MomentDetail',
         data() {
             return {
+                likeListVisible: false,
+                likeUsers:[{
+                    userId:'1',
+                    headImg:require('../image/a.jpg'),
+                    username:'user1',
+                    profile:'诚信肥宅',
+                    isFollowed:true,
+                    followState:'已关注'
+                },{
+                    userId:'2',
+                    headImg:require('../image/a.jpg'),
+                    username:'user2',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                    
+                },{
+                    userId:'3',
+                    headImg:require('../image/a.jpg'),
+                    username:'user3',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                },{
+                    userId:'4',
+                    headImg:require('../image/a.jpg'),
+                    username:'user4',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                },{
+                    userId:'5',
+                    headImg:require('../image/a.jpg'),
+                    username:'user5',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                },{
+                    userId:'6',
+                    headImg:require('../image/a.jpg'),
+                    username:'user6',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                },{
+                    userId:'7',
+                    headImg:require('../image/a.jpg'),
+                    username:'user7',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                },{
+                    userId:'8',
+                    headImg:require('../image/a.jpg'),
+                    username:'user8',
+                    profile:'诚信肥宅',
+                    isFollowed:false,
+                    followState:'关注'
+                }],
+                userId:'000',
                 username:'loststars',
-                isFollowed:false,
-                followState:'关注',
+                profile:'万年单身汪',
                 likeSrc:require('../image/comment-unlike.png'),
                 collectSrc:require('../image/uncollect.png'),
                 blogComment:{
@@ -172,18 +251,21 @@
                 },
                 moment:{
                     imgList: [{
+                            url: require('../image/ins1.png')
+                        },
+                        {
+                            url: require('../image/ins2.png')
+                        },
+                        {
+                            url: require('../image/ins3.png')
+                        },
+                        {
                             url: require('../image/a.jpg')
-                        },
-                        {
-                            url: require('../image/gaojin_ciyun.png')
-                        },
-                        {
-                            url: require('../image/gaojin_radar.png')
-                        },
-                        {
-                            url: require('../image/user_img.jpg')
                     }],
+                    userId:'111',
                     username: 'Leonnnop',
+                    isFollowed:false,
+                    followState:'关注',
                     userPage:'',
                     sendTime:'2018-07-15 00:00',
                     text: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
@@ -208,12 +290,13 @@
                     collectNum: 10,
                     forwardNum: 0,
                     commentNum: 3,
-                    likeNum: 5,
+                    likeNum: 8,
                     likeState:false,
                     collectState:false,
                 },
                 comments:[{
-                    profilePhoto:require('../image/a.jpg'),
+                    headImg:require('../image/a.jpg'),
+                    userId:'222',
                     username:'user3',
                     userPage:'',
                     commentTime:'2018-07-18 12:00',
@@ -223,7 +306,8 @@
 
                     }
                 },{
-                    profilePhoto:require('../image/a.jpg'),
+                    headImg:require('../image/a.jpg'),
+                    userId:'333',
                     username:'user2',
                     userPage:'',
                     commentTime:'2018-07-17 15:00',
@@ -233,7 +317,8 @@
 
                     }
                 },{
-                    profilePhoto:require('../image/a.jpg'),
+                    headImg:require('../image/a.jpg'),
+                    userId:'444',
                     username:'user1',
                     userPage:'',
                     commentTime:'2018-07-17 08:00',
@@ -265,15 +350,21 @@
                 }
                 this.moment.collectState=!this.moment.collectState;
             },
-            commentHandler:function(){
-                console.log(this.currentDate);
-            },
             likeHandler:function(){
                 if(!this.moment.likeState){
                     this.likeSrc=require('../image/comment-like.png');
                     this.moment.likeNum++;
+                    //加入喜欢列表
+                    this.likeUsers.push({
+                        headImg:require('../image/a.jpg'),
+                        userId:this.userId,
+                        username:this.username,
+                        profile:this.profile
+                    });
                 }else{
                     this.likeSrc=require('../image/comment-unlike.png');
+                    //从喜欢列表删除
+                    this.likeUsers.pop();
                     this.moment.likeNum--;
                 }
                 this.moment.likeState=!this.moment.likeState;
@@ -281,18 +372,18 @@
             forwardHandler:function(){
 
             },
-            followHandler:function(){
-                if(!this.isFollowed){
-                    this.followState='已关注';
+            followHandler:function(user,isFollowed){
+                if(!isFollowed){
+                    user.followState='已关注';
                 }else{
-                    this.followState='关注';
+                    user.followState='关注';
                 }
-                this.isFollowed=!this.isFollowed;
+                user.isFollowed=!user.isFollowed;
             },
             submitBlogComment:function(){
                 if(this.blogComment.comment){
                     this.comments.unshift({
-                    profilePhoto:require('../image/a.jpg'),
+                    headImg:require('../image/a.jpg'),
                     username:'loststars',
                     userPage:'',
                     commentTime:'2018-07-18 23:00',
@@ -332,7 +423,7 @@
             submitCommentComment:function(comment){
                 if(this.commentComment.comment){
                     this.comments.unshift({
-                    profilePhoto:require('../image/a.jpg'),
+                    headImg:require('../image/a.jpg'),
                     username:'loststars',
                     userPage:'',
                     commentTime:'2018-07-18 20:00',
@@ -344,7 +435,7 @@
                         content:comment.content
                     }
                 });
-                this.commentNum++;
+                this.moment.commentNum++;
                 this.$message('评论成功！');
                 this.commentComment.comment='';
                 this.commentAComment(comment);
@@ -423,9 +514,10 @@
 
     #text {
         height: 350px;
-        width: 106%;
-        overflow-y: scroll;
+        width: 100%;
+        overflow-y: auto;
         overflow-x: hidden;
+        
     }
     .time {
     font-size: 13px;
@@ -444,6 +536,16 @@
   .show-comment-img{
       width:50px;
       height:50px;
-      border-radius:80px;
+      border-radius:50px;
+  }
+  .hover-cursor{
+      cursor: pointer;
+  }
+  .like-user-li{
+      padding:10px 0;
+      border-bottom:1px solid rgb(235,238,245);
+  }
+  .followed{
+      padding: 9px 9px;
   }
 </style>
