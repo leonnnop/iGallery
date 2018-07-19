@@ -12,29 +12,30 @@ import Login from '@/components/Login'
 import photoWall from '@/components/photoWall'
 import ForgetPsw from '@/components/ForgetPsw'
 import MomentDetail from '@/components/MomentDetail'
+import tag from '@/components/tag'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [{
-    path: '/',
+      path: '/',
       name: 'register',
       component: register,
-  },{
-    path: '/login',
+    }, {
+      path: '/login',
       name: 'Login',
       component: Login
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: register
-  },
-  {
-    path: '/forgetpsw',
-    name: 'ForgetPsw',
-    component: ForgetPsw
-  },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: register
+    },
+    {
+      path: '/forgetpsw',
+      name: 'ForgetPsw',
+      component: ForgetPsw
+    },
     {
       path: '/main',
       name: 'mainPage',
@@ -44,31 +45,35 @@ export default new Router({
         path: 'leaderBoard',
         name: 'leaderBoard',
         component: leaderBoard
-      },{
+      }, {
         path: 'blogs',
         name: 'blogs',
-        component: blogs        
-      },{
+        component: blogs
+      }, {
         path: 'users',
         name: 'users',
-        component: users        
-      },{
+        component: users
+      }, {
         path: 'user',
         name: 'user',
-        component: user        
-      },{
+        component: user
+      }, {
         path: 'topic',
         name: 'topic',
-        component: topic        
-      },{
+        component: topic
+      }, {
         path: 'photowall',
         name: 'photowall',
-        component: photoWall   
-      },{
+        component: photoWall
+      }, {
         path: 'momentDetail',
         name: 'MomentDetail',
         component: MomentDetail
-      }]
+      }, {
+        path: 'tag/:id',
+        name: 'tag',
+        component: tag
+      }, ]
 
     },
 
