@@ -28,6 +28,22 @@
 | 2      | 插入数据库时出错 |
 
 ------
+# 登录 #（陈阳）
+请求地址：/api/Users/TestAccount   
+请求方式：Post   
+支持格式：json    
+
+
+> 参数（body中）：Users
+
+> 返回消息：
+| 状态码                         | 说明             |
+| ------                         | ---------------- |
+| Success！                      |   登录成功       |
+| Wrong email or password        | 用户名或密码错误 |
+| User not found!                | 找不到此用户     |
+  
+------
 
 （苏昭帆）
 请求地址：api/Users/SearchEmail
@@ -171,7 +187,7 @@
 
 ------
 
-# 关注用户 #
+# 关注用户 #（陈阳）
 请求地址：/api/Users/Follow
 请求方式：Post   
 支持格式：json    
@@ -189,7 +205,7 @@
 
 
 ------
-# 查看关注列表 #
+# 查看关注列表 #（陈阳）
 请求地址：/api/Users/FollowList
 请求方式：Post   
 支持格式：json    
@@ -200,7 +216,17 @@
 
 > 返回消息：用户列表 （List）
 
-  
+
+# 查找匹配用户 #（陈阳）
+请求地址：/api/Users/search_user
+请求方式：Get  
+
+
+> 参数：string(关键词)
+
+
+> 返回消息：用户列表 （List）
+
 
 =======
 
