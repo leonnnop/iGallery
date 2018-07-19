@@ -16,6 +16,7 @@ namespace ProductsApp.Controllers
 {
     public class UsersController : ApiController
     {
+        DBAccess Access = new DBAccess();
         /// <summary>
         /// 用户注册
         /// </summary>
@@ -39,18 +40,12 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
 
-            //检查邮箱是否已被用于注册
+            
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS t where email='" + user.Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
-            if (rd.HasRows)//邮箱已注册
-            {
-                status = 1;
-            }
-            else//邮箱未注册
-            {
-                //为用户生成一个ID
+            
+               ///为用户生成一个ID
                 int id = 1;
                 cmd.CommandText = "select count(*) from users";
                 rd = cmd.ExecuteReader();
@@ -64,8 +59,72 @@ namespace ProductsApp.Controllers
                 int result = cmd.ExecuteNonQuery();
                 if (result != 1)//插入出现错误
                 {
-                    status = 2;
+                    status = 1;
                 }
+               
+            
+
+            //关闭数据库连接
+            conn.Close();
+
+            //返回信息
+            return Ok(status);
+        }
+
+        /// <summary>
+        /// 注册邮箱验证
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        /// 
+        [HttpGet]
+        public IHttpActionResult VerifyRegister(string Email)
+        {
+            //创建返回信息，先假设邮箱被注册过
+            string status = "1";
+
+            //连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            //检查邮箱是否已被用于注册
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select * from USERS t where email='" + user.Email + "'";
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            if (rd.HasRows)//邮箱已注册
+            {
+                status = "1";
+            }
+            else//邮箱未注册
+            {
+                MailMessage message = new MailMessage();    //创建一个邮件信息的对象
+                message.From = new MailAddress("1871373978@qq.com");
+                message.To.Add(Email);
+                message.Subject = "欢迎注册iGallery";
+                string yzm = null;
+                Random rde = new Random();
+                yzm += rde.Next(100000, 999999);
+                message.Body = "您的验证码为 " + yzm;
+                message.IsBodyHtml = false;              //是否为html格式
+                message.Priority = MailPriority.High;    //发送邮件的优先等级
+                SmtpClient sc = new SmtpClient();        //简单邮件传输协议
+                sc.Host = "smtp.qq.com";                 //指定发送邮件端口
+                sc.Port = 25;
+                sc.UseDefaultCredentials = true;
+                sc.EnableSsl = false;
+                sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
+                sc.Send(message);   //发送邮件
+                response.StatusCode = HttpStatusCode.OK;
+                status = yzm;
             }
 
             //关闭数据库连接
@@ -74,6 +133,11 @@ namespace ProductsApp.Controllers
             //返回信息
             return Ok(status);
         }
+
+
+
+
+
 
         /// <summary>
         /// 用户登录
@@ -131,42 +195,8 @@ namespace ProductsApp.Controllers
 
         //邮箱验证
         [HttpGet]
-        public HttpResponseMessage SendMail(String Email)
+        public HttpResponseMessage VerifyMail(String Email)
         {
-            MailMessage message = new MailMessage();    //创建一个邮件信息的对象
-            message.From = new MailAddress("1871373978@qq.com");
-            message.To.Add(Email);
-            message.Subject = "欢迎注册iGallery";
-            Random r = new Random();
-            string yzm = null;
-            Random rd = new Random();
-            yzm += rd.Next(100000, 999999);
-            message.Body = "您的验证码为 " + yzm;
-            message.IsBodyHtml = false;              //是否为html格式
-            message.Priority = MailPriority.High;    //发送邮件的优先等级
-            SmtpClient sc = new SmtpClient();        //简单邮件传输协议
-            sc.Host = "smtp.qq.com";                 //指定发送邮件端口
-            sc.Port = 25;
-            sc.UseDefaultCredentials = true;
-            sc.EnableSsl = false;
-            sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
-            sc.Send(message);   //发送邮件
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
-            string result = Newtonsoft.Json.JsonConvert.SerializeObject(yzm);
-            response.Content = new StringContent(result);
-            return response;
-        }
-
-
-        /// <summary>
-        /// 查找用户邮箱是否存在
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public HttpResponseMessage SearchEmail(string email)
-        {
-            //返回信息
             string mess = "false";
             HttpResponseMessage response = Request.CreateResponse();
 
@@ -183,13 +213,30 @@ namespace ProductsApp.Controllers
             }
             //SQL操作
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where EMAIL='" + email + "'";
+            cmd.CommandText = "select * from USERS where EMAIL='" + Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read()) //存在
             {
+                MailMessage message = new MailMessage();    //创建一个邮件信息的对象
+                message.From = new MailAddress("1871373978@qq.com");
+                message.To.Add(Email);
+                message.Subject = "iGallery重置密码";
+                string yzm = null;
+                Random rde = new Random();
+                yzm += rde.Next(100000, 999999);
+                message.Body = "您的验证码为 " + yzm;
+                message.IsBodyHtml = false;              //是否为html格式
+                message.Priority = MailPriority.High;    //发送邮件的优先等级
+                SmtpClient sc = new SmtpClient();        //简单邮件传输协议
+                sc.Host = "smtp.qq.com";                 //指定发送邮件端口
+                sc.Port = 25;
+                sc.UseDefaultCredentials = true;
+                sc.EnableSsl = false;
+                sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
+                sc.Send(message);   //发送邮件
                 response.StatusCode = HttpStatusCode.OK;
-                mess = "true";
+                mess = yzm;
             }
             else
             {
@@ -199,6 +246,38 @@ namespace ProductsApp.Controllers
             conn.Close();
             response.Content = new StringContent(mess);
             return response;
+           
+        }
+
+
+        /// <summary>
+        /// 查找用户邮箱是否存在
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+         [HttpGet]
+        public HttpResponseMessage SearchEmail(string email)
+        { 
+            //返回信息
+            string mess = "false";
+            HttpResponseMessage response = Request.CreateResponse();
+            string select = Access.Select("*", "USERS", "EMAIL='" + email + "'");
+            OracleDataReader rd = Access.GetDataReader(select);
+            {
+                if(rd.Read()) //存在
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                    mess = "true";
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    mess = "false";
+                }
+                
+                response.Content = new StringContent(mess, Encoding.Unicode);
+                return response;
+            }
         }
         /// <summary>
         /// 修改用户密码
@@ -206,28 +285,14 @@ namespace ProductsApp.Controllers
         /// <param name="email"></param>
         /// <param name="NewPassword"></param>
         /// <returns></returns>
-        [HttpPut]
-        public HttpResponseMessage ChangePassword(string email, string NewPassword)
+       [HttpPut]
+        public HttpResponseMessage ChangePassword(string email,string NewPassword)
         {
             string mess = "true";
             HttpResponseMessage response = Request.CreateResponse();
 
-            //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            //SQL操作
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "update USERS set PASSWORD ='" + NewPassword + "' where EMAIL='" + email + "'";
-            cmd.Connection = conn;
-            if (cmd.ExecuteNonQuery() != 0)
+            string update = Access.Update("USERS", "PASSWORD = '" + NewPassword + "'", "EMAIL='" + email + "'");
+            if(Access.ExecuteSql(update))
             {
                 response.StatusCode = HttpStatusCode.OK;
                 mess = "true";
@@ -237,11 +302,10 @@ namespace ProductsApp.Controllers
                 response.StatusCode = HttpStatusCode.Forbidden;
                 mess = "false";
             }
-            conn.Close();
+          
             response.Content = new StringContent(mess, Encoding.Unicode);
             return response;
         }
-
 
 
         /// <summary>
@@ -287,7 +351,7 @@ namespace ProductsApp.Controllers
             else//查无此人，返回错误状态码404
             {
                 result = "NotFound";
-                response.StatusCode = HttpStatusCode.NotFound;
+                response.StatusCode = HttpStatusCode.OK;
             }
             response.Content = new StringContent(result, Encoding.Unicode);
             rd.Close();
@@ -302,8 +366,10 @@ namespace ProductsApp.Controllers
         /// <param name="user">Users</param>
         /// <returns></returns>
         [HttpPut]
-        public HttpResponseMessage ModifyUserInfo([FromBody]Users user)
+        public IHttpActionResult ModifyUserInfo([FromBody]Users user)
         {
+            string status;
+
             //将更新信息存入新建object
             Users newUser = new Users();
             newUser.Email = user.Email;
@@ -312,7 +378,7 @@ namespace ProductsApp.Controllers
             newUser.Bio = user.Bio;
             newUser.Photo = user.Password;
 
-            HttpResponseMessage response = Request.CreateResponse();
+            //HttpResponseMessage response = Request.CreateResponse();
 
             //todo:连接数据库
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
@@ -334,15 +400,16 @@ namespace ProductsApp.Controllers
             int executeResult = cmd.ExecuteNonQuery();
             if (executeResult == 1)//修改成功，返回成功状态码202
             {
-                response.StatusCode = HttpStatusCode.NoContent;
+                status = 0;
             }
             else//修改失败，返回失败状态码404
             {
-                response.StatusCode = HttpStatusCode.NotFound;
+                status = 1;
             }
 
             conn.Close();
-            return response;
+            
+            return Ok(status);
         }
 
         /// <summary>

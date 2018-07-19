@@ -14,10 +14,10 @@ namespace ProductsApp.Models
         public int ForwardNum { get; set; }
         public int CollectNum { get; set; }
         public int CommentNum { get; set; }
-        public DateTime Time { get; set; }
+        public string Time { get; set; }
 
         public Moment() { }
-        public Moment(string id, string sender_id, string content, int likes, int forwards, int collects, int comments, DateTime time)
+        public Moment(string id, string sender_id, string content, int likes, int forwards, int collects, int comments, string time)
         {
             ID = id;
             SenderID = sender_id;
