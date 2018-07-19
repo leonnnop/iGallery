@@ -16,6 +16,7 @@ namespace ProductsApp.Controllers
 {
     public class UsersController : ApiController
     {
+       
         /// <summary>
         /// 用户注册
         /// </summary>
@@ -39,18 +40,12 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
 
-            //检查邮箱是否已被用于注册
+            
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS t where email='" + user.Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
-            if (rd.HasRows)//邮箱已注册
-            {
-                status = 1;
-            }
-            else//邮箱未注册
-            {
-                //为用户生成一个ID
+            
+               ///为用户生成一个ID
                 int id = 1;
                 cmd.CommandText = "select count(*) from users";
                 rd = cmd.ExecuteReader();
@@ -64,8 +59,72 @@ namespace ProductsApp.Controllers
                 int result = cmd.ExecuteNonQuery();
                 if (result != 1)//插入出现错误
                 {
-                    status = 2;
+                    status = 1;
                 }
+               
+            
+
+            //关闭数据库连接
+            conn.Close();
+
+            //返回信息
+            return Ok(status);
+        }
+
+        /// <summary>
+        /// 注册邮箱验证
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        /// 
+        [HttpGet]
+        public IHttpActionResult VerifyRegister(string Email)
+        {
+            //创建返回信息，先假设邮箱被注册过
+            string status = "1";
+
+            //连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            //检查邮箱是否已被用于注册
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select * from USERS t where email='" + user.Email + "'";
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            if (rd.HasRows)//邮箱已注册
+            {
+                status = "1";
+            }
+            else//邮箱未注册
+            {
+                MailMessage message = new MailMessage();    //创建一个邮件信息的对象
+                message.From = new MailAddress("1871373978@qq.com");
+                message.To.Add(Email);
+                message.Subject = "欢迎注册iGallery";
+                string yzm = null;
+                Random rde = new Random();
+                yzm += rde.Next(100000, 999999);
+                message.Body = "您的验证码为 " + yzm;
+                message.IsBodyHtml = false;              //是否为html格式
+                message.Priority = MailPriority.High;    //发送邮件的优先等级
+                SmtpClient sc = new SmtpClient();        //简单邮件传输协议
+                sc.Host = "smtp.qq.com";                 //指定发送邮件端口
+                sc.Port = 25;
+                sc.UseDefaultCredentials = true;
+                sc.EnableSsl = false;
+                sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
+                sc.Send(message);   //发送邮件
+                response.StatusCode = HttpStatusCode.OK;
+                status = yzm;
             }
 
             //关闭数据库连接
@@ -74,6 +133,11 @@ namespace ProductsApp.Controllers
             //返回信息
             return Ok(status);
         }
+
+
+
+
+
 
         /// <summary>
         /// 用户登录
@@ -149,7 +213,7 @@ namespace ProductsApp.Controllers
             }
             //SQL操作
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where EMAIL='" + email + "'";
+            cmd.CommandText = "select * from USERS where EMAIL='" + Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read()) //存在
@@ -157,11 +221,10 @@ namespace ProductsApp.Controllers
                 MailMessage message = new MailMessage();    //创建一个邮件信息的对象
                 message.From = new MailAddress("1871373978@qq.com");
                 message.To.Add(Email);
-                message.Subject = "欢迎注册iGallery";
-                Random r = new Random();
+                message.Subject = "iGallery重置密码";
                 string yzm = null;
-                Random rd = new Random();
-                yzm += rd.Next(100000, 999999);
+                Random rde = new Random();
+                yzm += rde.Next(100000, 999999);
                 message.Body = "您的验证码为 " + yzm;
                 message.IsBodyHtml = false;              //是否为html格式
                 message.Priority = MailPriority.High;    //发送邮件的优先等级
