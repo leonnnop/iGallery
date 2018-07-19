@@ -379,7 +379,7 @@ namespace ProductsApp.Controllers
             else//查无此人，返回错误状态码404
             {
                 result = "NotFound";
-                response.StatusCode = HttpStatusCode.NotFound;
+                response.StatusCode = HttpStatusCode.OK;
             }
             response.Content = new StringContent(result, Encoding.Unicode);
             rd.Close();
@@ -394,8 +394,10 @@ namespace ProductsApp.Controllers
         /// <param name="user">Users</param>
         /// <returns></returns>
         [HttpPut]
-        public HttpResponseMessage ModifyUserInfo([FromBody]Users user)
+        public IHttpActionResult ModifyUserInfo([FromBody]Users user)
         {
+            string status;
+
             //将更新信息存入新建object
             Users newUser = new Users();
             newUser.Email = user.Email;
@@ -404,7 +406,7 @@ namespace ProductsApp.Controllers
             newUser.Bio = user.Bio;
             newUser.Photo = user.Password;
 
-            HttpResponseMessage response = Request.CreateResponse();
+            //HttpResponseMessage response = Request.CreateResponse();
 
             //todo:连接数据库
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
@@ -426,15 +428,16 @@ namespace ProductsApp.Controllers
             int executeResult = cmd.ExecuteNonQuery();
             if (executeResult == 1)//修改成功，返回成功状态码202
             {
-                response.StatusCode = HttpStatusCode.NoContent;
+                status = 0;
             }
             else//修改失败，返回失败状态码404
             {
-                response.StatusCode = HttpStatusCode.NotFound;
+                status = 1;
             }
 
             conn.Close();
-            return response;
+            
+            return Ok(status);
         }
 
         /// <summary>
