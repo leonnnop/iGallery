@@ -68,5 +68,43 @@ namespace ProductsApp.Controllers
             response.Content = new StringContent(result);
             return response;
         }
+
+        /// <summary>
+        /// 转发动态
+        /// </summary>
+        /// <param name="forward"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult ForwardMoment([FromBody] Forward forward)
+        {
+            //创建返回信息，先假设插入成功
+            int status = 0;
+
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "insert into FORWARD(USER_ID,MOMENT_ID) " +
+                    "values('" + forward.User_Id + "','" + forward.Moment_Id + "')";
+            int result = cmd.ExecuteNonQuery();
+            if (result != 1)//插入出现错误
+            {
+                status = 1;
+            }
+
+            //关闭数据库连接
+            conn.Close();
+
+            //返回信息
+            return Ok(status);
+        }
     }
 }
