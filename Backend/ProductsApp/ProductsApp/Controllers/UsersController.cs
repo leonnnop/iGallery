@@ -16,7 +16,7 @@ namespace ProductsApp.Controllers
 {
     public class UsersController : ApiController
     {
-       
+        DBAccess Access = new DBAccess();
         /// <summary>
         /// 用户注册
         /// </summary>
@@ -255,42 +255,29 @@ namespace ProductsApp.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [HttpGet]
+         [HttpGet]
         public HttpResponseMessage SearchEmail(string email)
-        {
+        { 
             //返回信息
             string mess = "false";
             HttpResponseMessage response = Request.CreateResponse();
-
-            //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
+            string select = Access.Select("*", "USERS", "EMAIL='" + email + "'");
+            OracleDataReader rd = Access.GetDataReader(select);
             {
-                conn.Open();
+                if(rd.Read()) //存在
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                    mess = "true";
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    mess = "false";
+                }
+                
+                response.Content = new StringContent(mess, Encoding.Unicode);
+                return response;
             }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            //SQL操作
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where EMAIL='" + email + "'";
-            cmd.Connection = conn;
-            OracleDataReader rd = cmd.ExecuteReader();
-            if (rd.Read()) //存在
-            {
-                response.StatusCode = HttpStatusCode.OK;
-                mess = "true";
-            }
-            else
-            {
-                response.StatusCode = HttpStatusCode.NotFound;
-                mess = "false";
-            }
-            conn.Close();
-            response.Content = new StringContent(mess);
-            return response;
         }
         /// <summary>
         /// 修改用户密码
@@ -298,28 +285,14 @@ namespace ProductsApp.Controllers
         /// <param name="email"></param>
         /// <param name="NewPassword"></param>
         /// <returns></returns>
-        [HttpPut]
-        public HttpResponseMessage ChangePassword(string email, string NewPassword)
+       [HttpPut]
+        public HttpResponseMessage ChangePassword(string email,string NewPassword)
         {
             string mess = "true";
             HttpResponseMessage response = Request.CreateResponse();
 
-            //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            //SQL操作
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "update USERS set PASSWORD ='" + NewPassword + "' where EMAIL='" + email + "'";
-            cmd.Connection = conn;
-            if (cmd.ExecuteNonQuery() != 0)
+            string update = Access.Update("USERS", "PASSWORD = '" + NewPassword + "'", "EMAIL='" + email + "'");
+            if(Access.ExecuteSql(update))
             {
                 response.StatusCode = HttpStatusCode.OK;
                 mess = "true";
@@ -329,11 +302,10 @@ namespace ProductsApp.Controllers
                 response.StatusCode = HttpStatusCode.Forbidden;
                 mess = "false";
             }
-            conn.Close();
+          
             response.Content = new StringContent(mess, Encoding.Unicode);
             return response;
         }
-
 
 
         /// <summary>
