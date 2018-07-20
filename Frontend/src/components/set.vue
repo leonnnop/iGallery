@@ -2,12 +2,12 @@
   <el-tabs type="border-card" class="tabs">
     <el-tab-pane label="修改个人信息">
         <el-row style="margin-left:15%;margin-top:5%">
-          <el-form ref="form" :model="form" :rules="rules" :label-position="right" label-width="80px" >
-            <el-form-item label="昵称">
-                <el-input v-model="form.name" style="width:50%"></el-input>
+          <el-form ref="form" :model="form" :rules="rules" :label-position="right" label-width="90px" >
+            <el-form-item label="昵称：">
+                <el-input v-model="form.name" style="width:50%">{{name}}</el-input>
             </el-form-item>
-            <el-form-item label="个人简介">
-                <el-input type="textarea" v-model="form.desc" style="width:50%"></el-input>                
+            <el-form-item label="个人简介：">
+                <el-input type="textarea" v-model="form.desc" style="width:50%">{{desc}}</el-input>                
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">确认修改</el-button>
@@ -17,10 +17,10 @@
         </el-row>
     </el-tab-pane>
     <el-tab-pane label="重置密码">
-      <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules"  label-width="80px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules"  label-width="90px" class="demo-ruleForm">
         <div v-if="showButton" style="margin-left:15%;margin-top:5%">
-        <el-form-item label="原密码" prop="opass">
-          <el-input type="password" v-model="ruleForm.opass" auto-complete="off" style="width:40%" clearable></el-input>
+        <el-form-item label="原密码：" prop="opass">
+          <el-input type="password" v-model="ruleForm.opass" auto-complete="off" style="width:50%" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="passHandler('ruleForm')">确认</el-button>
@@ -28,10 +28,10 @@
         </el-form-item>
         </div>
         <div v-if="passCorrect" style="margin-left:15%;margin-top:5%">
-        <el-form-item label="密码" prop="pass">
+        <el-form-item label="密码：" prop="pass">
           <el-input type="password" v-model="ruleForm.pass" auto-complete="off" style="width:50%" clearable></el-input>
         </el-form-item>
-        <el-form-item label="确认密码" prop="checkPass">
+        <el-form-item label="确认密码：" prop="checkPass">
           <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" style="width:50%" clearable></el-input>
         </el-form-item>
         <el-form-item>
@@ -85,8 +85,8 @@
       };
       return {
         form: {    
-          name: '',
-          desc: ''
+          name: '呵',
+          desc: '呵呵'
         },
         ruleForm: {
           opass:'',
@@ -238,6 +238,16 @@
           this.onCancel();
         }).catch();
       }
+    },
+    created() {
+            this.$axios.get('/')
+            .then((response) => {
+                this.name=response.data.name;
+                this.desc=response.data.desc;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
   }
 </script>

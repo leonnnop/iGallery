@@ -13,7 +13,7 @@
             <el-button type="text" class="num" @click="showFans">粉丝:{{fansNum}}</el-button>
           </el-row>
           <el-row>
-            <p id="desc">个人简介：{{desc}}</p>
+            <p style="font-size:13px;color:#6c6b6e">个人简介：{{desc}}</p>
           </el-row>
         </el-col>
     </el-row>
@@ -64,8 +64,8 @@
       padding-top: 30px;
   }
   .num{
-      color:rgb(8, 8, 8);
-      font-size:15px;
+      color:#161515;
+      font-size:14px;
       padding-right:10px;
   }
 </style>

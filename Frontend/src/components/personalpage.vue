@@ -55,11 +55,8 @@
               </el-col>
               <el-dialog title="新建收藏夹" :visible.sync="dialogFormVisible">
                   <el-form ref="form" :model="ruleform" :rules="rules">
-                    <el-form-item label="名称：" :label-width="formLabelWidth" prop="name">
-                      <el-input v-model="ruleform.name" auto-complete="off" style="width:200px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="简介：" :label-width="formLabelWidth" prop="desc">
-                      <el-input v-model="ruleform.desc" auto-complete="off" style="width:450px"></el-input>
+                    <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname">
+                      <el-input v-model="ruleform.fname" auto-complete="off" style="width:200px"></el-input>
                     </el-form-item>
                   </el-form>
                   <div slot="footer" class="dialog-footer">
@@ -69,19 +66,19 @@
               </el-dialog>
             </el-row>
             <el-row>
-              <el-col v-for="favor in favors" :key=favor.name :span="6">
+              <el-col v-for="favor in favors.favorsList" :key=favor.name :span="6">
                 <el-col class="favor">
                 <div style="header">
                   <el-card shadow="always" :body-style="{ padding: '0px' }">
                     <img :src="favor.url" class="img" alt="收藏夹封面" @click="toCollect"/>
                     <el-row>
                       <el-col :span="16" :offset="1">
-                        <el-tooltip effect="dark" :content="favor.brief" placement="bottom-end">
+                        <el-tooltip effect="dark" :content="favor.favorName" placement="bottom-end">
                           <el-button type="text" @click="toCollect">{{favor.favorName}}</el-button>
                         </el-tooltip>
                       </el-col>
                       <el-col :span="6">
-                        <el-button @click="deleteFavor"  type="primary" style="font-size:12px;margin-top:6px" size="mini">删除</el-button>
+                        <el-button @click="deleteFavor" type="primary" style="font-size:12px;margin-top:6px" size="mini">删除</el-button>
                       </el-col>
                     </el-row>
                   </el-card>
@@ -112,7 +109,6 @@
   .el-tabs__item{
     font-size:15px;
     margin:10px;
-    padding:0px;
   }
   .moments{
     display:block;
@@ -183,37 +179,35 @@
             momentID:'4',
             url: require('../image/a.jpg')
           }],
-        favors:[{
+        favors:{
+          favorsList:[{
             index:0,
             favorID:'0',
             url: require('../image/a.jpg'),
-            favorName:'默认收藏夹',
-            brief:'默认收藏夹的简介'
+            favorName:'默认收藏夹'
           },{
             index:1,
             favorID:'1',
             url: require('../image/gaojin_ciyun.png'),
-            favorName:'MyCollect',
-            brief:'默认收藏夹的简介'
+            favorName:'MyCollect'
           },{
             index:2,
             favorID:'2',
             url: require('../image/gaojin_radar.png'),
-            favorName:'Something',
-            brief:'默认收藏夹的简介'
+            favorName:'Something'
           },{
             index:3,
             favorID:'3',
             url: require('../image/a.jpg'),
-            favorName:'Anything',
-            brief:'默认收藏夹的简介'
+            favorName:'Anything'
           },{
             index:4,
             favorID:'4',
             url: require('../image/a.jpg'),
-            favorName:'Nothing',
-            brief:'默认收藏夹的简介'
+            favorName:'Nothing'
           }],
+          favorNum:''
+        },
         collects:[{
             index:0,
             momentID:'',
@@ -235,23 +229,14 @@
             url: require('../image/a.jpg')
           }],
         ruleform: {
-          name: '',
-          desc: ''
+          fname: ''
         },
         rules:{
-          name:[
+          fname:[
             {
               min: 1,
               max: 10,
               message: '密码长度为1~10',
-              trigger: 'blur'
-            }
-          ],
-          desc:[
-            { 
-              min: 0,
-              max: 20,
-              message: '简介长度为0~20',
               trigger: 'blur'
             }
           ]
@@ -303,16 +288,16 @@
       toFavor: function() {
         this.dialogFormVisible=false;
       },
+      deleteFavor:function(key){ 
+        this.favors.pop();
+      },
       finishHandler: function (formName) {
           this.$refs[formName].validate((valid) => {
           if (valid) {
-              let fmessage={
-                fname:this.fname,
-                fdesc:this.fdesc,
-              }
-              this.$axios.post('/users',qs.stringify({fmessage}))
+              this.$axios.post('/users',qs.stringify({fname:this.fname}))
               .then((response) => {
                   this.favors=response.data.favors;
+                  this.favors.favorNum++;
                   let result = response.data.result;
                   this.resultHandler(result);
               })
