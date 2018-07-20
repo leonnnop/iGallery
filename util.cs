@@ -49,8 +49,7 @@ namespace Utility
                 MemoryStream ms = new MemoryStream();
 
 
-                //分割后缀和文件名
-                string fileName = Path.GetFileName(filePath);
+                //分割后缀
                 string fileExt = Path.GetExtension(filePath);
 
                 //判断后缀
@@ -112,7 +111,7 @@ namespace Utility
                           int pid = int.Parse(rd[0].ToString()) + 1;
                           //文件路径不重名
                           filepath = @"\\Mac\Home\Desktop\mmps\" + (Convert.ToString(pid)); 
-                          cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + pid + "','" + filepath + "','" + id + "')";
+                          cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + (Convert.ToString(pid)) + "','" + filepath + "','" + id + "')";
                           cmd.ExecuteNonQuery();
                       }
                       else if (type == 2)
