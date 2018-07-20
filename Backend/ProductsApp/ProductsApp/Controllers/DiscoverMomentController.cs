@@ -14,75 +14,7 @@ namespace ProductsApp.Controllers
 {
     public class DiscoverMomentController : ApiController
     {
-
-        /// <summary>
-        /// 检查用户是否点赞一条动态
-        /// </summary>
-        /// <param name="email">string</param>
-        /// <param name="moment_id">string</param>
-        /// <returns></returns>
-        /// 返回int值：“-1”表示没有该用户，“0”表示用户已点赞过，“1”表示未点赞过
-        private int CheckLikeState(string email, string moment_id )
-        {
-            //bool result = false;
-            string ID = null;
-
-            //todo:连接数据库
-            DBAccess dBAccess = new DBAccess();
-
-            //执行数据库操作,获取该用户ID
-            OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where email='" + email + "'");
-            if (rd.Read())
-            {
-                ID = rd["ID"].ToString();
-            }
-            else
-            {
-                return -1;
-            }
-
-            rd = dBAccess.GetDataReader("select * from FAVORITE where moment_id='" + moment_id + "'");
-
-            //List<string> userList = new List<string>();
-            while (rd.Read())
-            {
-                //string user_id = rd["USER_ID"].ToString();
-                //userList.Add(user_id);
-                if (rd["USER_ID"].ToString() == ID)
-                    return 0;
-            }
-
-            return 1;
-        }
-
-
-        /// <summary>
-        /// 通过邮箱获取用户ID
-        /// </summary>
-        /// <param name="email">string</param>
-        /// <returns></returns>
         
-        private string GetUserID(string email)
-        {
-            string ID = null;
-
-            //todo:连接数据库
-            DBAccess dBAccess = new DBAccess();
-
-            //执行数据库操作,获取该用户ID
-            OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where email='" + email + "'");
-            if (rd.Read())
-            {
-                ID = rd["ID"].ToString();
-            }
-            else
-            {
-                return null;
-            }
-            return ID;
-        }
-
-
 
         /// <summary>
         /// “发现”界面点赞更新
@@ -99,8 +31,11 @@ namespace ProductsApp.Controllers
             //todo:连接数据库
             DBAccess dBAccess = new DBAccess();
 
+            //创建api对象
+            UserMomentAPI api = new UserMomentAPI();
+
             //记录该用户是否点赞该动态
-            likeState = CheckLikeState(email, moment_id);
+            likeState = api.CheckLikeState(email, moment_id);
 
             //执行数据库操作
             OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + moment_id + "'");
@@ -124,9 +59,9 @@ namespace ProductsApp.Controllers
 
                 //获取用户id
                 string user_id;
-                if (GetUserID(email) != null)
+                if (api.GetUserID(email) != null)
                 {
-                    user_id = GetUserID(email);
+                    user_id = api.GetUserID(email);
                 }
                 else//用户不存在
                 {
@@ -194,7 +129,10 @@ namespace ProductsApp.Controllers
 
             //创建User_Moment对象List，并向其中添加读出的数据库信息
             List<User_Moment> resultList = new List<User_Moment>();
-            
+
+            //创建api对象
+            UserMomentAPI api = new UserMomentAPI();
+
             while (rd.Read())//当数据库能读出一条符合条件的元组，执行循环
             {
                 User_Moment um = new User_Moment();
@@ -210,7 +148,7 @@ namespace ProductsApp.Controllers
                 um.CommentNum = int.Parse(rd["COMMENT_NUM"].ToString());
                 um.Time =  rd["TIME"].ToString();
                 //获取该用户的点赞状态
-                int likeState = CheckLikeState(email, um.MomentID);
+                int likeState = api.CheckLikeState(email, um.MomentID);
                 if (likeState == 1)//未点赞过
                 {
                     um.LikeState = "false";

@@ -22,9 +22,17 @@ namespace ProductsApp.Controllers
         /// <param name="PageSize"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        [HttpGet]
-        public Tuple<List<Moment>,int> Followers(int Page, int PageSize, string TagContent)
+       [HttpGet]
+        public Tuple<List<Moment>,int,bool> Followers(int Page, int PageSize, string TagContent , string UserId)
         {
+            bool FollowState = false;
+            if (Access.GetRecordCount(Access.Select("*", "FOLLOW_TAG", "USER_ID='" + UserId + "' and TAG='" + TagContent + "'")) == 0)
+            {
+                FollowState = false;  //用户未关注
+            }
+            else
+                FollowState = true;   //用户已关注
+
             //动态ID的数据集
             DataSet MIDSet = new DataSet();
             //动态的数据集
@@ -52,14 +60,14 @@ namespace ProductsApp.Controllers
             }
             select = Access.Select("*", "FOLLOW_TAG", "TAG = '" + TagContent + "'");
             int Flowers = Access.GetRecordCount(select);
-            
-            Tuple<List<Moment>, int> result = new Tuple<List<Moment>, int>(null, 0);
+
+            Tuple<List<Moment>, int, bool> result = new Tuple<List<Moment>, int, bool>(null, 0, false);
             if (moments.Count != 0)
             {
-                result = new Tuple<List<Moment>, int>(moments, Flowers);
+                result = new Tuple<List<Moment>, int, bool>(moments, Flowers, FollowState);
             }
             else if (moments.Count == 0)
-                result = new Tuple<List<Moment>, int>(null, 0);
+                result = new Tuple<List<Moment>, int, bool>(null, 0, FollowState);
 
             return result;
         }

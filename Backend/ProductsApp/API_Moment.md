@@ -60,3 +60,68 @@
 
 ------
 
+
+【韩乐桐】
+# 删除动态 #
+请求地址：/api/ModifyMoment/DeleteMoment   
+ 
+请求方式：Put  
+  
+支持格式：json  
+    
+
+> 参数：   
+
+| 类型 | 参数名 |  
+| --- | --- |   
+| string | email |   
+| string | moment_id |  
+
+{ email:"", moment_id:""}   
+
+
+> 返回类型：int 
+
+| 状态码 | 说明 |    
+| -- | -- |  
+| 0 | 成功删除 |  
+| 1 | 不存在该用户 |  
+| 2 | 该用户没有发表过该动态 |  
+| 3 | 动态删除失败 |   
+
+
+-------------                        
+
+
+【韩乐桐】
+# 修改动态 #
+请求地址：/api/ModifyMoment/ModifyMoment  
+ 
+请求方式：Put  
+  
+支持格式：json  
+    
+
+> 参数（FromBody）： Modify_Moment对象  
+
+| 类型 | 参数名 |  
+| --- | --- |   
+| string | email |   
+| string | moment_id |  
+| string | content |  
+
+{ email:"", moment_id:"", content:"" }   
+
+
+> 返回类型：int 
+
+| 状态码 | 说明 |    
+| -- | -- |  
+| 0 | 修改成功 |  
+| 1 | 不存在该用户 |  
+| 2 | 该用户没有发表过该动态 |  
+| 3 | 动态修改失败 |   
+
+
+-------------                        
+
