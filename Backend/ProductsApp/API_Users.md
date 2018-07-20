@@ -232,9 +232,14 @@
 
 
 > 返回消息：
-|状态码   |说明      |
-|List     |用户列表  |
-|Not found|无关注用户|
+|状态码    |说明      |
+| string   | ID       |
+| string   | Email    |
+| string   | Password |
+| string   | Username |
+| string   | Bio      |
+| string   | Photo    |
+|Not found |无关注用户|
 
 
 

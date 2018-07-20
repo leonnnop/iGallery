@@ -44,8 +44,8 @@ namespace ProductsApp.Controllers
                 Users temp = new Users();
                 temp.ID = rd["ID"].ToString();
                 temp.Email = rd["EMAIL"].ToString();
-                temp.Username = rd["USERNAME"].ToString();
                 temp.Password = rd["PASSWORD"].ToString();
+                temp.Username = rd["USERNAME"].ToString();
                 temp.Bio = rd["BIO"].ToString();
                 temp.Photo = rd["PHOTO"].ToString();
                 User_list.Add(temp);
@@ -114,8 +114,8 @@ namespace ProductsApp.Controllers
                     {
                         Users temp = new Users();
                         temp.ID = rd3["ID"].ToString();
-                        temp.Password = rd3["PASSWORD"].ToString();
                         temp.Email = rd3["EMAIL"].ToString();
+                        temp.Password = rd3["PASSWORD"].ToString();
                         temp.Username = rd3["USERNAME"].ToString();
                         temp.Bio = rd3["BIO"].ToString();
                         temp.Photo = rd3["PHOTO"].ToString();

@@ -7,8 +7,13 @@
 参数类型：string keyword
 
 返回结果：
-|状态码   |说明       |
-|List     |用户列表   |
+|状态码  |说明        |
+| string | ID         |
+| string | Email      |
+| string | Password   |
+| string | Username   |
+| string | Bio        |
+| string | Photo      |
 |Not found|未找到用户 |
 
 
@@ -22,8 +27,26 @@
 参数类型：string keyword
 
 返回结果：
-|状态码         |说明               |
-|List<Tag>      |标签列表           |
-|List<Users>    |用户列表           |
-|List<Moment>   |动态列表           |
-|null           |未找到任何相关内容 |
+|状态码  |    说明    |
+
+（标签列表）
+| string | Content    |
+（用户列表）
+| string | ID         |
+| string | Email      |
+| string | Password   |
+| string | Username   |
+| string | Bio        |
+| string | Photo      |
+
+（动态列表）
+| string | ID          |
+| string | Sender_Id   |
+| string | Content     |
+| int    | Like_num    |
+| int    | Forward_num |
+| int    | Collect_num |
+| int    | Comment_num |
+|string  | time        |
+
+|null    |未找到任何相关内容 |
