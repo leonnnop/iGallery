@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Oracle.ManagedDataAccess.Client;
 
-namespace IGallery
+namespace ProductsApp
 {
     public class UserMomentAPI
     {
