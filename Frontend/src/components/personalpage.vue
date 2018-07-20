@@ -1,9 +1,9 @@
 <template>
   <el-card id="cards" style="width:70%" :body-style="{padding:'0px'}"> 
-    <el-row style="background-color:#e4e7ed;padding-bottom:10px">
+    <el-row style="background-color:#dcdfe6;padding-bottom:10px">
       <el-row>
          <el-col :span="1" :offset="22">
-           <el-button style="background-color:#dcdfe6" @click="handleSettingClick">设置<i class="el-icon-setting el-icon--right"></i></el-button>
+           <el-button style="background-color:#c1c4c9" @click="handleSettingClick">设置<i class="el-icon-setting el-icon--right"></i></el-button>
          </el-col>
       </el-row> 
       <el-row>
@@ -14,7 +14,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img :src="headUrl" style="width:178px;height:178px;border-radius:83px;;cursor:pointer" alt="头像">
+            <img :src="headUrl" style="width:178px;height:178px;border-radius:83px;cursor:pointer" alt="头像">
           </el-upload>
         </el-col>
         <el-col :span="17" style="padding-top:20px">
@@ -26,7 +26,7 @@
             <el-button type="text" class="num" @click="showFans">粉丝:{{fansNum}}</el-button>
           </el-row>
           <el-row>
-            <p id="desc">个人简介{{desc}}</p>
+            <p style="font-size:13px;color:#6c6b6e">个人简介：{{desc}}</p>
           </el-row>
         </el-col>
       </el-row>
@@ -74,11 +74,16 @@
                 <div style="header">
                   <el-card shadow="always" :body-style="{ padding: '0px' }">
                     <img :src="favor.url" class="img" alt="收藏夹封面" @click="toCollect"/>
-                    <div class="bottom">
-                      <el-tooltip effect="dark" :content="favor.brief" placement="bottom-end">
-                        <el-button type="text" @click="toCollect">{{favor.favorName}}</el-button>
-                      </el-tooltip>
-                    </div>
+                    <el-row>
+                      <el-col :span="16" :offset="1">
+                        <el-tooltip effect="dark" :content="favor.brief" placement="bottom-end">
+                          <el-button type="text" @click="toCollect">{{favor.favorName}}</el-button>
+                        </el-tooltip>
+                      </el-col>
+                      <el-col :span="6">
+                        <el-button @click="deleteFavor"  type="primary" style="font-size:12px;margin-top:6px" size="mini">删除</el-button>
+                      </el-col>
+                    </el-row>
                   </el-card>
                 </div>
                 </el-col>
@@ -119,18 +124,13 @@
     display:block;
     width:200px;
     height:200px;
+    border-radius:5px;
   }
   .favor{
     display:block;
     width:200px;
     height:245px;
     margin:15px;
-  }
-  .bottom{
-    margin-top: 0px;
-    margin-bottom: 0px;
-    background-color:#dcdfe6;
-    padding-left:120px;
   }
   #cards{
       margin-left:auto;
@@ -143,8 +143,8 @@
       padding-top: 30px;
   }
   .num{
-      color:rgb(8, 8, 8);
-      font-size:15px;
+      color:#161515;
+      font-size:14px;
       padding-right:10px;
   }
 </style>
@@ -160,7 +160,7 @@
         username:'初始昵称',
         followNum:0,
         fansNum:0,
-        desc:'',
+        desc:'感觉头发被掉光。',
         momentNum:0,
         moments:[{
             index:0,
@@ -345,13 +345,37 @@
         }).catch();
       },
       showFollow(){
-        this.$router.push('set');
+        this.$router.push('follow');
       },
       showFans(){
-        this.$router.push('set');
+        this.$router.push('fans');
       }
     },
     created() {
+      function getMessageList(){
+        return axios.get('/getList');
+      }
+      function getFavorList(){
+        return axios.get('/getList');
+      }
+      this.$axios.all([getMessageList(),getFavorList()])
+        .then(axios.spread(function(msg,favor){
+        //两个请求都成功触发这个函数，两个参数代表两次请求返回的结果
+          this.headUrl=msg.data.headUrl;
+          this.name=msg.data.name;
+          this.fansNum=msg.data.fansNum;
+          this.followNum=msg.data.followNum;
+          this.desc=msg.data.desc;
+          this.momentNum=msg.data.momentNum;
+          this.moments=msg.data.moments;
+
+          this.favors=favor.data.favors;
+          this.collects=favor.data.collects;
+        }))
+        .catch((error) => {
+           console.log(error);
+        });
+      /*
       this.$axios.get('/')
         .then((response) => {
             this.headUrl=response.data.headUrl;
@@ -362,7 +386,7 @@
             this.momentNum=response.data.momentNum;
             this.moments=response.data.moments;
             })
-            .catch((error) => {
+        .catch((error) => {
                 console.log(error);
         });
       this.$axios.get('/favorite')
@@ -372,7 +396,7 @@
         })
         .catch((error) => {
          console.log(error);
-        });
+        });*/
     }
   }
 </script>

@@ -1,22 +1,24 @@
 <template>
   <el-tabs type="border-card" class="tabs">
     <el-tab-pane label="修改个人信息">
-          <el-form ref="form" :model="form" :rules="rules" :label-position="right" label-width="80px">
+        <el-row style="margin-left:15%;margin-top:5%">
+          <el-form ref="form" :model="form" :rules="rules" :label-position="right" label-width="80px" >
             <el-form-item label="昵称">
-                <el-input v-model="form.name" style="width:40%"></el-input>
+                <el-input v-model="form.name" style="width:50%"></el-input>
             </el-form-item>
             <el-form-item label="个人简介">
-                <el-input type="textarea" v-model="form.desc" style="width:40%"></el-input>                
+                <el-input type="textarea" v-model="form.desc" style="width:50%"></el-input>                
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">确认修改</el-button>
                 <el-button @click="onCancel">取消</el-button>
             </el-form-item> 
           </el-form>
+        </el-row>
     </el-tab-pane>
     <el-tab-pane label="重置密码">
       <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules"  label-width="80px" class="demo-ruleForm">
-        <div v-if="showButton">
+        <div v-if="showButton" style="margin-left:15%;margin-top:5%">
         <el-form-item label="原密码" prop="opass">
           <el-input type="password" v-model="ruleForm.opass" auto-complete="off" style="width:40%" clearable></el-input>
         </el-form-item>
@@ -25,12 +27,12 @@
           <el-button @click="cancelHandler">取消</el-button>
         </el-form-item>
         </div>
-        <div v-if="passCorrect">
+        <div v-if="passCorrect" style="margin-left:15%;margin-top:5%">
         <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm.pass" auto-complete="off" style="width:40%" clearable></el-input>
+          <el-input type="password" v-model="ruleForm.pass" auto-complete="off" style="width:50%" clearable></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">
-          <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" style="width:40%" clearable></el-input>
+          <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" style="width:50%" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="finishHandler('ruleForm')">确认修改</el-button>
@@ -44,11 +46,16 @@
 
 <style>
   .tabs{
-    width:60%;
+    width:50%;
     height:60%;
     margin-left:auto;
     margin-right:auto;
     margin-top:0px;
+  }
+  .el-tabs__item{
+    font-size:15px;
+    width:150px;
+    padding-left:30px;
   }
 </style>
 

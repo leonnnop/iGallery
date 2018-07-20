@@ -15,6 +15,7 @@ import personalpage from '@/components/personalpage'
 import set from '@/components/set'
 import MomentDetail from '@/components/MomentDetail'
 import tag from '@/components/tag'
+import userpage from '@/components/userpage'
 
 Vue.use(Router)
 
@@ -83,7 +84,11 @@ export default new Router({
         path: 'tag/:id',
         name: 'tag',
         component: tag
-      }, ]
+      },{
+        path:'userpage',
+        name:'userpage',
+        component:userpage
+      } ]
 
     },
 
