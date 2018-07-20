@@ -13,37 +13,37 @@ namespace ProductsApp.Controllers
     {
         DBAccess Access = new DBAccess();
         [HttpPut]
-        public HttpResponseMessage FollowTag(string UserId, string tag)
-        {
-           HttpResponseMessage response = Request.CreateResponse();
-           if (Access.ExecuteSql(Access.Insert("FOLLOW_TAG", "'" + UserId + "', '" + tag + "'")))
-           {
-               response.StatusCode = HttpStatusCode.OK;
-               response.Content = new StringContent("关注成功", Encoding.Unicode);
-           }
-           else
-           {
-               response.StatusCode = HttpStatusCode.Forbidden;
-               response.Content = new StringContent("关注失败", Encoding.Unicode);
-           }
-           return response;
-        }
-
-        [HttpPut]
-        public HttpResponseMessage CancleFollowTag(string UserId, string tag)
+        public bool FollowTag(string UserId, string tag)
         {
             HttpResponseMessage response = Request.CreateResponse();
-            if (Access.ExecuteSql(Access.Delete("FOLLOW_TAG", "USER_ID= '" + UserId + "' and TAG= '" + tag + "'")))
+            bool WhetherExit = false;
+            string sql = Access.Select("*", "FOLLOW_TAG", "USER_ID='" + UserId + "' and TAG='" + tag + "'");
+            if (Access.GetRecordCount(sql) == 0)  //用户未关注Tag
             {
-                response.StatusCode = HttpStatusCode.OK;
-                response.Content = new StringContent("取关成功", Encoding.Unicode);
+                if (Access.ExecuteSql(Access.Insert("FOLLOW_TAG", "'" + UserId + "', '" + tag + "'")))
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                    return true; //修改成功
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                    return false;
+                }
             }
             else
             {
-                response.StatusCode = HttpStatusCode.Forbidden;
-                response.Content = new StringContent("取关失败", Encoding.Unicode);
+                if (Access.ExecuteSql(Access.Delete("FOLLOW_TAG", "USER_ID='" + UserId + "' and TAG='" + tag + "'")))
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                    return true; //修改成功
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                    return false;
+                }
             }
-            return response;
         }
     }
 }
