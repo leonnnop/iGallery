@@ -150,7 +150,7 @@ namespace ProductsApp.Controllers
                     }
                     else if (likeState == 0)//取消点赞
                     {
-                        if (dBAccess.ExecuteSql("delete from FAVORITE where user_id = '"+user_id+"'"))
+                        if (dBAccess.ExecuteSql("delete from FAVORITE where user_id = '"+user_id+"' and moment_id = '"+moment_id+"'"))
                         {
                             status = 0;//moment表和favorite表都修改成功，返回成功状态码0
                         }
