@@ -123,15 +123,6 @@ C:\Users\SarahWuTX\source\repos\ProductsApp\ProductsApp\bin\System.Web.Http.Cors
 \\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\roslyn\vbc.rsp
 \\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\roslyn\VBCSCompiler.exe
 \\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\roslyn\VBCSCompiler.exe.config
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\Newtonsoft.Json.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\Oracle.DataAccess.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\Oracle.ManagedDataAccess.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Net.Http.Formatting.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Web.Cors.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Web.Http.Cors.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Web.Http.dll
-\\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Web.Http.WebHost.dll
 \\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 \\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Net.Http.Formatting.xml
 \\Mac\Home\Desktop\iGallery\Backend\ProductsApp\ProductsApp\bin\System.Web.Http.xml

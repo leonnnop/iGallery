@@ -19,7 +19,7 @@ namespace ProductsApp.Controllers
         /// <param name="user">用户</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Followings([FromBody]Users user)
+        public IHttpActionResult Followings([FromBody]string UserID)
         {
             List<DisplayedMoment> moments=new List<DisplayedMoment>();
             //连接数据库
@@ -40,10 +40,10 @@ namespace ProductsApp.Controllers
             cmd.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, time " +
                 "from users,moment " +
                 "where moment.sender_id = users.id and " +
-                "(users.id = '" + user.ID + "' or " +
+                "(users.id = '" + UserID + "' or " +
                 "users.id in (select following_id " +
                 "from follow_user " +
-                "where follow_user.user_id = '" + user.ID + "')) " +
+                "where follow_user.user_id = '" + UserID + "')) " +
                 "order by moment.time desc";
             OracleDataReader rd = cmd.ExecuteReader();
             while (rd.Read())
@@ -59,17 +59,16 @@ namespace ProductsApp.Controllers
                 mmt.CommentNum = Convert.ToInt32(rd[6]);
                 if (rd[7] is DBNull)
                 {
-                    mmt.Time = DateTime.Now;//DateTime类型不允许为空，因此对于DBNull类型暂且这么处理
+                    mmt.Time = null;
                 }
                 else
                 {
-                    mmt.Time = Convert.ToDateTime(rd[7]);
+                    mmt.Time = rd[7].ToString();
                 }
 
                 //通过Moment取得每一条动态的相关信息，并加入list
                 moments.Add(All_Info_Of(mmt, cmd));
             }
-
             return Json(moments);
         }
         /// <summary>
