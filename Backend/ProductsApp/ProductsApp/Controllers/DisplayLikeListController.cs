@@ -1,5 +1,5 @@
-﻿using IGallery;
-using IGallery.Models;
+﻿using ProductsApp;
+using ProductsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +8,17 @@ using System.Net.Http;
 using System.Web.Http;
 using Oracle.ManagedDataAccess.Client;
 
-namespace IGallery.Controllers
+namespace ProductsApp.Controllers
 {
     public class DisplayLikeListController : ApiController
 
     {
+
+        /// <summary>
+        /// 获取一条动态的点赞用户列表
+        /// </summary>
+        /// <param name="moment_id">string</param>
+        /// <returns></returns>
         [HttpGet]
         public IHttpActionResult GetLikeList(string moment_id)
         {
