@@ -164,7 +164,7 @@
                     <div id="content">
                         <div id="text">
                             <p style="margin:0">{{moment.text}}</p>
-                            <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag.url)">#{{tag.name}}</el-button>
+                            <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag.name)">#{{tag.name}}</el-button>
                         </div>
                     </div>
 
@@ -332,9 +332,9 @@
             }
         },
         methods: {
-            jumpToTag: function (url) {
-                console.log(url);
-                this.$router.push(url);
+            jumpToTag: function (name) {
+                console.log(name);
+                this.$router.push('tag/'+name);
             },
             jumpToUser:function(url){
                 console.log(url);

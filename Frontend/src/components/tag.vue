@@ -286,6 +286,7 @@
                 .then((response) => {
                     let totalMoments = response.data.m_Item1;
                     this.followNum = response.data.m_Item2;
+                    this.followState = response.data.m_Item3;
                     totalMoments.forEach(element => {
                         element.likeIMG = require('../image/unlike.png');
                         // 更新后删除
