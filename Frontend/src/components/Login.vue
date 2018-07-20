@@ -86,6 +86,7 @@
                 this.ruleForm.password)
               .then((response) => {
                 if (response.data == '0') {
+                  this.store.commit('addCurrentUserId',this.ruleForm.email);
                   this.$router.push('/main/user');
                 } else if (response.data == '1') {
                   this.$message.error('密码错误！');

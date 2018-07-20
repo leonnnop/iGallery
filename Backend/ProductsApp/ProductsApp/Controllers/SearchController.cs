@@ -31,16 +31,21 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where ID like'%" + keyword + "%'";//查找匹配的字符串
+            cmd.CommandText = "select * from USERS where USERNAME like'%" + keyword + "%'";//查找匹配的字符串
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
-            List<Users> User_list = new List<Users>();                               //用户列表
+            List<Users> User_list = new List<Users>();                                     //用户列表
+            if(!rd.Read())
+            {
+                return Ok("Not found");
+            }
             while (rd.Read())
             {
                 Users temp = new Users();
                 temp.ID = rd["ID"].ToString();
                 temp.Email = rd["EMAIL"].ToString();
                 temp.Password = rd["PASSWORD"].ToString();
+                temp.Username = rd["USERNAME"].ToString();
                 temp.Bio = rd["BIO"].ToString();
                 temp.Photo = rd["PHOTO"].ToString();
                 User_list.Add(temp);
@@ -69,7 +74,7 @@ namespace ProductsApp.Controllers
             }
             OracleCommand cmd = new OracleCommand();
             List<Tag> tags = new List<Tag>();
-            cmd.CommandText = "select CONTENT from TAG where CONTENT='%"+keyword+"%'";
+            cmd.CommandText = "select CONTENT from TAG where CONTENT like'%"+keyword+"%'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             while (rd.Read())
@@ -80,14 +85,14 @@ namespace ProductsApp.Controllers
             }
             List<Moment> moments = new List<Moment>();
             List<Users> user_list = new List<Users>();
-            cmd.CommandText = "select MOMENT_ID from Moment_Tag where Tag='%"+keyword+"%'";
+            cmd.CommandText = "select MOMENT_ID from Moment_Tag where Tag like'%"+keyword+"%'";
             cmd.Connection = conn;
             OracleDataReader rd1 = cmd.ExecuteReader();
             while(rd1.Read())
             {
                 string id = rd1["MOMENT_ID"].ToString();
                 OracleCommand cmd1 = new OracleCommand();
-                cmd1.CommandText = "select * from Moment where ID=" + id + "'or CONTENT like '%"+keyword+"%'";
+                cmd1.CommandText = "select * from Moment where ID='" + id + "'or CONTENT like '%"+keyword+"%'";
                 cmd1.Connection = conn;
                 rd = cmd1.ExecuteReader();
                 if (rd.Read())
@@ -104,13 +109,13 @@ namespace ProductsApp.Controllers
                     OracleCommand cmd2 = new OracleCommand();
                     cmd2.CommandText = "select * from Users where ID='" + sender_id+"'";
                     cmd2.Connection = conn;
-                    OracleDataReader rd3 = cmd.ExecuteReader();
+                    OracleDataReader rd3 = cmd2.ExecuteReader();
                     while(rd3.Read())
                     {
                         Users temp = new Users();
                         temp.ID = rd3["ID"].ToString();
-                        temp.Password = rd3["PASSWORD"].ToString();
                         temp.Email = rd3["EMAIL"].ToString();
+                        temp.Password = rd3["PASSWORD"].ToString();
                         temp.Username = rd3["USERNAME"].ToString();
                         temp.Bio = rd3["BIO"].ToString();
                         temp.Photo = rd3["PHOTO"].ToString();

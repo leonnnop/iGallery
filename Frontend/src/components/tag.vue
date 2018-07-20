@@ -1,20 +1,30 @@
 <template>
     <el-container>
-        <el-row style="width:100%" type="flex" justify="center">
-            <el-col style="width:100%">
-                <el-row style="width:100%" type="flex" justify="start" align="middle">
+        <el-row style="width:100%;margin-top:30px;" type="flex" justify="center">
+            <el-col style="width:100%;">
+                <el-row style="width:100%;margin-bottom:30px;" type="flex" justify="start" align="middle">
                     <el-col style="width:100%">
-                        <div class="user-img border" style="margin-left:12%">
-                            <img class="user-img img-border" src="../image/a.jpg" alt="头像" />
+                        <div class="user-img border" style="margin-left:55%;width:150px;height:150px;">
+                            <img class="user-img img-border" src="../image/a.jpg" alt="头像" style="width:150px;height:150px;" />
                         </div>
                     </el-col>
-                    <el-col style="font-size:26px;color:#262626;margin-left:-61%">
-                        {{this.tagName}}
+                    <el-col style="font-size:32px;color:#262626;margin-left:-2%">
+                        <el-row>
+                            {{this.tagName}}
+                        </el-row>
+                        <el-row style="font-size:18px;margin-top:10px;margin-left:15px">
+                            {{this.addCommas(this.followNum)}} 人关注
+                        </el-row>
+
+                    </el-col>
+                    <el-col style="margin-left:0%">
+                        <el-button round style="width:30%;border-color:#db3579" @click="followClickHandler">{{this.followword}}</el-button>
+                        <!-- <el-button type="primary" plain style="width:50%">主要按钮</el-button> -->
                     </el-col>
                 </el-row>
                 <el-row style="width:100%" type="flex" justify="center">
-                    <el-row :gutter="35" style="width:85%;margin:30px;">
-                        <el-col :span="6">
+                    <el-row :gutter="40" style="width:70%;margin:30px;">
+                        <el-col :span="8">
                             <el-card class="box-card" :key="item" v-for="item in items_col_1">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
@@ -24,7 +34,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -34,7 +44,7 @@
                                 </el-row>
                             </el-card>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="8">
                             <el-card class="box-card" :key="item" v-for="item in items_col_2">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
@@ -44,7 +54,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -54,7 +64,7 @@
                                 </el-row>
                             </el-card>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="8">
                             <el-card class="box-card" :key="item" v-for="item in items_col_3">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
@@ -64,7 +74,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.text}}
@@ -74,7 +84,7 @@
                                 </el-row>
                             </el-card>
                         </el-col>
-                        <el-col :span="6">
+                        <!-- <el-col :span="6">
                             <el-card class="box-card" :key="item" v-for="item in items_col_4">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
@@ -93,7 +103,7 @@
                                     <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
                                 </el-row>
                             </el-card>
-                        </el-col>
+                        </el-col> -->
                     </el-row>
                 </el-row>
             </el-col>
@@ -115,7 +125,7 @@
         border-radius: 150px;
         background: linear-gradient(45deg, #f9a357, #db3579 40%, #c73894 95%);
         background-clip: padding-box;
-        padding: 5px;
+        padding: 6px;
         /* just to show box-shadow still works fine */
         /* box-shadow: 0 3px 9px black, inset 0 0 9px white; */
     }
@@ -170,7 +180,10 @@
     export default {
         data() {
             return {
-                tagName:'#ExampleTag',
+                tagName: '#ExampleTag',
+                followNum: 1430456,
+                followState: false,
+                followword: '关注',
                 tableData: [],
                 userName: 'Leonnnop',
                 cards: [],
@@ -268,12 +281,19 @@
         },
 
         created() {
-            this.axios.get('http://10.0.1.61:51738/api/products/1')
-                ///// 箭头函数会改变this的作用域
+            this.axios.get('http://10.0.1.8:54468/api/Moment/GetRankingMoments?user_id=' + this.store.state.currentUserId)
                 .then((response) => {
-                    this.tableData = [];
-                    this.totalElements = response.data.totalElements;
-                    let content = response.data.content;
+                    let totalMoments = response.data.User_Moment;
+                    totalMoments.forEach(element => {
+                        element.likeIMG = require('../image/unlike.png');
+                        // 更新后删除
+                        element.likeState = false;
+                    });
+                    let momentNum = totalMoments.length;
+                    this.items_col_1 = totalMoments.slice(0, Math.floor(momentNum / 3));
+                    this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 3) + 1, Math.floor(2 * momentNum /
+                        3));
+                    this.items_col_3 = totalMoments.slice(Math.floor(2 * momentNum / 3) + 1);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -281,6 +301,30 @@
         },
 
         methods: {
+            followClickHandler() {
+                this.axios.get()
+                    .then((response) => {
+
+                    })
+                this.followState = !this.followState
+                if (this.followState) {
+                    this.followNum++
+                        this.followword = '已关注'
+                } else {
+                    this.followNum--
+                        this.followword = '关注'
+                }
+            },
+            addCommas(val) {
+                var aIntNum = val.toString().split(".");
+                if (aIntNum[0].length >= 5) {
+                    aIntNum[0] = aIntNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+                if (aIntNum[1] && aIntNum[1] >= 5) {
+                    aIntNum[1] = aIntNum[1] ? aIntNum[1].replace(/\B(?=(\d{3})+(?!\d))/g, " ") : " ";
+                }
+                return aIntNum.join(".");
+            },
             handleLikeClick(item) {
                 item.likeState = !item.likeState
                 if (item.likeState) {
