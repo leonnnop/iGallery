@@ -47,7 +47,7 @@ namespace ProductsApp.Controllers
                     int collects = int.Parse(rd["COLLECT_NUM"].ToString());
                     int comments = int.Parse(rd["COMMENT_NUM"].ToString());
                     DateTime time = DateTime.Parse(rd["TIME"].ToString().Replace('T', ' '));
-                    moments.Add(new Moment(id, sender_id, content, likes, forwards, collects, comments, time));
+                    moments.Add(new Moment(id, sender_id, content, likes, forwards, collects, comments, time.ToString()));
                 }
             }
             select = Access.Select("*", "FOLLOW_TAG", "TAG = '" + TagContent + "'");
