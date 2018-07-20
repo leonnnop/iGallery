@@ -164,6 +164,7 @@
     <Compile Include="Controllers\DiscoverMomentController.cs" />
     <Compile Include="Controllers\DisplayLikeListController.cs" />
     <Compile Include="Controllers\DisplayMomentsController.cs" />
+    <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\MomentController.cs" />
     <Compile Include="Controllers\Moment_TagController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Models\Forward.cs" />
     <Compile Include="Models\Moment.cs" />
     <Compile Include="Models\Moment_Tag.cs" />
+    <Compile Include="Models\MyMoments.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\User_Moment.cs" />
