@@ -7,7 +7,7 @@
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
                 <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -15,10 +15,10 @@
               <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
-              {{item.text}}
+              {{item.Content}}
             </el-row>
             <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
             </el-row>
           </el-card>
         </el-col>
@@ -27,7 +27,7 @@
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
                 <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -35,10 +35,10 @@
               <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
-              {{item.text}}
+              {{item.Content}}
             </el-row>
             <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
             </el-row>
           </el-card>
         </el-col>
@@ -47,7 +47,7 @@
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
                 <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -55,10 +55,10 @@
               <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
-              {{item.text}}
+              {{item.Content}}
             </el-row>
             <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
             </el-row>
           </el-card>
         </el-col>
@@ -67,7 +67,7 @@
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
                 <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -75,10 +75,10 @@
               <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
-              {{item.text}}
+              {{item.Content}}
             </el-row>
             <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+              <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
             </el-row>
           </el-card>
         </el-col>
@@ -133,108 +133,130 @@
     data() {
       return {
         tableData: [],
-        userName: 'Leonnnop',
+        Username: 'Leonnnop',
         cards: [],
         height: [100, 200, 300, 400],
         imgValue: 0,
         items_col_1: [{
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           }
         ],
         items_col_2: [{
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           }
         ],
         items_col_3: [{
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           }
         ],
         items_col_4: [{
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           },
           {
-            userName: 'Leonnnop',
+            Username: 'Leonnnop',
             likeIMG: require('../image/unlike.png'),
-            likeState: false,
-            text: 'test 文案 阿拉拉。',
-            likeNum: 5
+            LikeState: false,
+            Content: 'test 文案 阿拉拉。',
+            LikeNum: 5
           }
         ],
       }
     },
 
     created() {
-      this.axios.get('http://10.0.1.61:51738/api/products/1')
-        ///// 箭头函数会改变this的作用域
+      this.axios.get('http://10.0.1.8:54468/api/DiscoverMoment/GetRankingMoments?email=' + this.$store.state.currentUserId)
         .then((response) => {
-          this.tableData = [];
-          this.totalElements = response.data.totalElements;
-          let content = response.data.content;
+          let totalMoments = response.data;
+          totalMoments.forEach(element => {
+            console.log(element.LikeState)
+            if (element.LikeState == 'true') {
+              element.likeIMG = require('../image/like.png');
+              element.LikeState = true
+            } else {
+              element.likeIMG = require('../image/unlike.png');
+              element.LikeState = false
+            }
+            // 更新后删除
+            // element.LikeState = false;
+          });
+          let momentNum = totalMoments.length;
+          console.log(momentNum)
+          this.items_col_1 = totalMoments.slice(0, Math.floor(momentNum / 4));
+          console.log(this.items_col_1)
+          this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 4), Math.floor(momentNum / 2));
+          console.log(this.items_col_2)
+
+          this.items_col_3 = totalMoments.slice(Math.floor(momentNum / 2), Math.floor(3 * momentNum / 4));
+          console.log(this.items_col_3)
+
+          this.items_col_4 = totalMoments.slice(Math.floor(3 * momentNum / 4));
+          console.log(this.items_col_4)
+
         })
         .catch(function (error) {
           console.log(error);
@@ -243,14 +265,26 @@
 
     methods: {
       handleLikeClick(item) {
-        item.likeState = !item.likeState
-        if (item.likeState) {
-          item.likeIMG = require('../image/like.png')
-          item.likeNum++
+        console.log(item.LikeState)
+
+        item.LikeState = !item.LikeState
+        console.log(item.LikeState)
+
+        if (item.LikeState == true) {
+          item.likeIMG = require('../image/like.png');
+          item.LikeNum++;
         } else {
-          item.likeIMG = require('../image/unlike.png')
-          item.likeNum--
+          item.likeIMG = require('../image/unlike.png');
+          item.LikeNum--;
         }
+        // console.log(item)
+        this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+          '&moment_id=' + item.MomentID
+          // , {
+          //     email: this.$store.state.currentUserId,
+          //     moment_id: item.MomentId
+          //   }
+        )
       },
       getNaturalWidth(id) {
         var image = new Image()

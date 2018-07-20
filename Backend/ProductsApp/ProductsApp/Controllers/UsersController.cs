@@ -40,29 +40,42 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
 
-            
+            //检查邮箱是否已被用于注册
             OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select * from USERS t where email='" + user.Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
-            
-               ///为用户生成一个ID
+            if (rd.HasRows)//邮箱已注册
+            {
+                status = 1;
+            }
+            else//邮箱未注册
+            {
+                //为用户生成一个ID
                 int id = 1;
                 cmd.CommandText = "select count(*) from users";
                 rd = cmd.ExecuteReader();
                 rd.Read();
                 id += rd.GetInt32(0);
-
+                
                 //将新建用户插入数据库
                 cmd.CommandText = "insert into USERS(ID,EMAIL,PASSWORD,USERNAME,BIO,PHOTO) " +
-                    "values('" + id.ToString() + "','" + user.Email + "','" + user.Password + "','" + user.Username + "','null','null')";
-
+                "values('" + id.ToString() + "','" + user.Email + "','" + user.Password + "','" + user.Username + "','','')";
+                
                 int result = cmd.ExecuteNonQuery();
                 if (result != 1)//插入出现错误
                 {
-                    status = 1;
+                    status = 2;
                 }
-               
-            
+                //创建用户的默认收藏夹
+                cmd.CommandText = "insert into COLLECTION(FOUNDER_ID,NAME) " +
+                    "values('" + id.ToString() + "','默认收藏夹')";
+                result = cmd.ExecuteNonQuery();
+                if (result != 1)//插入出现错误
+                {
+                    status = 2;
+                }
+            }
 
             //关闭数据库连接
             conn.Close();
@@ -166,33 +179,19 @@ namespace ProductsApp.Controllers
             {
                 string password = rd["Password"].ToString();
                 conn.Close();
-                if (password == Password) return Right();//如果用户输入的密码正确
-                else return Wrong();
+                if (password == Password) return LoginResult("0");//如果用户输入的密码正确
+                else return LoginResult("1");
             }
-            else return No_user();//未找到此用户名
+            else return LoginResult("2");//未找到此用户名
 
         }
-        public HttpResponseMessage Right()//返回true
+        public HttpResponseMessage LoginResult(string result)//返回true
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-            string result = "0";
             response.Content = new StringContent(result);
             return response;
         }
-        public HttpResponseMessage Wrong()//返回true
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            string result = "1";
-            response.Content = new StringContent(result);
-            return response;
-        }
-        public HttpResponseMessage No_user()//返回false
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            string result = "2";
-            response.Content = new StringContent(result);
-            return response;
-        }
+        
 
         //邮箱验证
         [HttpGet]
@@ -351,11 +350,7 @@ namespace ProductsApp.Controllers
         [HttpPut]
         public IHttpActionResult ModifyUserInfo([FromBody]Users user)
         {
-<<<<<<< HEAD
-            int status;
-
-=======
->>>>>>> 6f78426676971edc6376bf09d8ff7f79f81fcc5e
+            
             //将更新信息存入新建object
             Users newUser = new Users();
             //newUser.Email = user.Email;
@@ -387,11 +382,11 @@ namespace ProductsApp.Controllers
         /// <summary>
         /// 关注用户
         /// </summary>
-        /// <param name="follow">Users</param>
-        /// <param name="followed">Users</param>
+        /// <param name="followID">Users</param>
+        /// <param name="followedID">Users</param>
         /// <returns></returns>
-        [HttpPost]
-        public HttpResponseMessage Follow([FromBody]Users follow, [FromBody]Users followed)//把关注用户和被关注用户加入关注联系集
+        [HttpGet]
+        public HttpResponseMessage Follow(string followID, string followedID)//把关注用户和被关注用户加入关注联系集
         {
             string state = "0";//状态码0：成功，1：关注失败
             HttpResponseMessage response = Request.CreateResponse();
@@ -406,7 +401,7 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + follow.ID + "," + followed.ID + ")";//插入数据库
+            cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + followID + "," + followedID + ")";//插入数据库
             cmd.Connection = conn;
             int result = cmd.ExecuteNonQuery();
             if (result == 1)//插入成功
@@ -426,10 +421,10 @@ namespace ProductsApp.Controllers
         /// <summary>
         /// 返回关注列表
         /// </summary>
-        /// <param name="user">Users</param>
+        /// <param name="userID">Users</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult FollowList([FromBody]Users user)       //返回关注列表
+        public IHttpActionResult FollowList([FromBody]string userID)       //返回关注列表
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -442,14 +437,18 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + user.ID + "'";//找到该用户所关注的用户的ID
+            cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + userID + "'";//找到该用户所关注的用户的ID
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             List<Users> following_list = new List<Users>();
+            if (!rd.Read())
+            {
+                return Ok("Not found");
+            }
             while (rd.Read())
             {
                 string followed_id = rd["FOLLOWING_ID"].ToString();
-                cmd.CommandText = "select * from User where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+                cmd.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
                 cmd.Connection = conn;
                 OracleDataReader rd1 = cmd.ExecuteReader();
                 if (rd1.Read())
@@ -458,6 +457,7 @@ namespace ProductsApp.Controllers
                     temp.ID = rd1["ID"].ToString();
                     temp.Email = rd1["EMAIL"].ToString();
                     temp.Password = rd1["PASSWORD"].ToString();
+                    temp.Username = rd1["USERNAME"].ToString();
                     temp.Bio = rd1["BIO"].ToString();
                     temp.Photo = rd1["PHOTO"].ToString();
                     following_list.Add(temp);

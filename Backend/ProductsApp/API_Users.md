@@ -1,4 +1,4 @@
-------
+﻿------
 
 # 注册用户（吴桐欣）
 
@@ -231,18 +231,16 @@
 > 参数（body中）：Users
 
 
-> 返回消息：用户列表 （List）
+> 返回消息：
+|状态码    |说明      |
+| string   | ID       |
+| string   | Email    |
+| string   | Password |
+| string   | Username |
+| string   | Bio      |
+| string   | Photo    |
+|Not found |无关注用户|
 
-
-# 查找匹配用户 （陈阳）
-请求地址：/api/Users/search_user
-请求方式：Get  
-
-
-> 参数：string(关键词)
-
-
-> 返回消息：用户列表 （List）
 
 
 =======
