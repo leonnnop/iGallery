@@ -13,8 +13,8 @@ namespace ProductsApp.Controllers
 {
     public class MessageController : ApiController
     {
-        [HttpGet]
-        public IHttpActionResult SendMessage(Message message)
+        [HttpPost]
+        public IHttpActionResult SendMessage([FromBody]Message message)
         {
             int status = 0;
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
