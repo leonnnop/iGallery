@@ -428,6 +428,10 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             List<Users> following_list = new List<Users>();
+            if (!rd.Read())
+            {
+                return Ok("Not found");
+            }
             while (rd.Read())
             {
                 string followed_id = rd["FOLLOWING_ID"].ToString();
