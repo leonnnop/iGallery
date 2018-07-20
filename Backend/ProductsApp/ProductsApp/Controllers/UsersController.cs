@@ -166,33 +166,19 @@ namespace ProductsApp.Controllers
             {
                 string password = rd["Password"].ToString();
                 conn.Close();
-                if (password == Password) return Right();//如果用户输入的密码正确
-                else return Wrong();
+                if (password == Password) return LoginResult("0");//如果用户输入的密码正确
+                else return LoginResult("1");
             }
-            else return No_user();//未找到此用户名
+            else return LoginResult("2");//未找到此用户名
 
         }
-        public HttpResponseMessage Right()//返回true
+        public HttpResponseMessage LoginResult(string result)//返回true
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-            string result = "0";
             response.Content = new StringContent(result);
             return response;
         }
-        public HttpResponseMessage Wrong()//返回true
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            string result = "1";
-            response.Content = new StringContent(result);
-            return response;
-        }
-        public HttpResponseMessage No_user()//返回false
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            string result = "2";
-            response.Content = new StringContent(result);
-            return response;
-        }
+        
 
         //邮箱验证
         [HttpGet]

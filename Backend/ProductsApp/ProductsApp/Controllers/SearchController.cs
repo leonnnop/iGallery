@@ -35,15 +35,16 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             List<Users> User_list = new List<Users>();                                     //用户列表
-            if(rd.Read()==null)
+            if(!rd.Read())
             {
-                return OK("Not found");
+                return Ok("Not found");
             }
             while (rd.Read())
             {
                 Users temp = new Users();
                 temp.ID = rd["ID"].ToString();
                 temp.Email = rd["EMAIL"].ToString();
+                temp.Username = rd["USERNAME"].ToString();
                 temp.Password = rd["PASSWORD"].ToString();
                 temp.Bio = rd["BIO"].ToString();
                 temp.Photo = rd["PHOTO"].ToString();
@@ -91,7 +92,7 @@ namespace ProductsApp.Controllers
             {
                 string id = rd1["MOMENT_ID"].ToString();
                 OracleCommand cmd1 = new OracleCommand();
-                cmd1.CommandText = "select * from Moment where ID=" + id + "'or CONTENT like '%"+keyword+"%'";
+                cmd1.CommandText = "select * from Moment where ID='" + id + "'or CONTENT like '%"+keyword+"%'";
                 cmd1.Connection = conn;
                 rd = cmd1.ExecuteReader();
                 if (rd.Read())
@@ -108,7 +109,7 @@ namespace ProductsApp.Controllers
                     OracleCommand cmd2 = new OracleCommand();
                     cmd2.CommandText = "select * from Users where ID='" + sender_id+"'";
                     cmd2.Connection = conn;
-                    OracleDataReader rd3 = cmd.ExecuteReader();
+                    OracleDataReader rd3 = cmd2.ExecuteReader();
                     while(rd3.Read())
                     {
                         Users temp = new Users();
