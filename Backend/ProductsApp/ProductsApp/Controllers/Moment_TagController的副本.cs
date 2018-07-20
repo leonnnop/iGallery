@@ -23,13 +23,9 @@ namespace ProductsApp.Controllers
         /// <param name="content"></param>
         /// <returns></returns>
        [HttpGet]
-        public Tuple<List<Moment>,int,bool> Followers(int Page, int PageSize, string TagContent , string Email)
+        public Tuple<List<Moment>,int,bool> Followers(int Page, int PageSize, string TagContent , string UserId)
         {
             bool FollowState = false;
-            string sql = Access.Select("ID", "USERS", "EMAIL='" + Email + "'").ToString();
-            OracleDataReader r = Access.GetDataReader(sql);
-            r.Read();
-            string UserId = r["ID"].ToString();
             if (Access.GetRecordCount(Access.Select("*", "FOLLOW_TAG", "USER_ID='" + UserId + "' and TAG='" + TagContent + "'")) == 0)
             {
                 FollowState = false;  //用户未关注
