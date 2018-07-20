@@ -18,8 +18,8 @@ using Utility;
 2、图片入库
 
 * 调用
-  * 个人头像 Util.Post(“你的用户id”, 2)；
-  * 动态组图 Util.Post(“你的动态id”, 1)；
+  * 上传个人头像 Util.Post(“你的用户id”, 2)；
+  * 上传动态组图 Util.Post(“你的动态id”, 1)；
 
 
 
