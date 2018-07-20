@@ -103,21 +103,25 @@ namespace Utility
                   foreach (string f in SrcRequest.Files.AllKeys)
                   {
                       HttpPostedFile file = SrcRequest.Files[f];
+                      //分割后缀
+                      string fileExt = Path.GetExtension(file.FileName);
+                      
                       if (type == 1)
                       {
                           //插入PICTURE一条记录
                           cmd.CommandText = "select count(*) from PICTURE";
                           OracleDataReader rd = cmd.ExecuteReader();
                           int pid = int.Parse(rd[0].ToString()) + 1;
+                         
                           //文件路径不重名
-                          filepath = @"\\Mac\Home\Desktop\mmps\" + (Convert.ToString(pid)); 
+                          filepath = @"\\Mac\Home\Desktop\mmps\" + (Convert.ToString(pid))+fileExt; 
                           cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + (Convert.ToString(pid)) + "','" + filepath + "','" + id + "')";
                           cmd.ExecuteNonQuery();
                       }
                       else if (type == 2)
                       {
                           //更新用户个人头像
-                          filepath = @"\\Mac\Home\Desktop\heads\"+id; 
+                          filepath = @"\\Mac\Home\Desktop\heads\"+id+fileExt; 
                           cmd.CommandText = "update USERS set PHOTO='"+filepath+"' where ID='"+id+"'";
                           cmd.ExecuteNonQuery();
                       }
