@@ -91,7 +91,7 @@ namespace Utility
             OracleConnection conn = new OracleConnection(connStr);
             conn.Open();
 
-            //
+            //查库
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
             cmd.CommandText = "select ID from PICTURE where MOMENT_ID='" + Mid + "' ";
@@ -104,7 +104,8 @@ namespace Utility
 
             rd.Close();
             conn.Close();
-
+            
+            //异步多图
             return list;
       
         }
