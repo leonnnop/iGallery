@@ -59,11 +59,11 @@ namespace ProductsApp.Controllers
                 mmt.CommentNum = Convert.ToInt32(rd[6]);
                 if (rd[7] is DBNull)
                 {
-                    mmt.Time = DateTime.Now;//DateTime类型不允许为空，因此对于DBNull类型暂且这么处理
+                    mmt.Time = "";//DateTime类型不允许为空，因此对于DBNull类型暂且这么处理
                 }
                 else
                 {
-                    mmt.Time = Convert.ToDateTime(rd[7]);
+                    mmt.Time = rd[7].ToString();
                 }
 
                 //通过Moment取得每一条动态的相关信息，并加入list

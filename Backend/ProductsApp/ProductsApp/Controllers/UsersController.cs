@@ -97,7 +97,7 @@ namespace ProductsApp.Controllers
 
             //检查邮箱是否已被用于注册
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS t where email='" + user.Email + "'";
+            cmd.CommandText = "select * from USERS t where email='" + Email + "'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.HasRows)//邮箱已注册
@@ -123,7 +123,7 @@ namespace ProductsApp.Controllers
                 sc.EnableSsl = false;
                 sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
                 sc.Send(message);   //发送邮件
-                response.StatusCode = HttpStatusCode.OK;
+                //response.StatusCode = HttpStatusCode.OK;
                 status = yzm;
             }
 
@@ -368,7 +368,7 @@ namespace ProductsApp.Controllers
         [HttpPut]
         public IHttpActionResult ModifyUserInfo([FromBody]Users user)
         {
-            string status;
+            int status;
 
             //将更新信息存入新建object
             Users newUser = new Users();

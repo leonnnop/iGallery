@@ -104,7 +104,7 @@ namespace ProductsApp.Controllers
                     int Collect_num = Convert.ToInt32(rd1["COLLECT_NUM"]);
                     int Comment_num = Convert.ToInt32(rd1["COMMENT_NUM"]);
                     string Time = rd1["SEND_TIME"].ToString();
-                    Moment temp = new Moment(ID, Sender_id, Content, Like_num, Forward_num, Collect_num, Comment_num, Convert.ToDateTime(Time));
+                    Moment temp = new Moment(ID, Sender_id, Content, Like_num, Forward_num, Collect_num, Comment_num, Time.ToString());
                     moment_list.Add(temp);
                 }
                 rd1.Close();

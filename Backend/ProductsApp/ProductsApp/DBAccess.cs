@@ -5,7 +5,7 @@ using System.Web;
 using System.Data;
 //using System.Data.OracleClient;
 using Oracle.ManagedDataAccess.Client;
-namespace iGallery
+namespace ProductsApp
 {
     public class DBAccess
     {
