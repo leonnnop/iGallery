@@ -36,7 +36,7 @@ namespace ProductsApp.Controllers
             cmd.CommandText = "select m.id as m_id,m.content, m.like_num, m.forward_num, m.collect_num, m.comment_num, m.time, p.id as p_id, p.url"+
                               " from MOMENT m,USERS u " +
                               "where m.id = p.moment_id and m.sender_id= '" + Sender_id + "'" +
-                              "order by moment.time desc";
+                              "order by m.time desc";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
 
