@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IGallery.Models
+namespace ProductsApp.Models
 {
     public class User_Moment
     {
@@ -18,5 +18,7 @@ namespace IGallery.Models
         public int CollectNum { get; set; }
         public int CommentNum { get; set; }
         public string Time { get; set; }
+        public string MomentID { get; set; }
+        public string LikeState { get; set; }
     }
 }
