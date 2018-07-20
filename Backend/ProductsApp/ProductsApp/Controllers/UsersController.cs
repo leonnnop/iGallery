@@ -496,42 +496,5 @@ namespace ProductsApp.Controllers
             conn.Close();
             return Json<List<Users>>(following_list);
         }
-        /// <summary>
-        /// 返回搜索匹配用户
-        /// </summary>
-        /// <param name="keyword">String</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult search_user(string keyword)
-        {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where ID like'%" + keyword + "%'";//查找匹配的字符串
-            cmd.Connection = conn;
-            OracleDataReader rd = cmd.ExecuteReader();
-            List<Users> User_list = new List<Users>();                               //用户列表
-            while (rd.Read())
-            {
-                Users temp = new Users();
-                temp.ID = rd["ID"].ToString();
-                temp.Email = rd["EMAIL"].ToString();
-                temp.Password = rd["PASSWORD"].ToString();
-                temp.Bio = rd["BIO"].ToString();
-                temp.Photo = rd["PHOTO"].ToString();
-                User_list.Add(temp);
-            }
-            rd.Close();
-            conn.Close();
-            return Json<List<Users>>(User_list);
-        }
     }
 }
