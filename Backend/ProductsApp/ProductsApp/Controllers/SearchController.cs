@@ -31,10 +31,14 @@ namespace Search.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from USERS where ID like'%" + keyword + "%'";//查找匹配的字符串
+            cmd.CommandText = "select * from USERS where USERNAME like'%" + keyword + "%'";//查找匹配的字符串
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
-            List<Users> User_list = new List<Users>();                               //用户列表
+            List<Users> User_list = new List<Users>();                                     //用户列表
+            if(rd.Read()==null)
+            {
+                return OK("Not found");
+            }
             while (rd.Read())
             {
                 Users temp = new Users();
@@ -69,7 +73,7 @@ namespace Search.Controllers
             }
             OracleCommand cmd = new OracleCommand();
             List<Tag> tags = new List<Tag>();
-            cmd.CommandText = "select CONTENT from TAG where CONTENT='%"+keyword+"%'";
+            cmd.CommandText = "select CONTENT from TAG where CONTENT like'%"+keyword+"%'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             while (rd.Read())
@@ -80,7 +84,7 @@ namespace Search.Controllers
             }
             List<Moment> moments = new List<Moment>();
             List<Users> user_list = new List<Users>();
-            cmd.CommandText = "select MOMENT_ID from Moment_Tag where Tag='%"+keyword+"%'";
+            cmd.CommandText = "select MOMENT_ID from Moment_Tag where Tag like'%"+keyword+"%'";
             cmd.Connection = conn;
             OracleDataReader rd1 = cmd.ExecuteReader();
             while(rd1.Read())
