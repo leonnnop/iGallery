@@ -383,11 +383,11 @@ namespace ProductsApp.Controllers
         /// <summary>
         /// 关注用户
         /// </summary>
-        /// <param name="follow">Users</param>
-        /// <param name="followed">Users</param>
+        /// <param name="followID">Users</param>
+        /// <param name="followedID">Users</param>
         /// <returns></returns>
-        [HttpPost]
-        public HttpResponseMessage Follow([FromBody]Users follow, [FromBody]Users followed)//把关注用户和被关注用户加入关注联系集
+        [HttpGet]
+        public HttpResponseMessage Follow(string followID, string followedID)//把关注用户和被关注用户加入关注联系集
         {
             string state = "0";//状态码0：成功，1：关注失败
             HttpResponseMessage response = Request.CreateResponse();
@@ -402,7 +402,7 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + follow.ID + "," + followed.ID + ")";//插入数据库
+            cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + followID + "," + followedID + ")";//插入数据库
             cmd.Connection = conn;
             int result = cmd.ExecuteNonQuery();
             if (result == 1)//插入成功
@@ -422,10 +422,10 @@ namespace ProductsApp.Controllers
         /// <summary>
         /// 返回关注列表
         /// </summary>
-        /// <param name="user">Users</param>
+        /// <param name="userID">Users</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult FollowList([FromBody]Users user)       //返回关注列表
+        public IHttpActionResult FollowList([FromBody]string userID)       //返回关注列表
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -438,14 +438,14 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + user.ID + "'";//找到该用户所关注的用户的ID
+            cmd.CommandText = "select FOLLOWING_ID from Follow_User where USER_ID='" + userID + "'";//找到该用户所关注的用户的ID
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             List<Users> following_list = new List<Users>();
             while (rd.Read())
             {
                 string followed_id = rd["FOLLOWING_ID"].ToString();
-                cmd.CommandText = "select * from User where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+                cmd.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
                 cmd.Connection = conn;
                 OracleDataReader rd1 = cmd.ExecuteReader();
                 if (rd1.Read())
