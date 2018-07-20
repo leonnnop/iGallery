@@ -10,7 +10,7 @@
                     </el-col>
                     <el-col style="font-size:32px;color:#262626;margin-left:-2%">
                         <el-row>
-                            {{this.tagName}}
+                            #{{this.$route.params.id}}
                         </el-row>
                         <el-row style="font-size:18px;margin-top:10px;margin-left:15px">
                             {{this.addCommas(this.followNum)}} 人关注
@@ -37,10 +37,10 @@
                                     <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
-                                    {{item.text}}
+                                    {{item.Content}}
                                 </el-row>
                                 <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col>
@@ -57,10 +57,10 @@
                                     <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
-                                    {{item.text}}
+                                    {{item.Content}}
                                 </el-row>
                                 <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col>
@@ -77,10 +77,10 @@
                                     <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
-                                    {{item.text}}
+                                    {{item.Content}}
                                 </el-row>
                                 <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col>
@@ -97,10 +97,10 @@
                                     <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
-                                    {{item.text}}
+                                    {{item.Content}}
                                 </el-row>
                                 <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.likeNum}}人喜欢
+                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col> -->
@@ -193,97 +193,99 @@
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     }
                 ],
                 items_col_2: [{
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     }
                 ],
                 items_col_3: [{
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     }
                 ],
                 items_col_4: [{
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     },
                     {
                         userName: 'Leonnnop',
                         likeIMG: require('../image/unlike.png'),
                         likeState: false,
-                        text: 'test 文案 阿拉拉。',
-                        likeNum: 5
+                        Content: 'test 文案 阿拉拉。',
+                        LikeNum: 5
                     }
                 ],
             }
         },
 
         created() {
-            this.axios.get('http://10.0.1.8:54468/api/Moment/GetRankingMoments?user_id=' + this.store.state.currentUserId)
+            this.axios.get('http://10.0.1.8:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' + '&TagContent=' +
+                    this.$route.params.id)
                 .then((response) => {
-                    let totalMoments = response.data.User_Moment;
+                    let totalMoments = response.data.m_Item1;
+                    this.followNum = response.data.m_Item2;
                     totalMoments.forEach(element => {
                         element.likeIMG = require('../image/unlike.png');
                         // 更新后删除
@@ -291,9 +293,9 @@
                     });
                     let momentNum = totalMoments.length;
                     this.items_col_1 = totalMoments.slice(0, Math.floor(momentNum / 3));
-                    this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 3) + 1, Math.floor(2 * momentNum /
+                    this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 3), Math.floor(2 * momentNum /
                         3));
-                    this.items_col_3 = totalMoments.slice(Math.floor(2 * momentNum / 3) + 1);
+                    this.items_col_3 = totalMoments.slice(Math.floor(2 * momentNum / 3));
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -302,7 +304,7 @@
 
         methods: {
             followClickHandler() {
-                this.axios.get()
+                this.axios.put()
                     .then((response) => {
 
                     })
@@ -326,14 +328,26 @@
                 return aIntNum.join(".");
             },
             handleLikeClick(item) {
-                item.likeState = !item.likeState
-                if (item.likeState) {
-                    item.likeIMG = require('../image/like.png')
-                    item.likeNum++
+                console.log(item.LikeState)
+
+                item.LikeState = !item.LikeState
+                console.log(item.LikeState)
+
+                if (item.LikeState == true) {
+                    item.likeIMG = require('../image/like.png');
+                    item.LikeNum++;
                 } else {
-                    item.likeIMG = require('../image/unlike.png')
-                    item.likeNum--
+                    item.likeIMG = require('../image/unlike.png');
+                    item.LikeNum--;
                 }
+                // console.log(item)
+                this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+                    '&moment_id=' + item.MomentID
+                    // , {
+                    //     email: this.$store.state.currentUserId,
+                    //     moment_id: item.MomentId
+                    //   }
+                )
             },
             getNaturalWidth(id) {
                 var image = new Image()
@@ -355,8 +369,8 @@
             },
             handleCancelClick(index) {
                 this.$confirm('您觉得这条消息很无聊嘛？qwq？', '提示', {
-                    confirmButtonText: '是的，别再给我看相关的谢谢!',
-                    cancelButtonText: '点错了',
+                    confirmButtonContent: '是的，别再给我看相关的谢谢!',
+                    cancelButtonContent: '点错了',
                     type: 'info'
                 }).then(() => {
                     // for 循环

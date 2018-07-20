@@ -79,6 +79,10 @@
       handleTopBarSelect(key, keyPath) {
         console.log('/' + key);
 
+        if (key == 'user') {
+          key = 'user/' + this.$store.state.currentUserId;
+          // console.log(key)
+        }
         this.$router.push('/main/' + key);
 
       },

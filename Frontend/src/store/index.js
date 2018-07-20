@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        currnetUserId: '',
+        currentUserId: '2.com',
         job: {
             taskId: '',
             createTime: null,
