@@ -19,7 +19,7 @@
         </el-col>
         <el-col :span="17" style="padding-top:20px">
           <el-row>
-            <el-button type="text" id="name">{{name}}</el-button>
+            <el-button type="text" id="username">{{username}}</el-button>
           </el-row>
           <el-row>
             <el-button type="text" class="num" @click="showFollow">关注:{{followNum}}</el-button>
@@ -38,7 +38,7 @@
             <el-row>
               <el-col v-for="moment in moments" :key=moment.name :span="6">
                 <el-col class="moments">
-                  <img :src="moment.url" class="img" @click="toMoment" alt="动态的图片"/>
+                  <img :src="moment.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
                 </el-col>
               </el-col>
             </el-row>
@@ -46,15 +46,20 @@
         </el-tab-pane>
         <el-tab-pane label="收藏夹">
           <el-row v-if="isFavor">
-            <el-row style="padding-left:830px">
-              <el-button  type="text" style="font-size:15px" @click="showDialog">新建收藏夹</el-button>
+            <el-row style="background-color:#dedfe6">
+              <el-col :span="12" :offset="9">
+                <div style="padding:10px;">收藏夹内容仅自己可见</div>
+              </el-col>
+              <el-col :span="2">
+                <el-button  type="text" style="font-size:15px" @click="dialogFormVisible=true">新建收藏夹</el-button>
+              </el-col>
               <el-dialog title="新建收藏夹" :visible.sync="dialogFormVisible">
                   <el-form ref="form" :model="ruleform" :rules="rules">
-                    <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-                      <el-input v-model="ruleform.name" auto-complete="off"></el-input>
+                    <el-form-item label="名称：" :label-width="formLabelWidth" prop="name">
+                      <el-input v-model="ruleform.name" auto-complete="off" style="width:200px"></el-input>
                     </el-form-item>
-                    <el-form-item label="简介" :label-width="formLabelWidth" prop="desc">
-                      <el-input v-model="ruleform.desc" auto-complete="off"></el-input>
+                    <el-form-item label="简介：" :label-width="formLabelWidth" prop="desc">
+                      <el-input v-model="ruleform.desc" auto-complete="off" style="width:450px"></el-input>
                     </el-form-item>
                   </el-form>
                   <div slot="footer" class="dialog-footer">
@@ -69,7 +74,7 @@
                 <div style="header">
                   <el-card shadow="always" :body-style="{ padding: '0px' }">
                     <img :src="favor.url" class="img" alt="收藏夹封面" @click="toCollect"/>
-                    <div style="padding-left:120px" class="bottom">
+                    <div class="bottom">
                       <el-tooltip effect="dark" :content="favor.brief" placement="bottom-end">
                         <el-button type="text" @click="toCollect">{{favor.favorName}}</el-button>
                       </el-tooltip>
@@ -81,11 +86,16 @@
             </el-row>
           </el-row>
           <el-row v-if="isCollect">
-            <el-col v-for="collect in collects" :key=collect.name :span="6">
-                <el-col class="blogs">
-                    <img :src="collect.url" class="img" @click="toMoment" alt="动态的图片"/>
+            <el-row>
+              <el-button type="text" style="font-size:15px;padding-left:15px" @click="backToFavors">返回</el-button>
+            </el-row>
+            <el-row>
+              <el-col v-for="collect in collects" :key=collect.name :span="6">
+                <el-col class="moments">
+                    <img :src="collect.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
                 </el-col>
               </el-col>
+            </el-row>
           </el-row>
         </el-tab-pane>
       </el-tabs>
@@ -96,14 +106,14 @@
 <style>
   .el-tabs__item{
     font-size:15px;
-    padding:5px;
     margin:10px;
+    padding:0px;
   }
   .moments{
     display:block;
     width:200px;
     height:200px;
-    margin:8px 8px;
+    margin:15px;
   }
   .img{
     display:block;
@@ -114,18 +124,21 @@
     display:block;
     width:200px;
     height:245px;
-    margin:8px 8px;
+    margin:15px;
   }
   .bottom{
     margin-top: 0px;
     margin-bottom: 0px;
+    background-color:#dcdfe6;
+    padding-left:120px;
   }
   #cards{
       margin-left:auto;
       margin-right:auto;
-      margin-top:0px;
+      margin-top:10px;
+      margin-bottom: 10px;
   }
-  #name{
+  #username{
       font-size: 18px;
       padding-top: 30px;
   }
@@ -144,67 +157,81 @@
     data(){
       return{
         headUrl:require('../image/a.jpg'),
-        name:'初始昵称',
+        username:'初始昵称',
         followNum:0,
         fansNum:0,
         desc:'',
         momentNum:0,
         moments:[{
             index:0,
+            momentID:'0',
             url: require('../image/a.jpg')
           },{
             index:1,
+            momentID:'1',
             url: require('../image/gaojin_ciyun.png')
           },{
             index:2,
+            momentID:'2',
             url: require('../image/gaojin_radar.png')
           },{
             index:3,
+            momentID:'3',
             url: require('../image/a.jpg')
           },{
             index:4,
+            momentID:'4',
             url: require('../image/a.jpg')
           }],
         favors:[{
             index:0,
+            favorID:'0',
             url: require('../image/a.jpg'),
             favorName:'默认收藏夹',
             brief:'默认收藏夹的简介'
           },{
             index:1,
+            favorID:'1',
             url: require('../image/gaojin_ciyun.png'),
             favorName:'MyCollect',
             brief:'默认收藏夹的简介'
           },{
             index:2,
+            favorID:'2',
             url: require('../image/gaojin_radar.png'),
             favorName:'Something',
             brief:'默认收藏夹的简介'
           },{
             index:3,
+            favorID:'3',
             url: require('../image/a.jpg'),
             favorName:'Anything',
             brief:'默认收藏夹的简介'
           },{
             index:4,
+            favorID:'4',
             url: require('../image/a.jpg'),
             favorName:'Nothing',
             brief:'默认收藏夹的简介'
           }],
         collects:[{
             index:0,
+            momentID:'',
             url: require('../image/a.jpg')
           },{
             index:1,
             url: require('../image/gaojin_ciyun.png')
           },{
             index:2,
+            momentID:'',
             url: require('../image/gaojin_radar.png')
           },{
             index:3,
+            momentID:'',
             url: require('../image/a.jpg')
           },{
             index:4,
+            momentID:'',
             url: require('../image/a.jpg')
           }],
         ruleform: {
@@ -229,7 +256,7 @@
             }
           ]
         },
-        formLabelWidth: '120px',
+        formLabelWidth: '100px',
         isFavor:true,
         isCollect:false,
         dialogFormVisible:false,
@@ -237,7 +264,7 @@
     },
     methods: {
       handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+        this.headUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
@@ -251,18 +278,24 @@
         }
         return isJPG && isLt2M;
       },
-      toMoment(){
-        this.$router.push('moment');
+      toMoment(key){
+        this.$router.push('momentDetail'+key);
       },
-      toCollect(){
+      toCollect:function(){
+        this.$axios.get('/collects',{
+            params:{
+                favorID:this.favorID,
+            }
+        })
+        .then((response)=>{
+            this.collects=response.data.collects;
+        })
         this.isFavor=false;
         this.isCollect=true;
       },
-      showMessage(){
-    
-      },
-      showDialog(){
-        this.dialogFormVisible=true;
+      backToFavors(){
+          this.isFavor=true;
+          this.isCollect=false;
       },
       handleSettingClick:function(){
         this.$router.push('set');
@@ -279,6 +312,7 @@
               }
               this.$axios.post('/users',qs.stringify({fmessage}))
               .then((response) => {
+                  this.favors=response.data.favors;
                   let result = response.data.result;
                   this.resultHandler(result);
               })
@@ -326,16 +360,10 @@
             this.followNum=response.data.followNum;
             this.desc=response.data.desc;
             this.momentNum=response.data.momentNum;
+            this.moments=response.data.moments;
             })
             .catch((error) => {
                 console.log(error);
-        });
-      this.$axios.get('/moment')
-        .then((response) => {
-          this.moments=response.data.moments;
-        })
-        .catch((error) => {
-         console.log(error);
         });
       this.$axios.get('/favorite')
         .then((response) => {
