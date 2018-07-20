@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IGallery.Models
+namespace ProductsApp.Models
 {
     public class Modify_Moment
     {

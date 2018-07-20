@@ -164,7 +164,9 @@
     <Compile Include="Controllers\DiscoverMomentController.cs" />
     <Compile Include="Controllers\DisplayLikeListController.cs" />
     <Compile Include="Controllers\DisplayMomentsController.cs" />
+    <Compile Include="Controllers\Follow_TagController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
+    <Compile Include="Controllers\ModifyMomentController.cs" />
     <Compile Include="Controllers\MomentController.cs" />
     <Compile Include="Controllers\Moment_TagController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -177,7 +179,9 @@
     <Compile Include="Models\Coment.cs" />
     <Compile Include="Models\DisplayedComment.cs" />
     <Compile Include="Models\DisplayedMoment.cs" />
+    <Compile Include="Models\Follow_Tag.cs" />
     <Compile Include="Models\Forward.cs" />
+    <Compile Include="Models\Modify_Moment.cs" />
     <Compile Include="Models\Moment.cs" />
     <Compile Include="Models\Moment_Tag.cs" />
     <Compile Include="Models\MyMoments.cs" />
@@ -188,6 +192,7 @@
     <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserMomentAPI.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
