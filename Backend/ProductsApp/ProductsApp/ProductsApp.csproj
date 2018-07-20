@@ -162,9 +162,11 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DiscoverMomentController.cs" />
+    <Compile Include="Controllers\DisplayLikeListController.cs" />
     <Compile Include="Controllers\DisplayMomentsController.cs" />
     <Compile Include="Controllers\MomentController.cs" />
     <Compile Include="Controllers\Moment_TagController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DBAccess.cs" />

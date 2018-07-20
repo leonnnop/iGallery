@@ -1,5 +1,5 @@
-﻿using IGallery;
-using IGallery.Models;
+﻿using ProductsApp;
+using ProductsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Globalization;
 //using System.Data.OracleClient;
 using Oracle.ManagedDataAccess.Client;
 
-namespace IGallery.Controllers
+namespace ProductsApp.Controllers
 {
     public class DiscoverMomentController : ApiController
     {

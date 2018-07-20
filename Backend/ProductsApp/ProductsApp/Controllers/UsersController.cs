@@ -351,11 +351,7 @@ namespace ProductsApp.Controllers
         [HttpPut]
         public IHttpActionResult ModifyUserInfo([FromBody]Users user)
         {
-<<<<<<< HEAD
-            int status;
-
-=======
->>>>>>> 6f78426676971edc6376bf09d8ff7f79f81fcc5e
+            
             //将更新信息存入新建object
             Users newUser = new Users();
             //newUser.Email = user.Email;
