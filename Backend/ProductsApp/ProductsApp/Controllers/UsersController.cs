@@ -315,49 +315,31 @@ namespace ProductsApp.Controllers
         /// <param name="email">string</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetUserInfo(string email)
+        public IHttpActionResult GetUserInfo(string email)
         {
-            string result = null;
-            HttpResponseMessage response = Request.CreateResponse();
 
             //todo:连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
+            DBAccess dBAccess = new DBAccess();
+
 
             //执行数据库操作
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select t.* from USERS t where email='" + email + "'";
-            cmd.Connection = conn;
-            OracleDataReader rd = cmd.ExecuteReader();
+            OracleDataReader rd = dBAccess.GetDataReader("select t.* from USERS t where email='" + email + "'");
+
+            //创建Users对象
+            Users user = new Users();
+
             if (rd.Read())//数据库中有此用户，返回其个人信息
             {
-                Users user = new Users();
+
                 user.ID = rd["ID"].ToString();
                 user.Email = rd["EMAIL"].ToString();
                 user.Username = rd["USERNAME"].ToString();
                 user.Password = rd["PASSWORD"].ToString();
                 user.Bio = rd["BIO"].ToString();
                 user.Photo = rd["PHOTO"].ToString();
-                result = JsonConvert.SerializeObject(user);
-                response.StatusCode = HttpStatusCode.OK;
             }
-            else//查无此人，返回错误状态码404
-            {
-                result = "NotFound";
-                response.StatusCode = HttpStatusCode.OK;
-            }
-            response.Content = new StringContent(result, Encoding.Unicode);
-            rd.Close();
-            conn.Close();
-            return response;
+
+            return Ok<Users>(user);
         }
 
 
@@ -369,48 +351,32 @@ namespace ProductsApp.Controllers
         [HttpPut]
         public IHttpActionResult ModifyUserInfo([FromBody]Users user)
         {
-            string status;
-
             //将更新信息存入新建object
             Users newUser = new Users();
-            newUser.Email = user.Email;
+            //newUser.Email = user.Email;
             newUser.Username = user.Username;
-            newUser.Password = user.Password;
+            //newUser.Password = user.Password;
             newUser.Bio = user.Bio;
             newUser.Photo = user.Password;
 
             //HttpResponseMessage response = Request.CreateResponse();
 
+            int status;
+
             //todo:连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
+            DBAccess dBAccess = new DBAccess();
 
             //执行数据库操作
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "update USERS set email='" + user.Email + "', username='" + user.Username + "', password='" + user.Password + "' where email='" + user.Email + "'";
-            cmd.Connection = conn;
-
-            int executeResult = cmd.ExecuteNonQuery();
-            if (executeResult == 1)//修改成功，返回成功状态码202
+            if (dBAccess.ExecuteSql("update USERS set username='" + user.Username + "', bio='" + user.Bio + "', photo = '" + user.Photo + "'  where email='" + user.Email + "'"))
             {
-                status = 0;
+                status = 0;//成功更新用户信息
             }
-            else//修改失败，返回失败状态码404
+            else
             {
-                status = 1;
+                status = 1;//更新失败
             }
 
-            conn.Close();
-            
-            return Ok(status);
+            return Ok<int>(status);
         }
 
         /// <summary>
