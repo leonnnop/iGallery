@@ -30,7 +30,7 @@ namespace MyIGallery.Controllers
                 result.StatusCode = HttpStatusCode.OK;
                 Tuple<ByteArrayContent, string> res = Util.Get(id, 2);
                 result.Content=res.Item1; //头图返图
-                string ext = res.Item2;
+                string ext = res.Item2;   //格式解析
                 result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/"+ext.Substring(1,ext.Length-1));
             }
             else
@@ -47,56 +47,31 @@ namespace MyIGallery.Controllers
         {
             HttpResponseMessage result = new HttpResponseMessage();
             Tuple<ByteArrayContent, string> res = Util.Get(pid, 1);
-            result.Content = res.Item1; //动态组图返图
-            string ext = res.Item2;
+            result.Content = res.Item1; //动态组图返图pid
+            string ext = res.Item2;   //格式解析
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + ext.Substring(1, ext.Length - 1));
             return result;
         }
 
         [HttpPost]
-        public void Save()
+        public HttpResponseMessage Save()
         {
+            //从{富参}表单获取参数
             var data=HttpContext.Current.Request.Params;
             string id = data["id"];
             int type = Convert.ToInt32(data["type"]);
 
-            Util.Post(id, type);
-        }
-    }
-}
+            HttpResponseMessage result = new HttpResponseMessage();
 
-/*
- *    [HttpPost]
-        public void Test()
-        {
-            var SrcRequest = HttpContext.Current.Request;
-
-            foreach(string p in SrcRequest.Params.AllKeys)
+            if(Util.Post(id, type))
             {
-                var par= SrcRequest.Params[p];
-
+                result.StatusCode = HttpStatusCode.OK;
             }
-            
+            else
+            {
+                result.StatusCode = HttpStatusCode.InternalServerError;
+            }
+            return result;
         }
-
-*
-* 
-[HttpGet]
-public ApiResultModel GetMmps(string id, int type)
-{
-    List<Byte[]> list = Util.Get(id, type);
-
-    //return Json<List<ByteArrayContent>>(list);
-
-    JObject joReturn = new JObject();
-    foreach (Byte[] b in list)
-    {
-        joReturn.Add(new JProperty(Convert.ToString(list.IndexOf(b) + 1), Convert.ToBase64String(b)));
     }
-    joReturn.Add(new JProperty("0", list.Count));
-
-    ApiResultModel result = new ApiResultModel(HttpStatusCode.OK, joReturn, "");
-
-    return result;
 }
-*/
