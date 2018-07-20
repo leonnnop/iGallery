@@ -418,6 +418,46 @@ namespace ProductsApp.Controllers
             return response;
         }
 
+         /// <summary>
+        /// 取消关注用户
+        /// </summary>
+        /// <param name="followID">string</param>
+        /// <param name="followedID">string</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage CancelFollow(string followID, string followedID)//把取消关注用户和被取消关注用户加入关注联系集
+        {
+            string state = "0";//状态码0：成功，1：失败
+            HttpResponseMessage response = Request.CreateResponse();
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "delete from Follow_User " +
+                              "where user_id='" +followID+ "'and following_id='"+followedID+"'";//把此条联系从数据库删除
+            cmd.Connection = conn;
+            int result = cmd.ExecuteNonQuery();
+            if (result == 1)//删除成功
+            {
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            else           //删除失败
+            {
+                state = "1";
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+            conn.Close();
+            response.Content = new StringContent(state, Encoding.Unicode);//返回状态码
+            return response;
+        }
+
         /// <summary>
         /// 返回关注列表
         /// </summary>
