@@ -8,7 +8,7 @@ using ProductsApp.Models;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Search.Controllers
+namespace ProductsApp.Controllers
 {
     public class SearchController : ApiController
     {
