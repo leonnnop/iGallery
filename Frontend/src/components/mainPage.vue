@@ -58,11 +58,12 @@
                         <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
                           
                           <el-upload
-                            
+                            ref="upload"
                             action="https://jsonplaceholder.typicode.com/posts/"
                             list-type="picture-card"
                             :on-remove="handleRemove" 
                             :file-list="uploadImgs"
+                            :auto-upload="false"
                             :before-upload="beforeUpload"
                             :on-change="uploadOnChange"
                             :on-success="uploadOnSuccess"
@@ -250,6 +251,10 @@
       handleTopBarSelect(key, keyPath) {
         console.log('/' + key);
 
+        if (key == 'user') {
+          key = 'user/' + this.$store.state.currentUserId;
+          // console.log(key)
+        }
         this.$router.push('/main/' + key);
 
       },
@@ -275,10 +280,10 @@
         this.showTextArea=false;
       },
       sendMomentHandler:function(){
-        console.log('————发布内容————');
-        console.log(this.uploadImgs2);
-        console.log(this.sendText);
-        console.log(this.tags);
+        // console.log('————发布内容————');
+        this.$refs.upload.submit(); //上传图片
+        
+
         this.uploadImgs2=[];
         this.tags=[];
         this.sendText='';
@@ -290,8 +295,9 @@
         this.$message({
           message: '发布成功！',
           type: 'success'
-        })
+        });
       },
+      //上传组件
       handleRemove(file, fileList) {
         if(!fileList.length){
           this.showNextBtn=false;
@@ -308,30 +314,30 @@
         // console.log('——————开始上传——————');
         // console.log(e.percent,file)
       },
-      uploadOnChange(file){
-          console.log("——————————change——————————")
+      uploadOnChange(file,fileList){
+          //console.log("——————————change——————————")
           // console.log(file)
           if(file.status == 'ready'){
-              console.log("ready")
+            this.uploadImgs2.push(file);
+              //console.log("ready")
           }else if(file.status == 'fail'){
               this.$message.error("图片上传出错，请刷新重试！")
           }
-      },
-      uploadOnSuccess(e,file,fileList){//上传附件
-          console.log("——————————success——————————")
-          console.log(fileList);
           if(fileList.length){
             this.showNextBtn=true;
           }
-          this.uploadImgs2=fileList;
+      },
+      uploadOnSuccess(e,file,fileList){//上传附件
+          // console.log("——————————success——————————")
+          // console.log(fileList);
       },
       upLoadOnExceed:function(files,fileList){
         this.$message.error('exceed');
         this.$message.warning(`最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
       },
       uploadOnError(e,file){
-          console.log("——————————error——————————")
-          console.log(e)
+          // console.log("——————————error——————————");
+          // console.log(e);
       },
       handleTagClose(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
