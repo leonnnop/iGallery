@@ -229,19 +229,34 @@
     },
 
     created() {
-      this.axios.get('http://10.0.1.8:54468/api/Moment/GetRankingMoments?user_id=' + this.store.state.currentUserId)
+      this.axios.get('http://10.0.1.8:54468/api/DiscoverMoment/GetRankingMoments?email=' + this.$store.state.currentUserId)
         .then((response) => {
-          let totalMoments = response.data.User_Moment;
+          let totalMoments = response.data;
           totalMoments.forEach(element => {
-            element.likeIMG = require('../image/unlike.png');
+            console.log(element.LikeState)
+            if (element.LikeState == 'true') {
+              element.likeIMG = require('../image/like.png');
+              element.LikeState = true
+            } else {
+              element.likeIMG = require('../image/unlike.png');
+              element.LikeState = false
+            }
             // 更新后删除
             // element.LikeState = false;
           });
           let momentNum = totalMoments.length;
+          console.log(momentNum)
           this.items_col_1 = totalMoments.slice(0, Math.floor(momentNum / 4));
-          this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 4) + 1, Math.floor(momentNum / 2));
-          this.items_col_3 = totalMoments.slice(Math.floor(momentNum / 2) + 1, Math.floor(3 * momentNum / 4));
-          this.items_col_4 = totalMoments.slice(Math.floor(3 * momentNum / 4) + 1);
+          console.log(this.items_col_1)
+          this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 4), Math.floor(momentNum / 2));
+          console.log(this.items_col_2)
+
+          this.items_col_3 = totalMoments.slice(Math.floor(momentNum / 2), Math.floor(3 * momentNum / 4));
+          console.log(this.items_col_3)
+
+          this.items_col_4 = totalMoments.slice(Math.floor(3 * momentNum / 4));
+          console.log(this.items_col_4)
+
         })
         .catch(function (error) {
           console.log(error);
@@ -250,22 +265,26 @@
 
     methods: {
       handleLikeClick(item) {
+        console.log(item.LikeState)
+
         item.LikeState = !item.LikeState
-        if (item.LikeState) {
+        console.log(item.LikeState)
+
+        if (item.LikeState == true) {
           item.likeIMG = require('../image/like.png');
-          item.likeNum++;
-          this.axios.put('http://10.0.1.8:54468/api/Moment/UpdateLiking', {
-            user_id: this.store.state.currentUserId,
-            moment_id: item.moment_id
-          })
+          item.LikeNum++;
         } else {
           item.likeIMG = require('../image/unlike.png');
-          item.likeNum--;
-          this.axios.put('http://10.0.1.8:54468/api/Moment/UpdateLiking', {
-            user_id: this.store.state.currentUserId,
-            moment_id: item.moment_id
-          })
+          item.LikeNum--;
         }
+        // console.log(item)
+        this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+          '&moment_id=' + item.MomentID
+          // , {
+          //     email: this.$store.state.currentUserId,
+          //     moment_id: item.MomentId
+          //   }
+        )
       },
       getNaturalWidth(id) {
         var image = new Image()

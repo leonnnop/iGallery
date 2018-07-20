@@ -18,7 +18,7 @@
               <el-menu-item index="users">用户</el-menu-item>
               <el-menu-item index="topic">话题</el-menu-item>
             </el-submenu> -->
-            <el-menu-item index="blogs">我的主页</el-menu-item>
+            <el-menu-item index="personalpage">我的主页</el-menu-item>
 
             <el-menu-item index="photoWall">发现</el-menu-item>
           </el-menu>
