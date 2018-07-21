@@ -149,10 +149,6 @@ namespace ProductsApp.Controllers
         }
 
 
-
-
-
-
         /// <summary>
         /// 用户登录
         /// </summary>
@@ -171,15 +167,27 @@ namespace ProductsApp.Controllers
             {
                 throw (ex);
             }
+            List<string> information = new List<string>();
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select Password from USERS t where email='" + Email + "'";//根据邮箱查找该用户的正确密码
+            cmd.CommandText = "select Password from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read())
             {
                 string password = rd["Password"].ToString();
                 conn.Close();
-                if (password == Password) return LoginResult("0");//如果用户输入的密码正确
+                if (password == Password)
+                {
+                    cmd.CommandText = "select ID from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
+                    cmd.Connection = conn;
+                    rd = cmd.ExecuteReader();
+                    if(rd.Read())
+                    {
+                       string id=rd["ID"].ToString();
+                       return LoginResult("0"+id+Email);//如果用户输入的密码正确
+                    }
+                   
+                }
                 else return LoginResult("1");
             }
             else return LoginResult("2");//未找到此用户名
