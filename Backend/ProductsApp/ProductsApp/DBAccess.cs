@@ -9,7 +9,7 @@ namespace ProductsApp
 {
     public class DBAccess
     {
-        protected OracleConnection Connection;
+        public OracleConnection Connection;
         private string connStr;
 
         /// <summary>

@@ -38,6 +38,7 @@ namespace ProductsApp.Controllers
             while ( rd.Read() )//当数据库能读出一条符合条件的元组，执行循环
             {
                 User_Follow uf = new User_Follow();
+                uf.ID = rd["ID"].ToString();
                 uf.Username = rd["USERNAME"].ToString();
                 uf.Photo = rd["PHOTO"].ToString();
                 uf.Email = rd["EMAIL"].ToString();
