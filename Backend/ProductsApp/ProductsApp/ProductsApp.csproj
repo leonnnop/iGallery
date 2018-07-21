@@ -170,6 +170,7 @@
     <Compile Include="Controllers\ModifyMomentController.cs" />
     <Compile Include="Controllers\MomentController.cs" />
     <Compile Include="Controllers\Moment_TagController.cs" />
+    <Compile Include="Controllers\PictureController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
