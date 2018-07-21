@@ -21,7 +21,7 @@ namespace ProductsApp.Controllers
         /// <param name="Email">用户邮箱</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Followings(string Email)
+        public IHttpActionResult Followings(string Email, int Begin, int End)
         {
             List<DisplayedMoment> moments=new List<DisplayedMoment>();
 
@@ -53,6 +53,12 @@ namespace ProductsApp.Controllers
                 "where follow_user.user_id = '" + UserID + "')) " +
                 "order by moment.time desc";
             OracleDataReader rd = cmd.ExecuteReader();
+
+            for(int i = 1; i < Begin; i++)
+            {
+                if (!rd.Read()) { return Ok(false); }
+            }
+            int count = Begin - 1;
             while (rd.Read())
             {
                 Moment mmt = new Moment();
@@ -80,10 +86,15 @@ namespace ProductsApp.Controllers
                 {
                     mmt.QuoteMID = rd[8].ToString();
                 }
-                
 
                 //通过Moment取得每一条动态的相关信息，并加入list
                 moments.Add(All_Info_Of(mmt, Email, cmd));
+
+                count++;
+                if (count >= End)
+                {
+                    return Json(moments);
+                }
             }
             return Json(moments);
         }
@@ -102,19 +113,25 @@ namespace ProductsApp.Controllers
             dm.moment = mmt;
 
             //获取发送动态的用户信息
-            dm.user = GetUserInfo(mmt.SenderID, cmd);
+            Users user= GetUserInfo(mmt.SenderID, cmd);
+            dm.user_email = user.Email;
+            dm.user_username = user.Username;
+            dm.user_bio = user.Bio;
+            //dm.user_photo = user.Photo;
 
             //获取原始动态的用户信息
             OracleDataReader rd = Access.GetDataReader(Access.Select("sender_ID", "moment", "ID='"+mmt.QuoteMID+"'"));
             if (rd.Read())
             {
-                dm.forwarded = GetUserInfo(rd[0].ToString(), cmd);
+                Users forwaeded = GetUserInfo(rd[0].ToString(), cmd);
+                dm.forwarded_email = forwaeded.Email;
+                dm.forwarded_username = forwaeded.Username;
             }
             else
             {
-                dm.forwarded = null;
+                dm.forwarded_email = null;
+                dm.forwarded_username = null;
             }
-            
 
             //获取标签信息
             dm.tags = new List<string>();
@@ -126,7 +143,7 @@ namespace ProductsApp.Controllers
             }
 
             //获取评论信息
-            dm.comments = GetComment(mmt.ID, 4, cmd);
+            GetComment(mmt.ID, 4, cmd, dm);
 
             //获知是否点赞过
             dm.liked = api.CheckLikeState(email, mmt.ID);
@@ -161,6 +178,8 @@ namespace ProductsApp.Controllers
                 {
                     user.Bio = rd["BIO"].ToString();
                 }
+                user.Photo = null;
+                /*
                 if (rd["PHOTO"] is DBNull)
                 {
                     user.Photo = null;
@@ -169,6 +188,8 @@ namespace ProductsApp.Controllers
                 {
                     user.Photo = rd["PHOTO"].ToString();
                 }
+                */
+
             }
             return user;
         }
@@ -180,7 +201,7 @@ namespace ProductsApp.Controllers
         /// <param name="limit">评论数的限制（若是所有评论，则赋一个很大的值）</param>
         /// <param name="cmd">数据库命令</param>
         /// <returns></returns>
-        private List<DisplayedComment> GetComment(string id, int limit, OracleCommand cmd)
+        private List<DisplayedComment> GetComment(string id, int limit, OracleCommand cmd, DisplayedMoment dm)
         {
             List<DisplayedComment> comments = new List<DisplayedComment>();
             cmd.CommandText = "select * from coment, users, publish_comment " +
@@ -193,24 +214,20 @@ namespace ProductsApp.Controllers
             while (rd.Read() && ++count <= limit)
             {
                 DisplayedComment dc = new DisplayedComment();
-                dc.sender = new Users();
 
                 //发送评论的用户，提供用户ID，用户名，头像
-                dc.sender.ID = null;
-                dc.sender.Email = rd["EMAIL"].ToString();
-                dc.sender.Password = null;
-                dc.sender.Username = rd["USERNAME"].ToString();
-                dc.sender.Bio = null;
-                dc.sender.Photo = rd["PHOTO"].ToString();
+                dc.sender_email = rd["EMAIL"].ToString();
+                dc.sender_username = rd["USERNAME"].ToString();
+                //dc.sender_photo = rd["PHOTO"].ToString();
 
                 //评论内容
-                dc.comment = new Coment();
-                dc.comment.ID = rd["ID"].ToString();
-                dc.comment.Content = rd["CONTENT"].ToString();
-                dc.comment.SendTime = Convert.ToDateTime(rd["send_time"]);
+                dc.content = rd["CONTENT"].ToString();
+                dc.send_time = rd["send_time"].ToString();
+                dc.quote = null;
+                /*
                 if (rd["quote_ID"] is DBNull)//没有引用评论
                 {
-                    dc.comment.QuoteID = null;
+                    dc.quote = null;
                 }
                 else//有引用评论，需要获取所引用评论的信息
                 {
@@ -223,16 +240,10 @@ namespace ProductsApp.Controllers
                     {
                         dc.quote = new DisplayedComment();
                         //被引用的用户
-                        dc.quote.sender = new Users();
-                        dc.quote.sender.ID = null;
-                        dc.quote.sender.Email = rd_cm["EMAIL"].ToString();
-                        dc.quote.sender.Password = null;
-                        dc.quote.sender.Username = rd_cm["username"].ToString();
-                        dc.quote.sender.Bio = null;
-                        dc.quote.sender.Photo = rd_cm["users.photo"].ToString();
+                        dc.quote.sender_email = rd_cm["EMAIL"].ToString();
+                        dc.quote.sender_username = rd_cm["username"].ToString();
 
                         //被引用的评论内容
-                        dc.quote.comment = new Coment();
                         dc.quote.comment.ID = rd_cm["coment.ID"].ToString();
                         dc.quote.comment.Content = rd_cm["coment.content"].ToString();
                         dc.quote.comment.SendTime = Convert.ToDateTime(rd_cm["coment.send_time"]);
@@ -241,13 +252,12 @@ namespace ProductsApp.Controllers
                         //被引用评论的引用（不展示多级评论）
                         dc.quote.quote = null;
                     }
-
-
                 }
-
+                */
                 comments.Add(dc);
             }
-
+            if (rd.Read()) { dm.more_comments = true; } else { dm.more_comments = false; }
+            dm.comments = comments;
             return comments;
         }
         
