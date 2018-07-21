@@ -28,3 +28,31 @@
 
 
 ------
+
+# 获取两个人的私信内容（李璐）
+
+请求地址：/api/Users/Message/GetMessage
+
+说明：传入互发私信两人的id，返回两个人的消息内容ContentList，按照时间顺序排序，用IndentityList数组表明每条消息是谁发的
+
+请求方式：Get
+
+支持格式：json
+
+参数类型：string
+
+| 类型   | 属性     |
+| :----- | -------- |
+| string | Sender_ID   |
+| string | Receiver_ID   |
+
+返回类型：JSON结构（Tuple<List<int>, List<string>>）
+
+JSON样例
+| 类型| 属性          |
+| ------ | ---------------- |
+|List<int>         | IndentityList        |
+|LIst<string>    | ContentList        |
+
+
+------
