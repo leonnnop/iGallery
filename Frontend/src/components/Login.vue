@@ -87,7 +87,7 @@
               .then((response) => {
                 if (response.data == '0') {
                   this.store.commit('addCurrentUserId',this.ruleForm.email);
-                  this.$router.push('/main/user');
+                  this.$router.push('/main/user/'+this.ruleForm.email);
                 } else if (response.data == '1') {
                   this.$message.error('密码错误！');
                 } else {
