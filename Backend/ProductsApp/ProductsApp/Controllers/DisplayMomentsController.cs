@@ -203,6 +203,7 @@ namespace ProductsApp.Controllers
         /// <returns></returns>
         private List<DisplayedComment> GetComment(string id, int limit, OracleCommand cmd, DisplayedMoment dm)
         {
+            dm.more_comments = false;
             List<DisplayedComment> comments = new List<DisplayedComment>();
             cmd.CommandText = "select * from coment, users, publish_comment " +
                 "where coment.ID = publish_comment.comment_ID and " +
@@ -256,7 +257,7 @@ namespace ProductsApp.Controllers
                 */
                 comments.Add(dc);
             }
-            if (rd.Read()) { dm.more_comments = true; } else { dm.more_comments = false; }
+            if (rd.Read()) { dm.more_comments = true; } 
             dm.comments = comments;
             return comments;
         }

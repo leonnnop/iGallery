@@ -167,7 +167,7 @@ namespace ProductsApp.Controllers
             {
                 throw (ex);
             }
-            List<string> information = new List<string>();
+            
             OracleCommand cmd = new OracleCommand();
             cmd.CommandText = "select Password from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
             cmd.Connection = conn;
@@ -180,22 +180,24 @@ namespace ProductsApp.Controllers
                 {
                     cmd.CommandText = "select ID from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
                     cmd.Connection = conn;
+                    conn.Open();
                     rd = cmd.ExecuteReader();
                     if(rd.Read())
                     {
                        string id=rd["ID"].ToString();
-                       return LoginResult("0"+id+Email);//如果用户输入的密码正确
+                       return LoginResult(id);//如果用户输入的密码正确
                     }
-                   
+                    else return LoginResult("Error");
                 }
-                else return LoginResult("1");
+                else return LoginResult("Error");
             }
-            else return LoginResult("2");//未找到此用户名
+            else return LoginResult("NotFound");//未找到此用户名
 
         }
         public HttpResponseMessage LoginResult(string result)//返回true
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+           
             response.Content = new StringContent(result);
             return response;
         }

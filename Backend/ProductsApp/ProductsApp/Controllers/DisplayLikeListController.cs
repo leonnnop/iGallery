@@ -43,7 +43,7 @@ namespace ProductsApp.Controllers
                 resultList.Add(u);
 
             }
-
+            
             return Json<List<Users>>(resultList);//返回符合条件的Users列表
 
         }
