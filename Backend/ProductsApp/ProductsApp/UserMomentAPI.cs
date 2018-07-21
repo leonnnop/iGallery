@@ -90,6 +90,33 @@ namespace ProductsApp
             return 1;
         }
 
+
+        /// <summary>
+        /// 检查用户1是否关注用户2
+        /// </summary>
+        /// <param name="id_1">string</param>
+        /// <param name="id_2">string</param>
+        /// <returns></returns>
+        /// 返回int值：“0”表示已关注，“1”表示未关注
+        public int CheckFollowState(string id_1, string id_2)
+        {
+            //bool result = false;
+            //string ID = null;
+
+            //执行数据库操作,获取该用户ID
+            OracleDataReader rd = dBAccess.GetDataReader("select * from FOLLOW_USER where user_id='" + id_1 + "' and following_id = '" + id_2 + "'");
+            if (rd.Read())//表示已关注
+            {
+                return 0;
+            }
+            else //表示未关注
+            {
+                return 1;
+            }
+
+        }
+
+
         /// <summary>
         /// Checks the state of the collect.
         /// </summary>
