@@ -416,7 +416,7 @@ namespace ProductsApp.Controllers
                             "from Follow_User" +
                             "where user_id='" + followID + "'and following_id='"+followedID+"'";
             OracleDataReader rd = cmd.ExecuteReader();
-            if (rd.HasRows)
+            if (!rd.HasRows)
             {
                 cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + followID + "," + followedID + ")";//插入数据库
                 cmd.Connection = conn;
