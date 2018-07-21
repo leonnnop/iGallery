@@ -40,6 +40,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+          </el-form>
         </div>
     </el-tab-pane>
   </el-tabs>
@@ -86,6 +87,10 @@
         }
       };
       return {
+        passwordForm: {
+          password: '',
+          checkPassword: ''
+        },
         form: {
           name: '呵',
           desc: '呵呵'
@@ -94,6 +99,22 @@
           opass: '',
           pass: '',
           checkPass: ''
+        },passwordRules: {
+          password: [{
+              validator: validatePass,
+              trigger: 'blur'
+            },
+            {
+              min: 8,
+              max: 20,
+              message: '密码长度为8~20',
+              trigger: 'blur'
+            }
+          ],
+          checkPassword: [{
+            validator: validatePass2,
+            trigger: 'blur'
+          }]
         },
         rules: {
           name: [{

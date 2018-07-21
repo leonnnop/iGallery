@@ -77,7 +77,7 @@ export default new Router({
         name: 'set',
         component: set
       },{
-        path: 'momentDetail',
+        path: 'momentDetail/:id',
         name: 'MomentDetail',
         component: MomentDetail
       }, {

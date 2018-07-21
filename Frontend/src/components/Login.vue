@@ -85,13 +85,15 @@
             this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.ruleForm.email + "&Password=" +
                 this.ruleForm.password)
               .then((response) => {
-                if (response.data == '0') {
-                  this.store.commit('addCurrentUserId',this.ruleForm.email);
-                  this.$router.push('/main/user/'+this.ruleForm.email);
-                } else if (response.data == '1') {
+                if (response.data == 'Not Found') {
+                  this.$message.error('邮箱不存在！请先注册一个账户！');
+                } else if (response.data == 'Error') {
                   this.$message.error('密码错误！');
                 } else {
-                  this.$message.error('邮箱不存在！请先注册一个账户！');
+                  this.$store.commit('addCurrentUserId', this.ruleForm.email);
+                  this.$store.commit('addCurrentUserId_ID', response.data);
+                  console.log(this.$store.state.currentUserId_ID)
+                  this.$router.push('/main/user/' + this.ruleForm.email);
                 }
               })
               .catch((error) => {

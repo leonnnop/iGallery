@@ -8,7 +8,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        currentUserId: '2.com',
+        currentUserId: '277284652@qq.com',
+        currentUserId_ID: '16',
         job: {
             taskId: '',
             createTime: null,
@@ -41,7 +42,10 @@ export default new Vuex.Store({
     },
     mutations: {
         addCurrentUserId(state, currentId) {
-            state.currnetUserId = currentId;
+            state.currentUserId = currentId;
+        },
+        addCurrentUserId_ID(state, currentId) {
+            state.currentUserId_ID = currentId;
         },
         addAssign(state, currentAssign) {
             let detailAssign = {};
