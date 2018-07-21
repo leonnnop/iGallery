@@ -1,6 +1,6 @@
 ------
 
-# 返回个人主页内容（李璐）
+# 返回个人主页动态内容（李璐）
 
 请求地址：/api/HomePage/GetMyMoments
 
@@ -17,21 +17,20 @@
 | string | Sender_id       |
 
 
-返回类型：JSON结构（MyMoments数组）
+返回类型：JSON结构（Moment数组）
 
 样例JSON
 
 | 类型                   | 属性     |
 | ---------------------- | -------- |
-| string               | M_ID （动态ID）   |
-| string               | Content  |
-| string               | LikeNum |
-| string               | ForwardNum     |
-| string               | CollectNum    |
-| string               | CommentNum   |
-| string               | Time |
-| string               | P_ID  （图片ID）   |
-| string               | URL    |
+| string               | ID   |
+| string               | SenderID |
+| string               | Content |
+| string               | LikeNum     |
+| string               | ForwardNum    |
+| string               | CollectNum   |
+| string               | CommentNum |
+| string               | Time   |
 
 ------
 
