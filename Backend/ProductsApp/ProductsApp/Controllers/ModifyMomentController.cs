@@ -29,7 +29,7 @@ namespace ProductsApp.Controllers
             UserMomentAPI api = new UserMomentAPI();
 
             //获取用户ID
-            string user_id = api.GetUserID(email);
+            string user_id = api.EmailToUserID(email);
             if (user_id == null)
             {
                 status = 1;//不存在该用户
@@ -77,7 +77,7 @@ namespace ProductsApp.Controllers
             UserMomentAPI api = new UserMomentAPI();
 
             //获取用户ID
-            string user_id = api.GetUserID(modifyMoment.email);
+            string user_id = api.EmailToUserID(modifyMoment.email);
             if (user_id == null)
             {
                 status = 1;//不存在该用户

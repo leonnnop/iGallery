@@ -8,6 +8,51 @@ namespace ProductsApp
 {
     public class UserMomentAPI
     {
+        DBAccess dBAccess = new DBAccess();
+
+        /// <summary>
+        /// 通过邮箱获取用户ID
+        /// </summary>
+        /// <param name="email">string</param>
+        /// <returns></returns>
+        public string EmailToUserID(string email)
+        {
+            string ID = null;
+
+            //执行数据库操作,获取该用户ID
+            OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where email='" + email + "'");
+            if (rd.Read())
+            {
+                ID = rd["ID"].ToString();
+            }
+            else
+            {
+                return null;
+            }
+            return ID;
+        }
+        /// <summary>
+        /// 通过用户ID获取邮箱
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public string UserIDToEmail(string userid)
+        {
+            string Email = null;
+
+            //执行数据库操作,获取该用户ID
+            OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where ID='" + userid + "'");
+            if (rd.Read())
+            {
+                Email = rd["EMAIL"].ToString();
+            }
+            else
+            {
+                return null;
+            }
+            return Email;
+        }
+
         /// <summary>
         /// 检查用户是否点赞一条动态
         /// </summary>
@@ -19,9 +64,6 @@ namespace ProductsApp
         {
             //bool result = false;
             string ID = null;
-
-            //todo:连接数据库
-            DBAccess dBAccess = new DBAccess();
 
             //执行数据库操作,获取该用户ID
             OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where email='" + email + "'");
@@ -48,34 +90,36 @@ namespace ProductsApp
             return 1;
         }
 
-
         /// <summary>
-        /// 通过邮箱获取用户ID
+        /// Checks the state of the collect.
         /// </summary>
-        /// <param name="email">string</param>
-        /// <returns></returns>
-
-        public string GetUserID(string email)
+        /// <returns>The collect state.</returns>
+        /// <param name="email">Email.</param>
+        /// <param name="moment_id">Moment identifier.</param>
+        /// 返回int值：“-1”表示没有该用户，“0”表示用户已收藏，“1”表示未收藏
+        public int CheckCollectState(string email, string moment_id)
         {
-            string ID = null;
-
-            //todo:连接数据库
-            DBAccess dBAccess = new DBAccess();
 
             //执行数据库操作,获取该用户ID
-            OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where email='" + email + "'");
-            if (rd.Read())
+            string ID = EmailToUserID(email);
+            if (ID==null)//用户不存在
             {
-                ID = rd["ID"].ToString();
+                return -1;
             }
-            else
+
+            OracleDataReader rd = dBAccess.GetDataReader("select * from collect where moment_id='" + moment_id + "' " +
+                                                         "and founder_id='"+ID+"'");
+            
+            if (rd.HasRows)
             {
-                return null;
+                return 0;//已收藏
             }
-            return ID;
+            else 
+            {
+                return 1;//未收藏
+            }
         }
 
-
-
+        
     }
 }
