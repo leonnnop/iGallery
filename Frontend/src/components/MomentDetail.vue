@@ -16,7 +16,7 @@
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
                                     <img :src="likeSrc" alt="like" class="op-img hover-cursor" @click="likeHandler">
-                                    <span @click="likeListHandler" class="hover-cursor">{{moment.likeNum}}</span>
+                                    <span @click="likeListHandler" class="hover-cursor">{{moment.LikeNum}}</span>
                                     <el-dialog title="" :visible.sync="likeListVisible" width="40%">
                                         <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">点赞</span>
                                         <div style="height:400px;overflow:hidden;overflow-y:auto;">
@@ -44,17 +44,17 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor" @click="forwardHandler">{{moment.forwardNum}}
+                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor" @click="forwardHandler">{{moment.ForwardNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/comment.png" alt="comment" class="op-img hover-cursor">{{moment.commentNum}}
+                                    <img src="../image/comment.png" alt="comment" class="op-img hover-cursor">{{moment.CommentNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img :src="collectSrc" alt="collect" class="op-img hover-cursor" @click="collectHandler">{{moment.collectNum}}
+                                    <img :src="collectSrc" alt="collect" class="op-img hover-cursor" @click="collectHandler">{{moment.CollectNum}}
                                 </el-row>
                             </el-col>
                         </el-row>
@@ -154,11 +154,11 @@
                                         <span class="hover-cursor" @click="jumpToUser(moment.userPage)">{{moment.Username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button plain size="small" @click="followHandler(moment,moment.followState)" :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
+                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)" :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col :span="20" :offset="2" style="font-size:12px;color:#999">{{moment.sendTime}}</el-col>
+                                    <el-col :span="20" :offset="2" style="font-size:12px;color:#999">{{moment.Time}}</el-col>
                                 </el-row>
                             </el-col>
 
@@ -166,7 +166,7 @@
                     </div>
                     <div id="content">
                         <div id="text">
-                            <p style="margin:0">{{moment.text}}</p>
+                            <p style="margin:0">{{moment.Content}}</p>
                             <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag.name)">#{{tag.name}}</el-button>
                         </div>
                     </div>
@@ -268,11 +268,12 @@
                     ],
                     ID: '111',
                     Username: 'Leonnnop',
+                    SenderID: '16',
                     FollowState: false,
                     followState: '关注',
                     userPage: '',
-                    sendTime: '2018-07-15 00:00',
-                    text: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
+                    Time: '2018-07-15 00:00',
+                    Content: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...',
                     tags: [{
@@ -292,11 +293,11 @@
                             url: ''
                         }
                     ],
-                    collectNum: 10,
-                    forwardNum: 0,
-                    commentNum: 3,
-                    likeNum: 8,
-                    likeState: false,
+                    CollectNum: 10,
+                    ForwardNum: 0,
+                    CommentNum: 3,
+                    LikeNum: 8,
+                    LikeState: false,
                     collectState: false,
                 },
                 comments: [{
@@ -366,33 +367,41 @@
             collectHandler: function () {
                 if (!this.moment.collectState) {
                     this.collectSrc = require('../image/collect.png');
-                    this.moment.collectNum++;
+                    this.moment.CollectNum++;
                 } else {
                     this.collectSrc = require('../image/uncollect.png');
-                    this.moment.collectNum--;
+                    this.moment.CollectNum--;
                 }
                 this.moment.collectState = !this.moment.collectState;
             },
             likeHandler: function () {
-                
-                if (!this.moment.likeState) {
+                // console.log(item)
+                this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+                    '&moment_id=' + this.moment.MomentID
+                    // , {
+                    //     email: this.$store.state.currentUserId,
+                    //     moment_id: item.MomentId
+                    //   }
+                )
+                if (!this.moment.LikeState) {
                     this.likeSrc = require('../image/comment-like.png');
-                    this.moment.likeNum++;
+                    this.moment.LikeNum++;
                     //加入喜欢列表
                     this.likeUsers.push({
                         headImg: require('../image/a.jpg'),
-                        ID: this.ID,
-                        Username: this.Username,
-                        Bio: this.Bio
+                        //
+                        ID: this.$store.state.currentUserId_ID,
+                        Username: this.$store.state.currentUsername,
+                        Bio: this.$store.state.currentUserBio,
 
                     });
                 } else {
                     this.likeSrc = require('../image/comment-unlike.png');
                     //从喜欢列表删除
                     this.likeUsers.pop();
-                    this.moment.likeNum--;
+                    this.moment.LikeNum--;
                 }
-                this.moment.likeState = !this.moment.likeState;
+                this.moment.LikeState = !this.moment.LikeState;
             },
             forwardHandler: function () {
 
@@ -436,12 +445,12 @@
 
                         }
                     });
-                    this.moment.commentNum++;
+                    this.moment.CommentNum++;
                     this.$message('评论成功！');
                     this.blogComment.comment = '';
 
                     this.axios.post('/moment', {
-                            commentNum: this.moment.commentNum,
+                            CommentNum: this.moment.CommentNum,
                             comment: this.comments[0]
                         })
                         .then((response) => {
@@ -478,13 +487,13 @@
                             content: comment.content
                         }
                     });
-                    this.moment.commentNum++;
+                    this.moment.CommentNum++;
                     this.$message('评论成功！');
                     this.commentComment.comment = '';
                     this.commentAComment(comment);
 
                     this.$axios.post('/moment', {
-                            commentNum: this.moment.commentNum,
+                            CommentNum: this.moment.CommentNum,
                             comment: this.comments[0]
                         })
                         .then((response) => {
@@ -510,11 +519,14 @@
             }
         },
         created() {
+            //
             this.$axios.get('/moment')
                 .then((response) => {
-                    this.moment = response.data.moment;
-                    this.comments = response.data.comments;
-                    this.FollowState = response.data.FollowState;
+                    // this.moment = response.data.moment;
+                    // this.comments = response.data.comments;
+                    // this.FollowState = response.data.FollowState;
+                    this.moment = response.data;
+                    /////
                 })
                 .catch((error) => {
                     console.log(error);

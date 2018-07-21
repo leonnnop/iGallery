@@ -94,6 +94,16 @@
                   this.$store.commit('addCurrentUserId_ID', response.data);
                   console.log(this.$store.state.currentUserId_ID)
                   this.$router.push('/main/user/' + this.ruleForm.email);
+
+                  this.axios.get("http://10.0.1.8:54468/api/Users/GetUserInfo?email=" + this.$store.state.currentUserId)
+                    .then((response) => {
+                      this.$store.commit('addCurrentUsername', response.data.Username);
+                      this.$store.commit('addCurrentUserPassword', response.data.Password);
+                      this.$store.commit('addCurrentUserBio', response.data.Bio);
+                      this.$store.commit('addCurrentUserPhoto', response.data.Photo);
+
+                    })
+
                 }
               })
               .catch((error) => {

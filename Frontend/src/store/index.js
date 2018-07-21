@@ -10,6 +10,10 @@ export default new Vuex.Store({
     state: {
         currentUserId: '277284652@qq.com',
         currentUserId_ID: '16',
+        currentUsername: 'leonnnop',
+        currentUserPassword:'liangchen_',
+        currentUserBio: '',
+        currentUserPhoto: '',
         job: {
             taskId: '',
             createTime: null,
@@ -47,30 +51,17 @@ export default new Vuex.Store({
         addCurrentUserId_ID(state, currentId) {
             state.currentUserId_ID = currentId;
         },
-        addAssign(state, currentAssign) {
-            let detailAssign = {};
-            detailAssign.taskId = currentAssign.jobid;
-            detailAssign.taskState = currentAssign.taskState;
-            detailAssign.sawId = currentAssign.id;
-            detailAssign.sawTaskId = currentAssign.sawTaskId;
-            detailAssign.machine = currentAssign.equipid;
-            // detailAssign.machine = detailAssign.machine.join(',');
-            detailAssign.workType = currentAssign.type;
-            detailAssign.inner = currentAssign.inner;
-            detailAssign.outer = currentAssign.outer;
-            detailAssign.inBox = currentAssign.feedingbox;
-            // detailAssign.inBox = detailAssign.inBox.join(',');
-            detailAssign.outBox = currentAssign.finishedbox;
-            // detailAssign.outBox = detailAssign.outBox.join(',');
-            detailAssign.thick = currentAssign.thickness;
-            detailAssign.name = currentAssign.name;
-            detailAssign.draftid = currentAssign.draftid;
-            detailAssign.mainShaftSpeed = currentAssign.mainShaftSpeed;
-            detailAssign.feedSpeed = currentAssign.feedSpeed;
-            detailAssign.param = currentAssign.param;
-
-            state.detailAssigns.push(detailAssign);
-            console.log(state.detailAssigns);
+        addCurrentUsername(state, username) {
+            state.currentUsername = username;
+        },
+        addCurrentUserPhoto(state, photo) {
+            state.currentUserPhoto = photo;
+        },
+        addCurrentUserPassword(state, password) {
+            state.currentUserPassword = password;
+        },
+        addCurrentUserBio(state, bio) {
+            state.currentUserBio = bio;
         },
         deleteAssign(state, index) {
             state.detailAssigns.splice(index, 1);
