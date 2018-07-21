@@ -59,9 +59,9 @@ namespace ProductsApp.Controllers
 
                 //获取用户id
                 string user_id;
-                if (api.GetUserID(email) != null)
+                if (api.EmailToUserID(email) != null)
                 {
-                    user_id = api.GetUserID(email);
+                    user_id = api.EmailToUserID(email);
                 }
                 else//用户不存在
                 {
