@@ -8,9 +8,9 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Data;
 //using System.Data.OracleClient;
+using ProductsApp;
 using Oracle.ManagedDataAccess.Client;
-using Utility;
-
+//using Fleck;
 namespace ProductsApp.Controllers
 {
     public class Moment_TagController : ApiController
@@ -23,7 +23,7 @@ namespace ProductsApp.Controllers
         /// <param name="PageSize"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-       [HttpGet]
+        [HttpGet]
         public Tuple<List<Moment>,int,bool,List<string>> Followers(int Page, int PageSize, string TagContent , string Email)
         {
             bool FollowState = false;
@@ -46,7 +46,8 @@ namespace ProductsApp.Controllers
             MIDSet = Access.GetDataSet(select, "MOMENT_TAG", PageSize, Page);
             //动态的数组
             List<Moment> moments = new List<Moment>();
-            List<string> pics = new List<string>();
+            //user的数组
+            List<string> users = new List<string>();
             foreach (DataRow row in MIDSet.Tables[0].Rows)
             {
                 select = Access.Select("*", "MOMENT", "ID = '" + row[0] + "'");
@@ -55,6 +56,13 @@ namespace ProductsApp.Controllers
                 {
                     string id = rd["ID"].ToString();
                     string sender_id = rd["SENDER_ID"].ToString();
+                    DBAccess db = new DBAccess();
+                    string SQL = db.Select("USERNAME", "USERS", "ID='" + sender_id + "'");
+                    OracleDataReader R = Access.GetDataReader(SQL);
+                    while(R.Read())
+                    {
+                        users.Add(R["USERNAME"].ToString());
+                    }
                     string content = rd["CONTENT"].ToString();
                     int likes = int.Parse(rd["LIKE_NUM"].ToString());
                     int forwards = int.Parse(rd["FORWARD_NUM"].ToString());
@@ -62,20 +70,19 @@ namespace ProductsApp.Controllers
                     int comments = int.Parse(rd["COMMENT_NUM"].ToString());
                     string time = rd["TIME"].ToString().Replace('T', ' ');
                     moments.Add(new Moment(id, sender_id, content, likes, forwards, collects, comments, time));
-                    pics.Add(Util.GetPid(id)[0]);
                 }
             }
             select = Access.Select("*", "FOLLOW_TAG", "TAG = '" + TagContent + "'");
             int Flowers = Access.GetRecordCount(select);
 
-            Tuple<List<Moment>, int, bool,List<string>> result = new Tuple<List<Moment>, int, bool, List<string>>(null, 0, false, null);
+            Tuple<List<Moment>, int, bool,List<string>> result = new Tuple<List<Moment>, int, bool,List<string>>(null, 0, false,null);
             if (moments.Count != 0)
             {
-                result = new Tuple<List<Moment>, int, bool, List<string>>(moments, Flowers, FollowState,pics);
+                result = new Tuple<List<Moment>, int, bool, List<string>>(moments, Flowers, FollowState, users);
             }
             else if (moments.Count == 0)
-                result = new Tuple<List<Moment>, int, bool, List<string>>(null, 0, FollowState,null);
-
+                result = new Tuple<List<Moment>, int, bool, List<string>>(null, 0, FollowState, null);
+            
             return result;
         }
     }
