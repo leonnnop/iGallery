@@ -171,7 +171,7 @@
                     <div id="content">
                         <div id="text">
                             <p style="margin:0">{{moment.Content}}</p>
-                            <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag.name)">#{{tag.name}}</el-button>
+                            <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag)">#{{tag}}</el-button>
                         </div>
                     </div>
 
@@ -369,22 +369,8 @@
                     Content: '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...',
-                    tags: [{
-                            name: 'tag1',
-                            url: ''
-                        },
-                        {
-                            name: 'tag2',
-                            url: ''
-                        },
-                        {
-                            name: 'tag3',
-                            url: ''
-                        },
-                        {
-                            name: 'tag4',
-                            url: ''
-                        }
+                    tags: [
+                        'tag1','tag2','tag3'
                     ],
                     CollectNum: 10,
                     ForwardNum: 0,
@@ -492,9 +478,8 @@
                         });
                     }));
             },
-            jumpToTag: function (name) {
-                console.log(name);
-                this.$router.push('tag/' + name);
+            jumpToTag: function (tag) {
+                this.$router.push('/main/tag/'+tag);
             },
             jumpToUser: function (url) {
                 console.log(url);
