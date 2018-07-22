@@ -6,13 +6,13 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_1">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
+                <img :src="item.src" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -26,13 +26,13 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_2">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
+                <img :src="item.src" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -46,13 +46,13 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_3">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
+                <img :src="item.src" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -66,13 +66,13 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_4">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
+                <img :src="item.src" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -241,6 +241,25 @@
               element.likeIMG = require('../image/unlike.png');
               element.LikeState = false
             }
+
+            element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
+              '&type=2'
+            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.MomentID +
+                '&type=1')
+              .then((response) => {
+                // this.axios.get('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                //         response.data[0], {
+                //             responseType: 'blob'
+                //         })
+                //     .then((response) => {
+                //         element.contentSrc = response.data
+                //     })
+                Vue.set(element, 'contentSrc',
+                  'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                  response.data[0]);
+                // element.contentSrc = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                //     response.data[0]
+              })
             // 更新后删除
             // element.LikeState = false;
           });

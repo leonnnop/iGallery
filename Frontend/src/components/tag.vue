@@ -177,7 +177,7 @@
 </style>
 
 <script>
-import Vue from 'vue'
+    import Vue from 'vue'
     export default {
         data() {
             return {
@@ -297,16 +297,21 @@ import Vue from 'vue'
                     }
                     var index = 0;
                     totalMoments.forEach((element) => {
-                        element.likeIMG = require('../image/unlike.png');
+                        element.likeState = response.data.m_Item5[index]
+                        if (element.likeState == 0) {
+                            element.likeIMG = require('../image/like.png');
+                        } else {
+                            element.likeIMG = require('../image/unlike.png');
+                        }
                         // 更新后删除
                         element.likeState = false;
+                        // element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
+                        // '&type=2'
+
+                        element.userName = response.data.m_Item4[index]
+                        index++;
                         element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
                             '&type=2'
-
-                        // element.contentSrc = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data.m_Item4[
-                        //     index]
-                        // index++;
-
                         this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
                                 '&type=1')
                             .then((response) => {
@@ -317,7 +322,8 @@ import Vue from 'vue'
                                 //     .then((response) => {
                                 //         element.contentSrc = response.data
                                 //     })
-                                Vue.set(element, 'contentSrc', 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                Vue.set(element, 'contentSrc',
+                                    'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
                                     response.data[0]);
                                 // element.contentSrc = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
                                 //     response.data[0]
@@ -380,7 +386,7 @@ import Vue from 'vue'
                 }
                 // console.log(item)
                 this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
-                    '&moment_id=' + item.MomentID
+                    '&moment_id=' + item.ID
                     // , {
                     //     email: this.$store.state.currentUserId,
                     //     moment_id: item.MomentId

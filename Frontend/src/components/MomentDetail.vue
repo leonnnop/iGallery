@@ -290,6 +290,7 @@
                 tagsInputVisible: false,
                 tagsInputValue: '',
                 ableToAddTag: true,
+                likeListVisible: false,
                 pictureObj: {
                     id: 2,
                     type: 2
