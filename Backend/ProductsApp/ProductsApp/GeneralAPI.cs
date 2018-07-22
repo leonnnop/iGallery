@@ -15,7 +15,7 @@ using ProductsApp.Models;
     GetUserInfoByID     给用户ID，返回Users类型（与数据库中一致）的用户信息
     GetMomentInfo   给动态ID，返回Moment类型（与数据库中一致）的动态信息
     GetComentInfo   给评论ID，返回Coment类型（与数据库中一致）的评论信息
-
+    NewIDOf     给表名和属性名（通常为ID），返回该属性新的唯一的string
 
 */
 
@@ -278,7 +278,22 @@ namespace ProductsApp
             return coment;
 
         }
-
-
+        /// <summary>
+        /// 生成随机数作为新ID
+        /// </summary>
+        /// <param name="table">表名</param>
+        /// <returns></returns>
+        public string NewIDOf(string table)
+        {
+            Random random = new Random();
+            int id = random.Next(1, 100000);
+            OracleDataReader rd = dBAccess.GetDataReader(dBAccess.Select("ID", table, "ID='"+id.ToString()+"'"));
+            while (rd.Read())
+            {
+                id ++;
+                rd = dBAccess.GetDataReader(dBAccess.Select("ID", table, "ID='" + id.ToString() + "'"));
+            }
+            return id.ToString();
+        }
     }
 }

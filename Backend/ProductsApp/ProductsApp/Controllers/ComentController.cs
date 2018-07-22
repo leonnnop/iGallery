@@ -8,6 +8,7 @@ using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using Newtonsoft.Json;
 using ProductsApp.Models;
+using ProductsApp;
 using System.Web;
 
 namespace ProductsApp.Controllers
