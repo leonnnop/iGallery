@@ -157,8 +157,10 @@
                                         <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)"
                                             :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
                                         <!-- <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit"></i> -->
-                                        <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-edit" circle style="margin-left:30px" @click="modifyClickHandler"></el-button>
-
+                                        <el-row type="flex" align="middle">
+                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-edit" circle style="margin-left:0px" @click="modifyClickHandler"></el-button>
+                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-delete" circle style="margin-left:10px" @click="deleteClickHandler"></el-button>
+                                        </el-row>
                                     </el-col>
                                 </el-row>
                                 <el-row>
@@ -174,10 +176,10 @@
                             <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag)">#{{tag}}</el-button>
                         </div>
                     </div>
-
                 </el-card>
             </el-col>
         </el-row>
+
         <el-row type="flex" justify="center" style="margin-top:30px">
             <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
 
@@ -209,9 +211,9 @@
 
 
                                         </el-col>
-                                        <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;margin-left:-10%">
+                                        <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
                                             <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="moment.Content"></el-input>
-                                            <!-- <div class="editTag">
+                                            <div class="editTag">
                                                 <el-tag :key="tag" color="#fff" v-for="tag in moment.tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
                                                     {{tag}}
                                                 </el-tag>
@@ -220,22 +222,22 @@
                                                     @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
                                                 </el-input>
                                                 <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
-                                            </div> -->
+                                            </div>
                                         </el-col>
                                     </el-row>
 
                                 </div>
-                                <!-- <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
+                                <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
                                     <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
                                     <el-col :span="4">
                                         <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
                                     </el-col>
-                                </el-row> -->
-                                <el-row type="flex" justify="end" style="margin-top:10px" v-if="showTextArea">
-                                    <!-- <el-col :span="4">
-                                        <img src="../image/arrow-left.png" @click="sendLastHandler" class="sendMomentBtn">
-                                    </el-col> -->
-                                    <el-col :span="4" style="margin-top:-10px">
+                                </el-row>
+                                <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
+                                    <el-col :span="4">
+                                        <img src="../image/close-circle.png" @click="sendLastHandler" class="sendMomentBtn" style="width:50px;height:50px;margin-top:-5px">
+                                    </el-col>
+                                    <el-col :span="4">
                                         <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
                                     </el-col>
                                 </el-row>
@@ -247,6 +249,7 @@
                 </el-dialog>
             </el-col>
         </el-row>
+
     </div>
 </template>
 
@@ -268,14 +271,27 @@
                 showUploadArea: true,
                 showTextArea: false,
                 sendText: '',
+                uploadImgs2: [],
+                uploadImgs: [
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
+                ],
+                ableToUpload: true,
                 tags: [],
                 tagsInputVisible: false,
                 tagsInputValue: '',
                 ableToAddTag: true,
-                likeListVisible: false,
-                sendMomentVisible: false,
-                showUpload: false,
-                showTextArea: false,
+                pictureObj: {
+                    id: 2,
+                    type: 2
+                },
                 likeUsers: [{
                     ID: '1',
                     headImg: require('../image/a.jpg'),
@@ -370,7 +386,7 @@
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...',
                     tags: [
-                        'tag1','tag2','tag3'
+                        'tag1', 'tag2', 'tag3'
                     ],
                     CollectNum: 10,
                     ForwardNum: 0,
@@ -418,6 +434,24 @@
 
         },
         methods: {
+            deleteClickHandler() {
+                // this.$router.push('/main/personalpage');
+
+                this.axios.put('http://10.0.1.8:54468/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
+                        '&moment_id=' + this.$route.params.id)
+                    .then((response) => {
+                        if (response.data == 0) {
+                            this.$message({
+                                message: '删除成功！',
+                                type: 'success'
+                            });
+                            this.$router.push('/main/personalpage');
+
+                        } else {
+                            this.$message.error('删除失败，服务器内部错误，请重试。');
+                        }
+                    })
+            },
             sendMomentInit: function () {
                 this.sendMomentVisible = true;
                 this.showUpload = true;
@@ -427,12 +461,132 @@
                 this.showTextArea = true;
             },
             sendLastHandler: function () {
+                // this.showUploadArea = true;
+                // this.showTextArea = false;
+                this.uploadImgs2 = [];
+                this.tags = [];
+                this.sendText = '';
+                this.sendMomentVisible = false;
                 this.showUploadArea = true;
+                this.showNextBtn = false;
                 this.showTextArea = false;
+                this.showUpload = false;
             },
+            sendMomentHandler: function () {
+                console.log('————发布内容————');
+                // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
+                this.$refs.upload.submit(); //上传图片
+
+                this.axios.put('http://10.0.1.8:54468/api/Moment/ModifyMoment?email='+this.$store.state.currentUserId+'&moment_id='+this.$route.params.id+'&content='+this.moment.Content)
+                    .then((response) => {
+                        if (response.data == 0) {
+                            this.$message({
+                                message: '修改成功！',
+                                type: 'success'
+                            });
+                        } else {
+                            this.$message.error('修改失败，服务器内部错误，请重试。');
+                        }
+
+                        this.uploadImgs2 = [];
+                        this.tags = [];
+                        this.sendText = '';
+                        this.sendMomentVisible = false;
+                        this.showUploadArea = true;
+                        this.showNextBtn = false;
+                        this.showTextArea = false;
+                        this.showUpload = false;
+                    })
+                    .catch((error) => {
+                        this.uploadImgs2 = [];
+                        this.tags = [];
+                        this.sendText = '';
+                        this.sendMomentVisible = false;
+                        this.showUploadArea = true;
+                        this.showNextBtn = false;
+                        this.showTextArea = false;
+                        this.showUpload = false;
+                    })
+
+                if (this.moment.tags.length > 0) {
+                    // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
+                    this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.$route.params.id + '&', {
+                        params: {
+                            TagNames: this.moment.tags,
+                            // Moment_Id: this.$route.params.id
+                        },
+                        paramsSerializer: function (params) {
+                            var Qs = require('qs');
+                            return Qs.stringify(params, {
+                                arrayFormat: 'repeat'
+                            })
+                        }
+                    })
+                }
+
+            },
+            //上传组件
+            handleRemove(file, fileList) {
+                if (!fileList.length) {
+                    this.showNextBtn = false;
+                }
+            },
+            beforeUpload: function (file) {
+                const size = file.size / 1024 / 1024 < 3;
+                if (!size) {
+                    this.$message.error('上传图片大小不能超过 3MB!');
+                }
+                return size;
+            },
+            uploadOnProgress(e, file) { //开始上传
+                // console.log('——————开始上传——————');
+                // console.log(file)
+                // var file = document.getElementById("upload_file").files[0];
+                var oneFile = file.raw;
+                var formdata1 = new FormData(); // 创建form对象
+                formdata1.append('file', oneFile); // 通
+                // formdata1.append('id', 2); // 通
+                // formdata1.append('type', 2); // 通
+                let config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }; //添加请求头
+                this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((response) => { //这里的/xapi/upimage为接口
+                    console.log(response.data);
+                })
+
+            },
+            uploadOnChange(file, fileList) {
+                //console.log("——————————change——————————")
+                // console.log(file)
+                if (file.status == 'ready') {
+                    this.uploadImgs2.push(file);
+                    //console.log("ready")
+                } else if (file.status == 'fail') {
+                    this.$message.error("图片上传出错，请刷新重试！")
+                }
+                if (fileList.length) {
+                    this.showNextBtn = true;
+                }
+            },
+            uploadOnSuccess(e, file, fileList) { //上传附件
+                // console.log("——————————success——————————")
+                // console.log(fileList);
+            },
+            upLoadOnExceed: function (files, fileList) {
+                this.$message.error('exceed');
+                this.$message.warning(
+                    `最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
+            },
+            uploadOnError(e, file) {
+                // console.log("——————————error——————————");
+                // console.log(e);
+            },
+
             handleTagClose(tag) {
-                this.tags.splice(this.tags.indexOf(tag), 1);
-                if (this.tags.length <= 4) {
+                this.moment.tags.splice(this.moment.tags.indexOf(tag), 1);
+                if (this.moment.tags.length <= 4) {
                     this.ableToAddTag = true;
                 }
             },
@@ -447,9 +601,9 @@
             handleTagInputConfirm() {
                 let tagsInputValue = this.tagsInputValue;
                 if (tagsInputValue) {
-                    this.tags.push(tagsInputValue);
+                    this.moment.tags.push(tagsInputValue);
                 }
-                if (this.tags.length >= 4) {
+                if (this.moment.tags.length >= 4) {
                     this.ableToAddTag = false;
                 }
                 this.tagsInputVisible = false;
@@ -457,8 +611,9 @@
             },
             modifyClickHandler() {
                 this.sendMomentVisible = true;
-                // this.showUpload = true;
-                this.showTextArea = true;
+                this.showUpload = true;
+                // this.showTextArea = true;
+                this.sendNextHandler();
             },
             likeListHandler() {
                 this.likeListVisible = true
@@ -479,7 +634,7 @@
                     }));
             },
             jumpToTag: function (tag) {
-                this.$router.push('/main/tag/'+tag);
+                this.$router.push('/main/tag/' + tag);
             },
             jumpToUser: function (url) {
                 console.log(url);
@@ -504,6 +659,8 @@
                     //     moment_id: item.MomentId
                     //   }
                 )
+
+                console.log(this.moment.LikeState)
                 if (!this.moment.LikeState) {
                     this.likeSrc = require('../image/comment-like.png');
                     this.moment.LikeNum++;
@@ -640,12 +797,25 @@
             }
         },
         created() {
+
+            this.axios.get('http://10.0.1.8:54468//api/Picture/FirstGet?id=' + this.$route.params.id + '&type=1')
+                .then((response) => {
+                    response.data.forEach(element => {
+                        this.moment.imgList = [];
+                        this.moment.imgList.push({
+                            url: 'http://10.0.1.8:54468/api/Picture/Gets?id=' + element
+                        })
+                    });
+                })
             //
             this.axios.get('http://10.0.1.8:54468//api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
-                    '&Moment_ID=' + this.$route.params.id)
+                    '&MomentID=' + this.$route.params.id)
                 .then((response) => {
                     this.moment = response.data.moment;
                     this.moment.Username = response.data.user_username;
+                    this.moment.imgList = [{
+                        url: 'http://10.0.1.8:54468/api/Picture/FirstGet?id=2&type=2'
+                    }];
 
                     if (response.FollowState == 'true') {
                         this.moment.followState = '已关注'
@@ -655,6 +825,7 @@
 
                     if (response.data.liked == 0) {
                         this.moment.LikeState = true
+                        this.likeSrc = require('../image/comment-like.png');
                     } else {
                         this.moment.LikeState = false
                     }
@@ -665,7 +836,7 @@
                         this.moment.collectState = false
                     }
 
-                    this.comments = response.data.comments;
+                    // this.comments = response.data.comments;
                     this.FollowState = response.data.FollowState;
                     // this.moment = response.data;
                     /////

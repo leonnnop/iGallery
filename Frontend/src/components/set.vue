@@ -7,7 +7,7 @@
             <el-input type="text" v-model="ruleForm.name" auto-complete="off" style="width:50%" clearable></el-input>
           </el-form-item>
           <el-form-item label="个人简介：">
-            <el-input type="textarea" v-model="ruleForm.desc" style="width:50%" id="descAlert"></el-input>
+            <el-input type="textarea" v-model="ruleForm.desc" rows="5" style="width:50%" id="descAlert"></el-input>
           </el-form-item>
           <span style="font-size:10px;padding-left:90px">*简介最大长度为40个字符。</span>
           <el-form-item style="padding-top:25px">
@@ -65,8 +65,10 @@
     name: 'set',
     data() {
       var validateName = (rule, value, callback) => {
-        if (value == '') {
+        if (value === '') {
           return callback(new Error('请输入昵称'));
+        } else {
+          return callback();
         }
       };
       var validateOpass = (rule, value, callback) => {
@@ -155,19 +157,25 @@
       };
     },
     methods: {
-      onSubmit() {
-        this.axios.put('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
-            ID: this.$store.state.currentUseId_ID,
-            Username: this.ruleForm.name,
-            Bio: this.ruleForm.desc
-          })
-          .then((response) => {
-            let result = response.data;
-            this.resultHandler1(result);
-          })
-          .catch((error) => {
-            console.log(error);
-          })
+      onSubmit: function (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.axios.put('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
+                ID: this.$store.state.currentUseId_ID,
+                Username: this.ruleForm.name,
+                Bio: this.ruleForm.desc
+              })
+              .then((response) => {
+                let result = response.data;
+                this.resultHandler1(result);
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          } else {
+            this.$message.error('信息不合法，请重新输入！')
+          }
+        });
 
       },
       resultHandler1: function (result) {
