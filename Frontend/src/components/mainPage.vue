@@ -312,19 +312,19 @@
         //     this.showTextArea = false;
         //     this.showUpload = false;
         //   });
-        // if (tags.length > 0) {
-        //   this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?TagName', {
-        //     params: {
-        //       TagName: tags,
-        //       moment_id: this.$route.params.id
-        //     },
-        //     paramsSerializer: function (params) {
-        //       return Qs.stringify(params, {
-        //         arrayFormat: 'repeat'
-        //       })
-        //     }
-        //   })
-        // }
+        if (tags.length > 0) {
+          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag', {
+            params: {
+              TagNames: tags,
+              Moment_Id: this.$route.params.id
+            },
+            paramsSerializer: function (params) {
+              return Qs.stringify(params, {
+                arrayFormat: 'repeat'
+              })
+            }
+          })
+        }
       },
       //上传组件
       handleRemove(file, fileList) {

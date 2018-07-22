@@ -1,107 +1,55 @@
 <template>
-  <el-tabs type="border-card" class="tabs">
+  <el-tabs type="border-card" class="tabs" style="box-shadow:0 0 0;margin-top:40px">
     <el-tab-pane label="修改个人信息">
-<<<<<<< HEAD
-        <div style="margin-left:15%;margin-top:5%">
-          <el-form ref="ruleForm" :model="ruleForm" :rules="rules" :label-position="right" label-width="90px" >
-            <el-form-item label="昵称：">
-                <el-input type="text" v-model="ruleForm.name" auto-complete="off" style="width:50%" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="个人简介：">
-                <el-input type="textarea" v-model="ruleForm.desc" style="width:50%" id="descAlert" ></el-input>             
-            </el-form-item>
-            <span style="font-size:10px;padding-left:90px">*简介最大长度为40个字符。</span>
-            <el-form-item style="padding-top:15px">
-                <el-button type="primary" @click="onSubmit('ruleForm')" size="medium">确认修改</el-button>
-                <el-button @click="onCancel" size="medium">取消</el-button>
-            </el-form-item> 
-          </el-form>
-        </div>
+      <div style="margin-left:15%;margin-top:5%">
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" :label-position="right" label-width="90px">
+          <el-form-item label="昵称：">
+            <el-input type="text" v-model="ruleForm.name" auto-complete="off" style="width:50%" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="个人简介：">
+            <el-input type="textarea" v-model="ruleForm.desc" style="width:50%" id="descAlert"></el-input>
+          </el-form-item>
+          <span style="font-size:10px;padding-left:90px">*简介最大长度为40个字符。</span>
+          <el-form-item style="padding-top:25px">
+            <el-button type="primary" @click="onSubmit('ruleForm')" size="medium">确认修改</el-button>
+            <el-button @click="onCancel" size="medium">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-tab-pane>
     <el-tab-pane label="重置密码">
       <div style="margin-left:15%;margin-top:5%">
-      <el-form ref="ruleForm2" :model="ruleForm2" :rules="rules2"  label-width="90px">
-        <el-form-item label="原密码：" prop="opass">
-          <el-input type="password" v-model="ruleForm2.opass" auto-complete="off" style="width:50%" clearable></el-input>
-        </el-form-item>
-         <el-form-item label="密码：" prop="pass">
-           <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" style="width:50%" clearable></el-input>
-         </el-form-item>
-         <el-form-item label="确认密码：" prop="checkPass">
-           <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" style="width:50%" clearable></el-input>
-         </el-form-item>
-         <el-form-item>
-           <el-button type="primary" @click="finishHandler('ruleForm2')" size="medium">确认</el-button>
-           <el-button @click="cancelHandler" size="medium">取消</el-button>
-         </el-form-item>
+        <el-form ref="ruleForm2" :model="ruleForm2" :rules="rules2" label-width="90px">
+          <el-form-item label="原密码：" prop="opass">
+            <el-input type="password" v-model="ruleForm2.opass" auto-complete="off" style="width:50%" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="密码：" prop="pass">
+            <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" style="width:50%" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码：" prop="checkPass">
+            <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" style="width:50%" clearable></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="finishHandler('ruleForm2')" size="medium">确认</el-button>
+            <el-button @click="cancelHandler" size="medium">取消</el-button>
+          </el-form-item>
         </el-form>
       </div>
-=======
-      <el-row style="margin-left:15%;margin-top:5%">
-        <el-form ref="form" :model="form" :rules="rules" :label-position="right" label-width="90px">
-          <el-form-item label="昵称：">
-            <el-input v-model="form.name" style="width:50%">{{name}}</el-input>
-          </el-form-item>
-          <el-form-item label="个人简介：">
-            <el-input type="textarea" v-model="form.desc" style="width:50%">{{desc}}</el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">确认修改</el-button>
-            <el-button @click="onCancel">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-row>
-    </el-tab-pane>
-    <el-tab-pane label="重置密码">
-      <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="90px" class="demo-ruleForm">
-        <div v-if="showButton" style="margin-left:15%;margin-top:5%">
-          <el-form-item label="原密码：" prop="opass">
-            <el-input type="password" v-model="ruleForm.opass" auto-complete="off" style="width:50%" clearable></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="passHandler('ruleForm')">确认</el-button>
-            <el-button @click="cancelHandler">取消</el-button>
-          </el-form-item>
-        </div>
-        </el-form>
-        <div v-if="passCorrect">
-          <el-form ref="passwordForm" :rules="passwordRules" :model="passwordForm" status-icon>
-            <el-row>
-              <el-col :span="18">
-                <el-form-item prop="password">
-                  <el-input type="password" v-model="passwordForm.password" placeholder="新密码" maxlength="20"></el-input>
-                </el-form-item>
-                <el-form-item prop="checkPassword">
-                  <el-input type="password" v-model="passwordForm.checkPassword" placeholder="确认密码" maxlength="20"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-        </div>
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <style>
-<<<<<<< HEAD
-  #descAlert{
+  #descAlert {
     margin-bottom: -20px;
   }
-  .tabs{
-    width:50%;
-    height:60%;
-    margin-left:auto;
-    margin-right:auto;
-    margin-top:0px;
-=======
+
   .tabs {
     width: 50%;
     height: 60%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0px;
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
   }
 
   .el-tabs__item {
@@ -116,7 +64,6 @@
   export default {
     name: 'set',
     data() {
-<<<<<<< HEAD
       var validateName = (rule, value, callback) => {
         if (value == '') {
           return callback(new Error('请输入昵称'));
@@ -125,12 +72,10 @@
       var validateOpass = (rule, value, callback) => {
         if (value === '') {
           return callback(new Error('请输入原密码'));
-        } else{
+        } else {
           return callback();
         }
       };
-=======
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -142,93 +87,28 @@
         }
       };
       var validatePass2 = (rule, value, callback) => {
-        if (value == '') {
+        if (value === '') {
           callback(new Error('请再次输入密码'));
-<<<<<<< HEAD
         } else if (value !== this.ruleForm2.pass) {
-=======
-        } else if (value != this.ruleForm.pass) {
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
         }
       };
       return {
-<<<<<<< HEAD
-        ruleForm: {    
+        ruleForm: {
           name: 'he',
           desc: '呵呵'
         },
-        rules:{
-          name:[
-            { validator: validateName,
-              message:'请输入昵称',
-              trigger: 'blur' 
-            },{
-              min: 1,
-              max: 15,
-              message: '昵称长度为1~15',
-              trigger: 'blur'
-            }
-          ],
-          desc:[
-            { min: 0,
-              max: 40,
-              message: '简介长度为0~40',
-              trigger: 'blur'
-            }
-          ],
-        },
-      ruleForm2: {
-        opass:'',
-        pass: '',
-        checkPass: '',
-      },
-      rules2: {
-        opass:[
-          {validator:validateOpass,
-          trigger:'blur'
-          },{
-=======
-        passwordForm: {
-          password: '',
-          checkPassword: ''
-        },
-        form: {
-          name: '呵',
-          desc: '呵呵'
-        },
-        ruleForm: {
-          opass: '',
-          pass: '',
-          checkPass: ''
-        },passwordRules: {
-          password: [{
-              validator: validatePass,
-              trigger: 'blur'
-            },
-            {
-              min: 8,
-              max: 20,
-              message: '密码长度为8~20',
-              trigger: 'blur'
-            }
-          ],
-          checkPassword: [{
-            validator: validatePass2,
-            trigger: 'blur'
-          }]
-        },
         rules: {
           name: [{
-            validator: validatePass,
-            message: '请输入名称',
+            validator: validateName,
+            message: '请输入昵称',
             trigger: 'blur'
           }, {
             min: 1,
             max: 15,
-            message: '密码长度为1~15',
+            message: '昵称长度为1~15',
             trigger: 'blur'
           }],
           desc: [{
@@ -237,96 +117,61 @@
             message: '简介长度为0~40',
             trigger: 'blur'
           }],
+        },
+        ruleForm2: {
+          opass: '',
+          pass: '',
+          checkPass: '',
+        },
+        rules2: {
           opass: [{
-            validator: validatePass,
-            message: '请输入原密码',
+            validator: validateOpass,
             trigger: 'blur'
           }, {
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
             min: 8,
             max: 20,
             message: '密码长度为8~20',
             trigger: 'blur'
-<<<<<<< HEAD
-          }
-        ],
-        pass: [
-          { validator: validatePass, 
-            trigger: 'blur' 
-          },{
-=======
           }],
           pass: [{
             validator: validatePass,
-            message: '请输入密码',
             trigger: 'blur'
           }, {
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
             min: 8,
             max: 20,
             message: '密码长度为8~20',
             trigger: 'blur'
-<<<<<<< HEAD
-          }
-          ],
-        checkPass: [
-          { validator: validatePass2, 
-              trigger: 'blur' 
-          },{ 
-=======
           }],
           checkPass: [{
             validator: validatePass2,
-            message: '请再次输入密码',
             trigger: 'blur'
           }, {
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
             min: 8,
             max: 20,
             message: '密码长度为8~20',
             trigger: 'blur'
-<<<<<<< HEAD
           }],
         },
       };
-=======
-          }]
-        },
-        showButton: true,
-        passCorrect: false
-      }
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
     },
     methods: {
-      onSubmit: function (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-<<<<<<< HEAD
-              this.$axios.post('/users',{name:this.name,desc:this.desc})
-=======
-            let umessage = {
-              name: this.name,
-              desc: this.desc,
-            }
-            this.$axios.post('/users', qs.stringify({
-                name: this.name,
-                desc: this.desc
-              }))
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
-              .then((response) => {
-                let result = response.data.result;
-                this.resultHandler1(result);
-              })
-              .catch((error) => {
-                console.log(error);
-              })
-          } else {
-            this.$message.error('信息不合法，请重新输入！')
-          }
-        });
+      onSubmit() {
+        this.axios.put('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
+            ID: this.$store.state.currentUseId_ID,
+            Username: this.ruleForm.name,
+            Bio: this.ruleForm.desc
+          })
+          .then((response) => {
+            let result = response.data;
+            this.resultHandler1(result);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+
       },
       resultHandler1: function (result) {
-        if (result) {
+        if (result == 0) {
           this.$message({
             message: '信息修改成功！',
             type: 'success'
@@ -339,60 +184,39 @@
       onCancel: function () {
         this.$router.push('personalpage');
       },
-<<<<<<< HEAD
-    finishHandler: function (formName) {
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            //this.opassForm.opass='';
-            this.axios.get('',{
-              params:{
-                opass:this.opassForm.opass
-              }
-            })
-            .then((response)=>{
-              if(response){
-              this.$axios.post('/users',{pass:this.ruleForm2.pass})
-=======
-      resetForm: function (formName) {
-        this.$refs[formName].resetFields();
-      },
-      passHandler: function (formName) {
+      finishHandler: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.passCorrect = true;
-            this.showButton = false;
+            console.log('adsfaadfgadsgs')
+            //this.opassForm.opass='';
+            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.$store.state.currentUseId +
+                "&Password=" +
+                this.ruleForm2.opass
+              )
+              .then((response) => {
+                if (response.data == 0) {
+                  this.axios.post('http://10.0.1.8:54468/api/Users/ChangePassword', {
+                      email: this.$store.state.currentUseId,
+                      NewPassword: this.ruleForm2.checkPass
+                    })
+                    .then((response) => {
+                      let result = response.data;
+                      this.resultHandler(result);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    })
+                } else {
+                  this.$message.error('密码不合法，请重新输入！')
+                }
+              });
           } else {
-            this.$message.error('密码不正确，请重新输入！');
+            this.$message.error('原密码不正确，请重新输入！');
             return false;
           }
         })
       },
-      finishHandler: function (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$axios.post('/users', qs.stringify({
-                pass: this.pass
-              }))
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
-              .then((response) => {
-                let result = response.data.result;
-                this.resultHandler(result);
-              })
-              .catch((error) => {
-                console.log(error);
-              })
-              } else {
-              this.$message.error('密码不合法，请重新输入！')
-              }
-            });
-          }
-          else {
-            this.$message.error('原密码不正确，请重新输入！');
-            return false;
-          }
-          })
-    },
-    toLogin: function () {
+      toLogin: function () {
         this.$router.push('/login');
       },
       resultHandler: function (result) {
@@ -421,24 +245,15 @@
 
 
     created() {
-<<<<<<< HEAD
-            this.$axios.get('/')
-            .then((response) => {
-                this.ruleForm=response.data.ruleForm;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-=======
-      this.$axios.get('/')
-        .then((response) => {
-          this.name = response.data.name;
-          this.desc = response.data.desc;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
->>>>>>> 9f7f4a36dfbe4cddbb91408f7214826ac20fc713
+      // this.$axios.get('/')
+      //   .then((response) => {
+      //     // this.ruleForm = response.data.ruleForm;
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+      this.ruleForm.name = this.$store.state.currentUsername;
+      this.ruleForm.desc = this.$store.state.currentUserBio;
     }
   }
 </script>

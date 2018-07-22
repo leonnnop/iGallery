@@ -155,6 +155,7 @@
                                     </el-col>
                                     <el-col :span="4" :offset="4">
                                         <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)" :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
+                                        <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit" ></i>
                                     </el-col>
                                 </el-row>
                                 <el-row>
