@@ -168,7 +168,6 @@
           .catch((error) => {
             console.log(error);
           })
-
       },
       resultHandler1: function (result) {
         if (result == 0) {
