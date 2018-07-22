@@ -97,11 +97,15 @@ namespace ProductsApp
         /// <param name="id_1">string</param>
         /// <param name="id_2">string</param>
         /// <returns></returns>
-        /// 返回int值：“0”表示已关注，“1”表示未关注
+        /// 返回int值：“-1”表示是自己，“0”表示已关注，“1”表示未关注
         public int CheckFollowState(string id_1, string id_2)
         {
             //bool result = false;
             //string ID = null;
+            if (id_1 == id_2)
+            {
+                return -1;
+            }
 
             //执行数据库操作,获取该用户ID
             OracleDataReader rd = dBAccess.GetDataReader("select * from FOLLOW_USER where user_id='" + id_1 + "' and following_id = '" + id_2 + "'");

@@ -24,7 +24,7 @@
         (string)"user_email": "2.com",
         (string)"user_username": "szf",
         (string)"user_bio": null,
-        (int)"follow_state": 0,//永远为0，可忽略
+        (int)"follow_state": 0,//为0或-1，可忽略
         (string)"forwarded_email": null,
         (string)"forwarded_username": null,
         "moment": {
@@ -81,7 +81,7 @@
     (string)"user_email": "wtx@163.com",//动态发送者
     (string)"user_username": "SarashWtx",
     (string)"user_bio": "sarash",
-    (int)"follow_state": 1,//0-已关注，1-未关注
+    (int)"follow_state": 1,//0-已关注，1-未关注，-1-是自己
     (string)"forwarded_email": null,
     (string)"forwarded_username": null,//转发自…
     "moment": {
