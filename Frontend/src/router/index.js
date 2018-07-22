@@ -17,6 +17,7 @@ import MomentDetail from '@/components/MomentDetail'
 import tag from '@/components/tag'
 import userpage from '@/components/userpage'
 
+
 Vue.use(Router)
 
 export default new Router({
