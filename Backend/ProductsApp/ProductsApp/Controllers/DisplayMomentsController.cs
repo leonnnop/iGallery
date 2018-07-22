@@ -14,7 +14,7 @@ namespace ProductsApp.Controllers
     public class DisplayMomentsController : ApiController
     {
         DBAccess Access = new DBAccess();
-        UserMomentAPI api = new UserMomentAPI();
+        GeneralAPI api = new GeneralAPI();
         /// <summary>
         /// 展示用户的朋友圈，包含用户自己的动态和他所关注用户的动态
         /// </summary>
@@ -154,7 +154,7 @@ namespace ProductsApp.Controllers
             }
 
             dm = All_Info_Of(mmt, Email, 1000, cmd);
-            dm.follow_state = api.CheckFollowState(UserID, mmt.SenderID);
+            dm.FollowState = api.CheckFollowState(UserID, mmt.SenderID);
 
             return Json(dm);
         }
@@ -263,12 +263,12 @@ namespace ProductsApp.Controllers
         {
             dm.more_comments = false;
             List<DisplayedComment> comments = new List<DisplayedComment>();
-            cmd.CommandText = "select * from coment, users, publish_comment " +
+            string sql = "select * from coment, users, publish_comment " +
                 "where coment.ID = publish_comment.comment_ID and " +
                 "publish_comment.user_ID = users.ID and " +
                 "publish_comment.moment_ID = '" + id + "' " +
                 "order by send_time asc";
-            OracleDataReader rd = cmd.ExecuteReader();
+            OracleDataReader rd = Access.GetDataReader(sql);
             int count = 0;
             while (rd.Read() && ++count <= limit)
             {
@@ -295,8 +295,8 @@ namespace ProductsApp.Controllers
                     else//有引用评论，需要获取所引用评论的信息
                     {
                         //获取被引用的评论
-                        cmd.CommandText = "select * from coment,users,publish_comment where coment.ID = '" + rd["quote_ID"].ToString() + "'";
-                        OracleDataReader rd_cm = cmd.ExecuteReader();
+                        sql = "select * from coment,users,publish_comment where coment.ID = '" + rd["quote_ID"].ToString() + "'";
+                        OracleDataReader rd_cm = Access.GetDataReader(sql);
                         if (rd_cm.Read())
                         {
                             dc.quote = new DisplayedComment();
