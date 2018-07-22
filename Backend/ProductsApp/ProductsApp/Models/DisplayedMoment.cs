@@ -10,6 +10,7 @@ namespace ProductsApp.Models
         public string user_email { get; set; }
         public string  user_username { get; set; }
         public string user_bio { get; set; }
+        public int follow_state { get; set; }
         public string forwarded_email { get; set; }
         public string forwarded_username { get; set; }
         public Moment moment { get; set; }
