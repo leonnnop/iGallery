@@ -12,7 +12,7 @@ export default new Vuex.Store({
         currentUserId_ID: '16',
         currentUsername: 'leonnnop',
         currentUserPassword:'liangchen_',
-        currentUserBio: '',
+        currentUserBio: '233',
         currentUserPhoto: '',
         job: {
             taskId: '',
