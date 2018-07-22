@@ -228,10 +228,8 @@
 # 查看关注列表 （陈阳）
 请求地址：/api/Users/FollowList
 请求方式：Post   
-支持格式：json    
-
-
-> 参数（body中）：Users
+参数类型：string
+参数（body中）：UserID
 
 
 > 返回消息：
@@ -242,7 +240,7 @@
 | string   | Username |
 | string   | Bio      |
 | string   | Photo    |
-|Not found |无关注用户|
+| string   | Not found|
 
 
 
