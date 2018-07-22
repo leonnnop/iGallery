@@ -79,31 +79,21 @@ namespace ProductsApp
         public int CheckLikeState(string email, string moment_id)
         {
             //bool result = false;
-            string ID = null;
+            string ID = EmailToUserID(email);
+
+            if (ID == null)
+                return -1;//找不到该邮箱代表的用户
 
             //执行数据库操作,获取该用户ID
-            OracleDataReader rd = dBAccess.GetDataReader("select * from USERS where email='" + email + "'");
+            OracleDataReader rd = dBAccess.GetDataReader("select * from FAVORITE where moment_id='" + moment_id + "' and user_id = '" + ID + "'");
+
             if (rd.Read())
             {
-                ID = rd["ID"].ToString();
-            }
-            else
-            {
-                return -1;
+                return 0;//找到该条点赞
             }
 
-            rd = dBAccess.GetDataReader("select * from FAVORITE where moment_id='" + moment_id + "'");
+            return 1;//找不到该条点赞
 
-            //List<string> userList = new List<string>();
-            while (rd.Read())
-            {
-                //string user_id = rd["USER_ID"].ToString();
-                //userList.Add(user_id);
-                if (rd["USER_ID"].ToString() == ID)
-                    return 0;
-            }
-
-            return 1;
         }
 
 

@@ -59,17 +59,8 @@ namespace ProductsApp.Controllers
                 }
 
                 //获取用户id
-                string user_id;
-                if (api.EmailToUserID(email) != null)
-                {
-                    user_id = api.EmailToUserID(email);
-                }
-                else//用户不存在
-                {
-                    status = 4;
-                    return Ok(status);
-                }
-                 
+                string user_id = api.EmailToUserID(email);
+                
                 //更新数据库中的点赞数
                 if (dBAccess.ExecuteSql("update MOMENT set like_num= ' " + new_like_num + " 'where  ID='" + moment_id + "' "))
                 {
