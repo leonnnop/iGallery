@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ComentController.cs" />
     <Compile Include="Controllers\DiscoverMomentController.cs" />
     <Compile Include="Controllers\DisplayLikeListController.cs" />
     <Compile Include="Controllers\DisplayMomentsController.cs" />
@@ -179,6 +180,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Coment.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DisplayedComment.cs" />
     <Compile Include="Models\DisplayedMoment.cs" />
     <Compile Include="Models\Follow_Tag.cs" />
