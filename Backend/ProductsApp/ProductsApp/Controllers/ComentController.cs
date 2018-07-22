@@ -153,16 +153,10 @@ namespace ProductsApp.Controllers
 
 
             //保存评论体
-            cmd.CommandText = "select count(*) from COMENT";
-            if (Convert.ToInt32(cmd.ExecuteScalar())==0) //搞定评论ID
-            {
-                comment.Cid = "1";
-            }
-            else
-            {
-                cmd.CommandText = "select max(ID) from COMENT";
-                comment.Cid = Convert.ToString(Convert.ToInt32(cmd.ExecuteScalar()) + 1);
-            }
+            GeneralAPI g = new GeneralAPI();
+
+           comment.Cid= g.NewIDOf("COMENT");
+
             if (comment.Quote_id.Trim().Equals("")) //搞定评论类型
             {
                 comment.Type = "0";
