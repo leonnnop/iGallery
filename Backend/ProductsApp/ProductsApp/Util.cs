@@ -138,13 +138,12 @@ namespace Utility
                 if (type == 1)
                 {
                     //插入PICTURE一条记录
-                    cmd.CommandText = "select count(*) from PICTURE";
-                    OracleDataReader rd = cmd.ExecuteReader();
-                    rd.Read();
-                    int pid = Convert.ToInt32(rd[0])+1;
+                    GeneralAPI g = new GeneralAPI();
+
+                    string pid = g.NewIDOf("PICTURE");
                     //文件路径不重名
-                    filepath = @"C:\mmps\" + (Convert.ToString(pid)) + fileExt;
-                    cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + pid.ToString() + "','" + filepath + "','" + id + "')";
+                    filepath = @"C:\mmps\" + pid + fileExt;
+                    cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + pid+ "','" + filepath + "','" + id + "')";
                     if (cmd.ExecuteNonQuery() != 1)
                     {
                        flag = false;

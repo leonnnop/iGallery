@@ -358,7 +358,7 @@ namespace ProductsApp.Controllers
         /// </summary>
         /// <param name="user">Users</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public IHttpActionResult ModifyUserInfo([FromBody]User_Modify user_Modify)
         {
 
@@ -368,7 +368,7 @@ namespace ProductsApp.Controllers
             DBAccess dBAccess = new DBAccess();
 
             //执行数据库操作
-            if (dBAccess.ExecuteSql("update USERS set username='" + user_Modify.UserName + "', bio='" + user_Modify.Bio + "' where id ='" + user_Modify.id + "'"))
+            if (dBAccess.ExecuteSql("update USERS set username='" + user_Modify.UserName + "', bio='" + user_Modify.Bio + "' where id ='" + user_Modify.ID + "'"))
             {
                 status = 0;//成功更新用户信息
             }
@@ -454,8 +454,8 @@ namespace ProductsApp.Controllers
         /// </summary>
         /// <param name="userID">Users</param>
         /// <returns></returns>
-        [HttpPost]
-        public IHttpActionResult FollowList([FromBody]string userID)       //返回关注列表
+        [HttpGet]
+        public IHttpActionResult FollowList(string userID)       //返回关注列表
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -472,16 +472,17 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             List<Users> following_list = new List<Users>();
-            if (!rd.Read())
+            if (!rd.HasRows)
             {
                 return Ok("Not found");
             }
             while (rd.Read())
             {
                 string followed_id = rd["FOLLOWING_ID"].ToString();
-                cmd.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
-                cmd.Connection = conn;
-                OracleDataReader rd1 = cmd.ExecuteReader();
+                OracleCommand cmd1 = new OracleCommand();
+                cmd1.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+                cmd1.Connection = conn;
+                OracleDataReader rd1 = cmd1.ExecuteReader();
                 if (rd1.Read())
                 {
                     Users temp = new Users();
