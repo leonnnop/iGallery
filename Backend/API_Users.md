@@ -61,14 +61,14 @@
 支持格式：json    
 
 
-> 参数（body中）：Users
+> 参数：string Email，string Password
 
 > 返回消息：
-| 状态码 | 说明             |
-| ------ | ---------------- |
-| 0      | 登录成功         |
-| 1      | 用户名或密码错误 |
-| 2      | 找不到此用户     |
+| 状态码   | 说明                 |
+| -------- | ---------------------|
+| string   | 登录成功，返回用户ID |
+| Error    | 密码错误             |
+| NotFound | 找不到此用户         |
 
 ------
 
@@ -227,7 +227,7 @@
 请求地址：/api/Users/FollowList
 请求方式：Get   
 参数类型：string
-参数（body中）：UserID
+参数：userID
 
 
 > 返回消息：
@@ -238,6 +238,7 @@
 | string   | Username |
 | string   | Bio      |
 | string   | Photo    |
+未找到
 | string   | Not found|
 
 
