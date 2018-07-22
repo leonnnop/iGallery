@@ -7,8 +7,8 @@ using System.Text;
 using System.Net.Http;
 using System.Web.Http;
 using System.Data;
-//using System.Data.OracleClient;
 using ProductsApp;
+//using System.Data.OracleClient;
 using Oracle.ManagedDataAccess.Client;
 //using Fleck;
 namespace ProductsApp.Controllers
@@ -24,7 +24,7 @@ namespace ProductsApp.Controllers
         /// <param name="content"></param>
         /// <returns></returns>
         [HttpGet]
-        public Tuple<List<Moment>,int,bool,List<string>> Followers(int Page, int PageSize, string TagContent , string Email)
+        public Tuple<List<Moment>,int,bool,List<string>,List<int>> Followers(int Page, int PageSize, string TagContent , string Email)
         {
             bool FollowState = false;
             string sql = Access.Select("ID", "USERS", "EMAIL='" + Email + "'").ToString();
@@ -48,6 +48,8 @@ namespace ProductsApp.Controllers
             List<Moment> moments = new List<Moment>();
             //user的数组
             List<string> users = new List<string>();
+            //点赞状态的数组
+            List<int> states = new List<int>();
             foreach (DataRow row in MIDSet.Tables[0].Rows)
             {
                 select = Access.Select("*", "MOMENT", "ID = '" + row[0] + "'");
@@ -69,19 +71,21 @@ namespace ProductsApp.Controllers
                     int collects = int.Parse(rd["COLLECT_NUM"].ToString());
                     int comments = int.Parse(rd["COMMENT_NUM"].ToString());
                     string time = rd["TIME"].ToString().Replace('T', ' ');
+                    GeneralAPI A = new GeneralAPI();
+                    states.Add(A.CheckLikeState(Email, id));
                     moments.Add(new Moment(id, sender_id, content, likes, forwards, collects, comments, time));
                 }
             }
             select = Access.Select("*", "FOLLOW_TAG", "TAG = '" + TagContent + "'");
             int Flowers = Access.GetRecordCount(select);
 
-            Tuple<List<Moment>, int, bool,List<string>> result = new Tuple<List<Moment>, int, bool,List<string>>(null, 0, false,null);
+            Tuple<List<Moment>, int, bool, List<string>, List<int>> result = new Tuple<List<Moment>, int, bool, List<string>, List<int>>(null, 0, false, null, null);
             if (moments.Count != 0)
             {
-                result = new Tuple<List<Moment>, int, bool, List<string>>(moments, Flowers, FollowState, users);
+                result = new Tuple<List<Moment>, int, bool, List<string>, List<int>>(moments, Flowers, FollowState, users, states);
             }
             else if (moments.Count == 0)
-                result = new Tuple<List<Moment>, int, bool, List<string>>(null, 0, FollowState, null);
+                result = new Tuple<List<Moment>, int, bool, List<string>, List<int>>(null, 0, FollowState, null, null);
             
             return result;
         }
