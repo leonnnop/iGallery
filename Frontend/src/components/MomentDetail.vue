@@ -2,8 +2,8 @@
     <div style="margin-bottom:30px;">
         <el-row>
             <el-col :span="10" :offset="4">
-                <el-carousel height="500px" :interval="0" indicator-position="outside">
-                    <el-carousel-item v-for="(img,index) in moment.imgList" :key="index">
+                <el-carousel v-if="hackReset" height="500px" :interval="0" indicator-position="outside">
+                    <el-carousel-item v-for="(img,index) in imgList" :key="index">
                         <div class="pic">
                             <img :src="img.url" alt="movementImg">
                         </div>
@@ -67,7 +67,7 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img src="../image/a.jpg" alt="" style="width:40px;height:40px;border-radius:40px;">
+                                <img :src="userHeadImg" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment">
@@ -146,7 +146,7 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img src="../image/a.jpg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.userPage)">
+                                <img :src="userHeadImg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.userPage)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
@@ -259,6 +259,8 @@
         data() {
             return {
                 // sendText:'',
+                userHeadImg:'',
+                hackReset: false,
                 pictureURL: '',
                 navBarFixed: false,
                 searchInput: '',
@@ -361,20 +363,21 @@
                 commentComment: {
                     comment: ''
                 },
+                imgList: [{
+                        url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
+                    },
+                    {
+                        url: require('../image/ins2.png')
+                    },
+                    {
+                        url: require('../image/ins3.png')
+                    },
+                    {
+                        url: require('../image/a.jpg')
+                    }
+                ],
                 moment: {
-                    imgList: [{
-                            url: require('../image/ins1.png')
-                        },
-                        {
-                            url: require('../image/ins2.png')
-                        },
-                        {
-                            url: require('../image/ins3.png')
-                        },
-                        {
-                            url: require('../image/a.jpg')
-                        }
-                    ],
+
                     ID: '111',
                     Username: 'Leonnnop',
                     SenderID: '16',
@@ -477,7 +480,11 @@
                 // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
                 this.$refs.upload.submit(); //上传图片
 
-                this.axios.put('http://10.0.1.8:54468/api/Moment/ModifyMoment?email='+this.$store.state.currentUserId+'&moment_id='+this.$route.params.id+'&content='+this.moment.Content)
+                this.axios.put('http://10.0.1.8:54468/api/ModifyMoment/ModifyMoment', {
+                        email: this.$store.state.currentUserId,
+                        moment_id: this.$route.params.id,
+                        content: this.moment.Content
+                    })
                     .then((response) => {
                         if (response.data == 0) {
                             this.$message({
@@ -797,25 +804,37 @@
             }
         },
         created() {
-
-            this.axios.get('http://10.0.1.8:54468//api/Picture/FirstGet?id=' + this.$route.params.id + '&type=1')
+            this.hackReset = false
+            this.$nextTick(() => {
+                this.hackReset = true
+            })
+            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$route.params.id +
+                    '&type=1')
                 .then((response) => {
+                    this.imgList = [];
+                    console.log('ge')
                     response.data.forEach(element => {
-                        this.moment.imgList = [];
-                        this.moment.imgList.push({
-                            url: 'http://10.0.1.8:54468/api/Picture/Gets?id=' + element
+                        console.log('gege')
+                        this.imgList.push({
+                            url: 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                element
                         })
+                        console.log(this.imgList)
                     });
                 })
             //
-            this.axios.get('http://10.0.1.8:54468//api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
+            this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
                     '&MomentID=' + this.$route.params.id)
                 .then((response) => {
+
                     this.moment = response.data.moment;
                     this.moment.Username = response.data.user_username;
-                    this.moment.imgList = [{
-                        url: 'http://10.0.1.8:54468/api/Picture/FirstGet?id=2&type=2'
-                    }];
+
+                    this.userHeadImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
+                    '&type=2';
+                    // this.imgList = [{
+                    //     url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
+                    // }];
 
                     if (response.FollowState == 'true') {
                         this.moment.followState = '已关注'
@@ -847,6 +866,7 @@
                     //         name: element
                     //     })
                     // });
+
                 })
                 .catch((error) => {
                     console.log(error);

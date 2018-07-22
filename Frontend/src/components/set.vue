@@ -160,14 +160,27 @@
       onSubmit: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
-                ID: this.$store.state.currentUseId_ID,
-                Username: this.ruleForm.name,
-                Bio: this.ruleForm.desc
+            this.axios.post('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
+                UserName: this.ruleForm.name,
+                Bio: this.ruleForm.desc,
+                ID: this.$store.state.currentUserId_ID,
               })
               .then((response) => {
                 let result = response.data;
-                this.resultHandler1(result);
+                // this.resultHandler1(result);
+                /////
+                if (result == 0) {
+                  this.$store.commit('addCurrentUsername', this.ruleForm.name);
+                  this.$store.commit('addCurrentUserBio', this.ruleForm.desc);
+
+                  this.$message({
+                    message: '信息修改成功！',
+                    type: 'success'
+                  });
+                  setTimeout(this.onCancel, 3000);
+                } else {
+                  this.$message.error('信息修改失败！请重试。');
+                }
               })
               .catch((error) => {
                 console.log(error);
@@ -197,19 +210,29 @@
           if (valid) {
             console.log('adsfaadfgadsgs')
             //this.opassForm.opass='';
-            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.$store.state.currentUseId +
+            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.$store.state.currentUserId +
                 "&Password=" +
                 this.ruleForm2.opass
               )
               .then((response) => {
-                if (response.data == 0) {
-                  this.axios.post('http://10.0.1.8:54468/api/Users/ChangePassword', {
-                      email: this.$store.state.currentUseId,
-                      NewPassword: this.ruleForm2.checkPass
-                    })
+                if (response.data != 'Error' || esponse.data != 'NotFound') {
+                  this.axios.put('http://10.0.1.8:54468/api/Users/ChangePassword?email=' + this.$store.state.currentUserId +
+                      '&NewPassword=' + this.ruleForm2.checkPass
+                    )
                     .then((response) => {
                       let result = response.data;
-                      this.resultHandler(result);
+                      // this.resultHandler(result);
+                      if (result) {
+                        this.$store.commit('addCurrentUserPassword', this.ruleForm2.checkPass);
+
+                        this.$message({
+                          message: '密码重置成功！将在三秒后跳转至登录界面,重新登录！',
+                          type: 'success'
+                        });
+                        setTimeout(this.toLogin, 3000);
+                      } else {
+                        this.$message.error('密码重置失败，请重试！');
+                      }
                     })
                     .catch((error) => {
                       console.log(error);
@@ -229,6 +252,8 @@
       },
       resultHandler: function (result) {
         if (result) {
+          // this.$store.commit('addCurrentUserPassword', this.ruleForm.email);
+
           this.$message({
             message: '密码重置成功！将在三秒后跳转至登录界面,重新登录！',
             type: 'success'

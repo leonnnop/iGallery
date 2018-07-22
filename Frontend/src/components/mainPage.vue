@@ -285,32 +285,32 @@
         this.showUploadArea = true;
         this.showTextArea = false;
 
-        // this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
-        //     ID: this.currentMomentID,
-        //     SenderID: this.$store.state.currentUserId_ID,
-        //     Content: this.sendText,
-        //     LikeNum: 0,
-        //     ForwardNum: 0,
-        //     CollectNum: 0,
-        //     CommentNum: 0,
-        //     Time: '',
-        //   })
-        //   .then((response) => {
-        //     if (response.data == 0) {
-        //       // this.$message({
-        //       //   message: '发布成功！',
-        //       //   type: 'success'
-        //       // });
-        //     } else {
-        //       this.$message.error('本次发布失败，服务器内部错误，请重试。');
-        //     }
-        //   });
+        this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
+            ID: this.currentMomentID,
+            SenderID: this.$store.state.currentUserId_ID,
+            Content: this.sendText,
+            LikeNum: 0,
+            ForwardNum: 0,
+            CollectNum: 0,
+            CommentNum: 0,
+            Time: '',
+          })
+          .then((response) => {
+            if (response.data == 0) {
+              // this.$message({
+              //   message: '发布成功！',
+              //   type: 'success'
+              // });
+            } else {
+              this.$message.error('本次发布失败，服务器内部错误，请重试。');
+            }
+          });
 
         console.log(this.tags)
 
         if (this.tags.length > 0) {
           // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=4&', {
+          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
             params: {
               TagNames: this.tags,
               // Moment_Id: this.$route.params.id
