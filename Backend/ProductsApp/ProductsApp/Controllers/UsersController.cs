@@ -352,24 +352,15 @@ namespace ProductsApp.Controllers
         }
 
 
+
         /// <summary>
         /// 修改用户信息
         /// </summary>
         /// <param name="user">Users</param>
         /// <returns></returns>
         [HttpPut]
-        public IHttpActionResult ModifyUserInfo([FromBody]Users user)
+        public IHttpActionResult ModifyUserInfo([FromBody]User_Modify user_Modify)
         {
-            
-            //将更新信息存入新建object
-            Users newUser = new Users();
-            //newUser.Email = user.Email;
-            newUser.Username = user.Username;
-            //newUser.Password = user.Password;
-            newUser.Bio = user.Bio;
-            newUser.Photo = user.Password;
-
-            //HttpResponseMessage response = Request.CreateResponse();
 
             int status;
 
@@ -377,7 +368,7 @@ namespace ProductsApp.Controllers
             DBAccess dBAccess = new DBAccess();
 
             //执行数据库操作
-            if (dBAccess.ExecuteSql("update USERS set username='" + user.Username + "', bio='" + user.Bio + "', photo = '" + user.Photo + "'  where email='" + user.Email + "'"))
+            if (dBAccess.ExecuteSql("update USERS set username='" + user_Modify.UserName + "', bio='" + user_Modify.Bio + "' where id ='" + user_Modify.id + "'"))
             {
                 status = 0;//成功更新用户信息
             }
@@ -388,6 +379,9 @@ namespace ProductsApp.Controllers
 
             return Ok<int>(status);
         }
+
+
+
 
         /// <summary>
         /// (取消)关注用户

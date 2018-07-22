@@ -12,6 +12,5 @@ namespace ProductsApp.Models
         public string id { get; set; }
         public  string content { get; set; }
         public string send_time { get; set; }
-        public DisplayedComment quote{ get; set; }
     }
 }

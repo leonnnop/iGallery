@@ -26,7 +26,7 @@ namespace ProductsApp.Controllers
             DBAccess dBAccess = new DBAccess();
 
             //创建api对象
-            UserMomentAPI api = new UserMomentAPI();
+            GeneralAPI api = new GeneralAPI();
 
             //获取用户ID
             string user_id = api.EmailToUserID(email);
@@ -74,7 +74,7 @@ namespace ProductsApp.Controllers
             DBAccess dBAccess = new DBAccess();
 
             //创建api对象
-            UserMomentAPI api = new UserMomentAPI();
+            GeneralAPI api = new GeneralAPI();
 
             //获取用户ID
             string user_id = api.EmailToUserID(modifyMoment.email);
