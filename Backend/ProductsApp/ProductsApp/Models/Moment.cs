@@ -15,9 +15,10 @@ namespace ProductsApp.Models
         public int CollectNum { get; set; }
         public int CommentNum { get; set; }
         public string Time { get; set; }
+        public string QuoteMID { get; set; }
 
         public Moment() { }
-        public Moment(string id, string sender_id, string content, int likes, int forwards, int collects, int comments, string time)
+        public Moment(string id, string sender_id, string content, int likes, int forwards, int collects, int comments, string time)//, string quotemid)
         {
             ID = id;
             SenderID = sender_id;
@@ -27,6 +28,7 @@ namespace ProductsApp.Models
             CollectNum = collects;
             CommentNum = comments;
             Time = time;
+            //QuoteMID = quotemid;
         }
     }
     /*测试
@@ -39,6 +41,7 @@ namespace ProductsApp.Models
 	"CollectNum":0,
 	"CommentNum":0,
 	"Time":""
+    "QuoteMID":""
 
     */
 }

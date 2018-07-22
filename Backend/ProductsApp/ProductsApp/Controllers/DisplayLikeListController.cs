@@ -17,34 +17,48 @@ namespace ProductsApp.Controllers
         /// <summary>
         /// 获取一条动态的点赞用户列表
         /// </summary>
+        /// <param name="email">string</param>
         /// <param name="moment_id">string</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetLikeList(string moment_id)
+        public IHttpActionResult GetLikeList(string email, string moment_id)
         {
             //todo:连接数据库
             DBAccess dBAccess = new DBAccess();
 
             //执行数据库select操作
-            OracleDataReader rd = dBAccess.GetDataReader("select u.* from FAVORITE f, USERS u where f.moment_id = '" + moment_id + "' and f.user_id = u.id");
+            OracleDataReader rd = dBAccess.GetDataReader(" select u.* from FAVORITE f, USERS u where f.moment_id = '" + moment_id + "' and f.user_id = u.id  ");
             
             //创建Users对象List，并向其中添加读出的数据库信息
-            List<Users> resultList = new List<Users>();
+            List<User_Follow> resultList = new List<User_Follow>();
+
+            //创建api对象
+            UserMomentAPI api = new UserMomentAPI();
 
             while ( rd.Read() )//当数据库能读出一条符合条件的元组，执行循环
             {
-                Users u = new Users();
-                u.ID = rd["ID"].ToString();
-                u.Username = rd["USERNAME"].ToString();
-                u.Password = "null";
-                u.Photo = rd["PHOTO"].ToString();
-                u.Email = rd["EMAIL"].ToString();
-                u.Bio = rd["BIO"].ToString();
-                resultList.Add(u);
+                User_Follow uf = new User_Follow();
+                uf.ID = rd["ID"].ToString();
+                uf.Username = rd["USERNAME"].ToString();
+                uf.Photo = rd["PHOTO"].ToString();
+                uf.Email = rd["EMAIL"].ToString();
+                uf.Bio = rd["BIO"].ToString();
+                string user_id = api.EmailToUserID(email);
+                int follow_state = api.CheckFollowState(user_id, rd["ID"].ToString());
+                if (follow_state == 0)//关注
+                {
+                    uf.FollowState = "true";
+                }
+                else//未关注
+                {
+                    uf.FollowState = "false";
+                }
+
+                resultList.Add(uf);
 
             }
 
-            return Json<List<Users>>(resultList);//返回符合条件的Users列表
+            return Json<List<User_Follow>>(resultList);//返回符合条件的Users列表
 
         }
     }

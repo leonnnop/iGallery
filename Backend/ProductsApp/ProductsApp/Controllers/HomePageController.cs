@@ -33,28 +33,26 @@ namespace ProductsApp.Controllers
         
             //执行数据库操作
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select m.id as m_id,m.content, m.like_num, m.forward_num, m.collect_num, m.comment_num, m.time, p.id as p_id, p.url"+
-                              " from MOMENT m,USERS u " +
-                              "where m.id = p.moment_id and m.sender_id= '" + Sender_id + "'" +
-                              "order by moment.time desc";
+            cmd.CommandText = "select id,content,like_num,forward_num,collect_num,comment_num,time"+
+                              " from MOMENT " +
+                              "where sender_id = '" + Sender_id + "'" +
+                              "order by time desc";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
 
             //创建User_Moment对象List，并向其中添加读出的数据库信息
-            List<MyMoments> MyMomentList = new List<MyMoments>();
+            List<Moment> MyMomentList = new List<Moment>();
 
             while (rd.Read())//当数据库能读出一条符合条件的元组，执行循环
             {
-                MyMoments m = new MyMoments();
-                m.M_ID = rd["M_ID"].ToString();
+                Moment m = new Moment();
+                m.ID = rd["M_ID"].ToString();
                 m.Content = rd["CONTENT"].ToString();
                 m.LikeNum = int.Parse(rd["LIKE_NUM"].ToString());
                 m.ForwardNum = int.Parse(rd["FORWARD_NUM"].ToString());
                 m.CollectNum = int.Parse(rd["COLLECT_NUM"].ToString());
                 m.CommentNum = int.Parse(rd["COMMENT_NUM"].ToString());
                 m.Time = rd["TIME"].ToString();
-                m.P_ID = rd["P_ID"].ToString();
-                m.URL = rd["URL"].ToString();
                 MyMomentList.Add(m);
             }
 
@@ -62,7 +60,7 @@ namespace ProductsApp.Controllers
             rd.Close();
             conn.Close();
             //以json格式返回数组
-            return Json<List<MyMoments>>(MyMomentList);
+            return Json<List<Moment>>(MyMomentList);
 
         }
 

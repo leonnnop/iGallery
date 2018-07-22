@@ -149,10 +149,6 @@ namespace ProductsApp.Controllers
         }
 
 
-
-
-
-
         /// <summary>
         /// 用户登录
         /// </summary>
@@ -171,23 +167,37 @@ namespace ProductsApp.Controllers
             {
                 throw (ex);
             }
+            
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select Password from USERS t where email='" + Email + "'";//根据邮箱查找该用户的正确密码
+            cmd.CommandText = "select Password from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.Read())
             {
                 string password = rd["Password"].ToString();
                 conn.Close();
-                if (password == Password) return LoginResult("0");//如果用户输入的密码正确
-                else return LoginResult("1");
+                if (password == Password)
+                {
+                    cmd.CommandText = "select ID from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
+                    cmd.Connection = conn;
+                    conn.Open();
+                    rd = cmd.ExecuteReader();
+                    if(rd.Read())
+                    {
+                       string id=rd["ID"].ToString();
+                       return LoginResult(id);//如果用户输入的密码正确
+                    }
+                    else return LoginResult("Error");
+                }
+                else return LoginResult("Error");
             }
-            else return LoginResult("2");//未找到此用户名
+            else return LoginResult("NotFound");//未找到此用户名
 
         }
         public HttpResponseMessage LoginResult(string result)//返回true
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+           
             response.Content = new StringContent(result);
             return response;
         }
@@ -380,15 +390,16 @@ namespace ProductsApp.Controllers
         }
 
         /// <summary>
-        /// 关注用户
+        /// (取消)关注用户
         /// </summary>
         /// <param name="followID">Users</param>
         /// <param name="followedID">Users</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage Follow(string followID, string followedID)//把关注用户和被关注用户加入关注联系集
+        public HttpResponseMessage Follow(string followID, string followedID)//若用户没有关注，则把关注用户和被关注用户加入关注联系集
+                                                                             //若用户已经关注，则把关注用户和被关注用户的联系从联系集中删除
         {
-            string state = "0";//状态码0：成功，1：关注失败
+            string state = "0";//状态码0：成功，1：失败
             HttpResponseMessage response = Request.CreateResponse();
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -401,21 +412,47 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + followID + "," + followedID + ")";//插入数据库
             cmd.Connection = conn;
-            int result = cmd.ExecuteNonQuery();
-            if (result == 1)//插入成功
+            cmd.CommandText="select * " +
+                            "from Follow_User " +
+                            "where user_id='" + followID + "'and following_id='"+followedID+"'";
+            OracleDataReader rd = cmd.ExecuteReader();
+            if (!rd.HasRows)
             {
-                response.StatusCode = HttpStatusCode.OK;
+                cmd.CommandText = "insert into Follow_User(USER_ID,FOLLOWING_ID) values(" + followID + "," + followedID + ")";//插入数据库
+                int result = cmd.ExecuteNonQuery();
+                if (result == 1)//插入成功
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                }
+                else           //插入失败
+                {
+                    state = "1";
+                    response.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                conn.Close();
+                response.Content = new StringContent(state, Encoding.Unicode);//返回状态码
+                return response;
             }
-            else           //插入失败
+            else
             {
-                state = "1";
-                response.StatusCode = HttpStatusCode.InternalServerError;
+                cmd.CommandText = "delete from Follow_User " +
+                             "where user_id='" + followID + "'and following_id='" + followedID + "'";//把此条联系从数据库删除
+                cmd.Connection = conn;
+                int result = cmd.ExecuteNonQuery();
+                if (result == 1)//删除成功
+                {
+                    response.StatusCode = HttpStatusCode.OK;
+                }
+                else           //删除失败
+                {
+                    state = "1";
+                    response.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                conn.Close();
+                response.Content = new StringContent(state, Encoding.Unicode);//返回状态码
+                return response;
             }
-            conn.Close();
-            response.Content = new StringContent(state, Encoding.Unicode);//返回状态码
-            return response;
         }
 
         /// <summary>

@@ -34,95 +34,78 @@
           <i class="el-icon-bell"></i>
         </el-col>
         <el-col :span="1">
-          <img src="../image/send.png" alt="sendMoment" @click="sendMomentInit" >
-            
+          <img src="../image/send.png" alt="sendMoment" @click="sendMomentInit">
+
         </el-col>
       </el-row>
 
 
       <el-row type="flex" justify="center" style="margin-top:30px">
         <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
-          
+
           <router-view></router-view>
           <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
-              <el-row>
-                <el-col :span="3" :offset="0"><img src="../image/a.jpg" alt="headImg" style="width:80px;height:80px;border-radius:80px;"></el-col>
-                <el-col :span="18" :offset="0">
-                  <div class="sendContent">
-                    <div class="edit"><div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">Leonnnop</div>
-                      <el-row type="flex" justify="center" align="middle">
-                        <el-row>
-                          
-                        </el-row>
-                        <el-col :span="6" v-show="showUploadArea"></el-col>
-                        <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
-                          
-                          <el-upload
-                            
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            list-type="picture-card"
-                            :on-remove="handleRemove" 
-                            :file-list="uploadImgs"
-                            :before-upload="beforeUpload"
-                            :on-change="uploadOnChange"
-                            :on-success="uploadOnSuccess"
-                            :on-error="uploadOnError"
-                            :on-progress="uploadOnProgress"
-                            :on-exceed="upLoadOnExceed"
-                            :show-file-list="true"
-                            :limit="9"
-                            :multiple="true"
-                            class="upload">
-                            <i class="el-icon-plus"></i>
-                          </el-upload>
-                          
-                          
-                        </el-col>
-                        <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
-                          <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="sendText"></el-input>
-                          <div class="editTag">
-                            <el-tag
-                              :key="tag"
-                              color="#fff"
-                              v-for="tag in tags"
-                              closable
-                              :disable-transitions="false"
-                              @close="handleTagClose(tag)">
-                              {{tag}}
-                            </el-tag>
-                            
-                              <el-input
-                              class="input-new-tag"
-                              v-if="tagsInputVisible&&ableToAddTag"
-                              v-model="tagsInputValue"
-                              ref="saveTagInput"
-                              size="small"
-                              @keyup.enter.native="handleTagInputConfirm"
-                              @blur="handleTagInputConfirm"
-                            >
-                            </el-input>
-                          <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
-                          </div>
-                        </el-col>
-                      </el-row>
+            <el-row>
+              <el-col :span="3" :offset="0">
+                <img src="../image/a.jpg" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
+              </el-col>
+              <el-col :span="18" :offset="0">
+                <div class="sendContent">
+                  <div class="edit">
+                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">Leonnnop</div>
+                    <el-row type="flex" justify="center" align="middle">
+                      <el-row>
 
-                    </div>
-                    <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
-                      <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
-                      <el-col :span="4" >
-                        <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
+                      </el-row>
+                      <el-col :span="6" v-show="showUploadArea"></el-col>
+                      <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
+
+                        <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
+                        <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
+                          :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange" :on-success="uploadOnSuccess"
+                          :on-error="uploadOnError" :on-progress="uploadOnProgress" :on-exceed="upLoadOnExceed" :show-file-list="true"
+                          :limit="9" :multiple="true" class="upload" :data="pictureObj">
+                          <i class="el-icon-plus"></i>
+                        </el-upload>
+
+
+                      </el-col>
+                      <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
+                        <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="sendText"></el-input>
+                        <div class="editTag">
+                          <el-tag :key="tag" color="#fff" v-for="tag in tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
+                            {{tag}}
+                          </el-tag>
+
+                          <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag" v-model="tagsInputValue" ref="saveTagInput" size="small"
+                            @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
+                          </el-input>
+                          <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
+                        </div>
                       </el-col>
                     </el-row>
-                    <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
-                      <el-col :span="4" ><img src="../image/arrow-left.png" @click="sendLastHandler" class="sendMomentBtn"></el-col>
-                      <el-col :span="4"><img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn"></el-col>
-                    </el-row>
+
                   </div>
-                  
-                </el-col>
-              </el-row>
-              
-            </el-dialog>
+                  <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
+                    <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
+                    <el-col :span="4">
+                      <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
+                    </el-col>
+                  </el-row>
+                  <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
+                    <el-col :span="4">
+                      <img src="../image/arrow-left.png" @click="sendLastHandler" class="sendMomentBtn">
+                    </el-col>
+                    <el-col :span="4">
+                      <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
+                    </el-col>
+                  </el-row>
+                </div>
+
+              </el-col>
+            </el-row>
+
+          </el-dialog>
         </el-col>
       </el-row>
     </el-col>
@@ -136,52 +119,63 @@
     top: 0;
     z-index: 999;
   }
+
   .mainContentScroll {
     margin-top: 55px
   }
-  .send{
-   background: transparent;
+
+  .send {
+    background: transparent;
     height: 0;
     padding-bottom: 38%;
     position: relative;
-    -webkit-box-shadow:0 0;
+    -webkit-box-shadow: 0 0;
     box-shadow: 0 0;
   }
-  .sendContent{
+
+  .sendContent {
     height: 500px;
-    background:url('../image/send-dialog.png');
+    background: url('../image/send-dialog.png');
   }
-  .edit{
-    
+
+  .edit {
+
     width: 100%;
     height: 0;
     padding-bottom: 80%;
     overflow: hidden;
     position: relative;
   }
-  .edit .el-upload-list--picture-card .el-upload-list__item,.el-upload--picture-card{
+
+  .edit .el-upload-list--picture-card .el-upload-list__item,
+  .el-upload--picture-card {
     height: 0;
     width: 25%;
     padding-bottom: 25%;
     position: relative;
   }
-  .edit .el-upload-list--picture-card .el-upload-list__item img{
+
+  .edit .el-upload-list--picture-card .el-upload-list__item img {
     position: absolute;
     left: 0;
     top: 0;
   }
-  .el-upload--picture-card i{
+
+  .el-upload--picture-card i {
     position: absolute;
     left: 36%;
     top: 36%;
   }
-  .sendMomentBtn{
+
+  .sendMomentBtn {
     height: 40px;
     width: 40px;
   }
-  .el-tag + .el-tag {
+
+  .el-tag+.el-tag {
     margin-left: 10px;
   }
+
   .button-new-tag {
     margin-left: 0;
     height: 32px;
@@ -189,34 +183,36 @@
     padding-top: 0;
     padding-bottom: 0;
   }
+
   .input-new-tag {
     width: 90px;
     margin-left: 10px;
     vertical-align: bottom;
   }
-  .editTag{
+
+  .editTag {
     margin-top: 20px;
   }
-  
 </style>
 
 <script>
   export default {
     data() {
       return {
+        pictureURL: '',
         navBarFixed: false,
         searchInput: '',
         topBarActiveIndex: '1',
-        sendMomentVisible:false,
+        sendMomentVisible: false,
         dialogImageUrl: '',
         dialogVisible: false,
-        showNextBtn:false,
-        showUpload:false,
-        showUploadArea:true,
-        showTextArea:false,
-        sendText:'',
-        uploadImgs2:[],
-        uploadImgs:[
+        showNextBtn: false,
+        showUpload: false,
+        showUploadArea: true,
+        showTextArea: false,
+        sendText: '',
+        uploadImgs2: [],
+        uploadImgs: [
           // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
           // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
           // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
@@ -227,16 +223,20 @@
           // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
           // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
         ],
-        ableToUpload:true,
+        ableToUpload: true,
         tags: [],
         tagsInputVisible: false,
         tagsInputValue: '',
-        ableToAddTag:true
+        ableToAddTag: true,
+        pictureObj: {
+          id: 2,
+          type: 2
+        }
 
       }
     },
-    computed:{
-      sendMomentImgNum:function(){
+    computed: {
+      sendMomentImgNum: function () {
         return this.uploadImgs2.length;
       }
     },
@@ -266,81 +266,127 @@
           this.navBarFixed = false
         }
       },
-      sendMomentInit:function(){
-        this.sendMomentVisible=true;
-        this.showUpload=true;
+      sendMomentInit: function () {
+        this.sendMomentVisible = true;
+        this.showUpload = true;
       },
-      sendNextHandler:function(){
-        this.showUploadArea=false;
-        this.showTextArea=true;
+      sendNextHandler: function () {
+        this.showUploadArea = false;
+        this.showTextArea = true;
       },
-      sendLastHandler:function(){
-        this.showUploadArea=true;
-        this.showTextArea=false;
+      sendLastHandler: function () {
+        this.showUploadArea = true;
+        this.showTextArea = false;
       },
-      sendMomentHandler:function(){
-        console.log('————发布内容————');
-        console.log(this.uploadImgs2);
-        console.log(this.sendText);
-        console.log(this.tags);
-        this.uploadImgs2=[];
-        this.tags=[];
-        this.sendText='';
-        this.sendMomentVisible=false;
-        this.showUploadArea=true;
-        this.showNextBtn=false;
-        this.showTextArea= false;
-        this.showUpload=false;
-        this.$message({
-          message: '发布成功！',
-          type: 'success'
-        })
+      sendMomentHandler: function () {
+        // console.log('————发布内容————');
+        // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
+        this.$refs.upload.submit(); //上传图片
+
+        // this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
+        //     ID: '',
+        //     SenderID: this.$store.state.currentUserId_ID,
+        //     Content: this.sendText,
+        //     LikeNum: 0,
+        //     ForwardNum: 0,
+        //     CollectNum: 0,
+        //     CommentNum: 0,
+        //     Time: '',
+        //   })
+        //   .then((response) => {
+        //     if (response.data == 0) {
+        //       this.$message({
+        //         message: '发布成功！',
+        //         type: 'success'
+        //       });
+        //     } else {
+        //       this.$message.error('发表失败，服务器内部错误，请重试。');
+        //     }
+
+        //     this.uploadImgs2 = [];
+        //     this.tags = [];
+        //     this.sendText = '';
+        //     this.sendMomentVisible = false;
+        //     this.showUploadArea = true;
+        //     this.showNextBtn = false;
+        //     this.showTextArea = false;
+        //     this.showUpload = false;
+        //   });
+        // if (tags.length > 0) {
+        //   this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?TagName', {
+        //     params: {
+        //       TagName: tags,
+        //       moment_id: this.$route.params.id
+        //     },
+        //     paramsSerializer: function (params) {
+        //       return Qs.stringify(params, {
+        //         arrayFormat: 'repeat'
+        //       })
+        //     }
+        //   })
+        // }
       },
+      //上传组件
       handleRemove(file, fileList) {
-        if(!fileList.length){
-          this.showNextBtn=false;
+        if (!fileList.length) {
+          this.showNextBtn = false;
         }
       },
-      beforeUpload:function(file){
+      beforeUpload: function (file) {
         const size = file.size / 1024 / 1024 < 3;
         if (!size) {
           this.$message.error('上传图片大小不能超过 3MB!');
         }
         return size;
       },
-      uploadOnProgress(e,file){//开始上传
+      uploadOnProgress(e, file) { //开始上传
         // console.log('——————开始上传——————');
-        // console.log(e.percent,file)
-      },
-      uploadOnChange(file){
-          console.log("——————————change——————————")
-          // console.log(file)
-          if(file.status == 'ready'){
-              console.log("ready")
-          }else if(file.status == 'fail'){
-              this.$message.error("图片上传出错，请刷新重试！")
+        // console.log(file)
+        // var file = document.getElementById("upload_file").files[0];
+        var oneFile = file.raw;
+        var formdata1 = new FormData(); // 创建form对象
+        formdata1.append('file', oneFile); // 通
+        // formdata1.append('id', 2); // 通
+        // formdata1.append('type', 2); // 通
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
           }
+        }; //添加请求头
+        this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((response) => { //这里的/xapi/upimage为接口
+          console.log(response.data);
+        })
+
       },
-      uploadOnSuccess(e,file,fileList){//上传附件
-          console.log("——————————success——————————")
-          console.log(fileList);
-          if(fileList.length){
-            this.showNextBtn=true;
-          }
-          this.uploadImgs2=fileList;
+      uploadOnChange(file, fileList) {
+        //console.log("——————————change——————————")
+        // console.log(file)
+        if (file.status == 'ready') {
+          this.uploadImgs2.push(file);
+          //console.log("ready")
+        } else if (file.status == 'fail') {
+          this.$message.error("图片上传出错，请刷新重试！")
+        }
+        if (fileList.length) {
+          this.showNextBtn = true;
+        }
       },
-      upLoadOnExceed:function(files,fileList){
+      uploadOnSuccess(e, file, fileList) { //上传附件
+        // console.log("——————————success——————————")
+        // console.log(fileList);
+      },
+      upLoadOnExceed: function (files, fileList) {
         this.$message.error('exceed');
         this.$message.warning(`最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
       },
-      uploadOnError(e,file){
-          console.log("——————————error——————————")
-          console.log(e)
+      uploadOnError(e, file) {
+        // console.log("——————————error——————————");
+        // console.log(e);
       },
       handleTagClose(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
-        if(this.tags.length<=4){
-          this.ableToAddTag=true;
+        if (this.tags.length <= 4) {
+          this.ableToAddTag = true;
         }
       },
 
@@ -356,12 +402,16 @@
         if (tagsInputValue) {
           this.tags.push(tagsInputValue);
         }
-        if(this.tags.length>=4){
-          this.ableToAddTag=false;
+        if (this.tags.length >= 4) {
+          this.ableToAddTag = false;
         }
         this.tagsInputVisible = false;
         this.tagsInputValue = '';
-      }
+      },
+
+      // uploadOnProgress(event, file, fileList) {
+      //   console.log(fileList)
+      // }
 
     },
 

@@ -281,11 +281,19 @@
         },
 
         created() {
-            this.axios.get('http://10.0.1.8:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' + '&TagContent=' +
-                    this.$route.params.id)
+            this.axios.get('http://192.168.43.249:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
+                    '&TagContent=' +
+                    this.$route.params.id + '&Email=' + this.$store.state.currentUserId)
                 .then((response) => {
                     let totalMoments = response.data.m_Item1;
                     this.followNum = response.data.m_Item2;
+                    ////
+                    this.followState = response.data.m_Item3;
+                    if (this.followState) {
+                        this.followword = '已关注'
+                    } else {
+                        this.followword = '关注'
+                    }
                     totalMoments.forEach(element => {
                         element.likeIMG = require('../image/unlike.png');
                         // 更新后删除
@@ -304,18 +312,24 @@
 
         methods: {
             followClickHandler() {
-                this.axios.put()
+                this.axios.put('http://192.168.43.249:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
+                        '&tag=' + this.$route.params.id)
                     .then((response) => {
+                        if (response.data) {
+                            this.followState = !this.followState
+                            if (this.followState) {
+                                this.followNum++
+                                    this.followword = '已关注'
+                            } else {
+                                this.followNum--
+                                    this.followword = '关注'
+                            }
+                        } else {
+                            this.$message.error('服务器内部错误。请重试。');
 
+                        }
                     })
-                this.followState = !this.followState
-                if (this.followState) {
-                    this.followNum++
-                        this.followword = '已关注'
-                } else {
-                    this.followNum--
-                        this.followword = '关注'
-                }
+
             },
             addCommas(val) {
                 var aIntNum = val.toString().split(".");

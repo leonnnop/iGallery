@@ -32,7 +32,7 @@ namespace Utility
             }
             else if (type == 2)
             {
-                cmd.CommandText = "select PHOTO from USERS where ID='" + id + "'";
+                cmd.CommandText = "select PHOTO from USERS where EMAIL='" + id + "'";
             }
             OracleDataReader rd = cmd.ExecuteReader();
 
@@ -139,7 +139,7 @@ namespace Utility
                     cmd.CommandText = "select count(*) from PICTURE";
                     int pid = Convert.ToInt32(cmd.ExecuteScalar()) + 1;
                     //文件路径不重名
-                    filepath = @"C:\mmps\" + (Convert.ToString(pid)) + fileExt;
+                    filepath = @".\mmps\" + (Convert.ToString(pid)) + fileExt;
                     cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + Convert.ToString(pid) + "','" + filepath + "','" + id + "')";
                     if (cmd.ExecuteNonQuery() != 1)
                     {
@@ -149,8 +149,8 @@ namespace Utility
                 else if (type == 2)
                 {
                     //更新用户个人头像
-                    filepath = @"C:\heads\" + id + fileExt;
-                    cmd.CommandText = "update USERS set PHOTO='" + filepath + "' where ID='" + id + "'";
+                    filepath = @".\heads\" + id + fileExt;
+                    cmd.CommandText = "update USERS set PHOTO='" + filepath + "' where EMAIL='" + id + "'";
                     if (cmd.ExecuteNonQuery() != 1)
                     {
                         flag = false;
