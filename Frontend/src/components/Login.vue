@@ -102,6 +102,7 @@
                       this.$store.commit('addCurrentUserBio', response.data.Bio);
                       this.$store.commit('addCurrentUserPhoto', response.data.Photo);
 
+                      console.log(this.$store.state)
                     })
 
                 }

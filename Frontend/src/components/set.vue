@@ -7,7 +7,7 @@
             <el-input type="text" v-model="ruleForm.name" auto-complete="off" style="width:50%" clearable></el-input>
           </el-form-item>
           <el-form-item label="个人简介：">
-            <el-input type="textarea" v-model="ruleForm.desc" style="width:50%" id="descAlert"></el-input>
+            <el-input type="textarea" v-model="ruleForm.desc" rows="5" style="width:50%" id="descAlert"></el-input>
           </el-form-item>
           <span style="font-size:10px;padding-left:90px">*简介最大长度为40个字符。</span>
           <el-form-item style="padding-top:25px">
@@ -65,8 +65,10 @@
     name: 'set',
     data() {
       var validateName = (rule, value, callback) => {
-        if (value == '') {
+        if (value === '') {
           return callback(new Error('请输入昵称'));
+        } else {
+          return callback();
         }
       };
       var validateOpass = (rule, value, callback) => {
@@ -155,19 +157,39 @@
       };
     },
     methods: {
-      onSubmit() {
-        this.axios.put('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
-            ID: this.$store.state.currentUseId_ID,
-            Username: this.ruleForm.name,
-            Bio: this.ruleForm.desc
-          })
-          .then((response) => {
-            let result = response.data;
-            this.resultHandler1(result);
-          })
-          .catch((error) => {
-            console.log(error);
-          })
+      onSubmit: function (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.axios.post('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
+                UserName: this.ruleForm.name,
+                Bio: this.ruleForm.desc,
+                ID: this.$store.state.currentUserId_ID,
+              })
+              .then((response) => {
+                let result = response.data;
+                // this.resultHandler1(result);
+                /////
+                if (result == 0) {
+                  this.$store.commit('addCurrentUsername', this.ruleForm.name);
+                  this.$store.commit('addCurrentUserBio', this.ruleForm.desc);
+
+                  this.$message({
+                    message: '信息修改成功！',
+                    type: 'success'
+                  });
+                  setTimeout(this.onCancel, 3000);
+                } else {
+                  this.$message.error('信息修改失败！请重试。');
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          } else {
+            this.$message.error('信息不合法，请重新输入！')
+          }
+        });
+
       },
       resultHandler1: function (result) {
         if (result == 0) {
@@ -188,19 +210,29 @@
           if (valid) {
             console.log('adsfaadfgadsgs')
             //this.opassForm.opass='';
-            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.$store.state.currentUseId +
+            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.$store.state.currentUserId +
                 "&Password=" +
                 this.ruleForm2.opass
               )
               .then((response) => {
-                if (response.data == 0) {
-                  this.axios.post('http://10.0.1.8:54468/api/Users/ChangePassword', {
-                      email: this.$store.state.currentUseId,
-                      NewPassword: this.ruleForm2.checkPass
-                    })
+                if (response.data != 'Error' || esponse.data != 'NotFound') {
+                  this.axios.put('http://10.0.1.8:54468/api/Users/ChangePassword?email=' + this.$store.state.currentUserId +
+                      '&NewPassword=' + this.ruleForm2.checkPass
+                    )
                     .then((response) => {
                       let result = response.data;
-                      this.resultHandler(result);
+                      // this.resultHandler(result);
+                      if (result) {
+                        this.$store.commit('addCurrentUserPassword', this.ruleForm2.checkPass);
+
+                        this.$message({
+                          message: '密码重置成功！将在三秒后跳转至登录界面,重新登录！',
+                          type: 'success'
+                        });
+                        setTimeout(this.toLogin, 3000);
+                      } else {
+                        this.$message.error('密码重置失败，请重试！');
+                      }
                     })
                     .catch((error) => {
                       console.log(error);
@@ -220,6 +252,8 @@
       },
       resultHandler: function (result) {
         if (result) {
+          // this.$store.commit('addCurrentUserPassword', this.ruleForm.email);
+
           this.$message({
             message: '密码重置成功！将在三秒后跳转至登录界面,重新登录！',
             type: 'success'
