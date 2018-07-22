@@ -479,9 +479,10 @@ namespace ProductsApp.Controllers
             while (rd.Read())
             {
                 string followed_id = rd["FOLLOWING_ID"].ToString();
-                cmd.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
-                cmd.Connection = conn;
-                OracleDataReader rd1 = cmd.ExecuteReader();
+                OracleCommand cmd1 = new OracleCommand();
+                cmd1.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找被关注用户的所有信息
+                cmd1.Connection = conn;
+                OracleDataReader rd1 = cmd1.ExecuteReader();
                 if (rd1.Read())
                 {
                     Users temp = new Users();
