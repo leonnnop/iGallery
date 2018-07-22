@@ -23,7 +23,6 @@ namespace ProductsApp.Controllers
         public bool AddTag([FromUri]string[] TagNames, string Moment_Id)
         {
             bool state = false;
-            HttpResponseMessage response = Request.CreateResponse();
             
             foreach(string TagName in TagNames)
             {
