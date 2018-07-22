@@ -110,7 +110,7 @@
                             </el-row>
                             <el-row type="flex" justify="space-between" align="middle">
                                 <el-col :span="6">
-                                    <time class="time">{{ comment.commentTime }}</time>
+                                    <time class="time">{{ comment.send_time }}</time>
                                 </el-col>
                                 <el-col :span="1">
                                     <el-button type="text" @click="commentAComment(comment)">回复</el-button>
@@ -154,8 +154,11 @@
                                         <span class="hover-cursor" @click="jumpToUser(moment.userPage)">{{moment.Username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)" :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
-                                        <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit" ></i>
+                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)"
+                                            :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
+                                        <!-- <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit"></i> -->
+                                        <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-edit" circle style="margin-left:30px" @click="modifyClickHandler"></el-button>
+
                                     </el-col>
                                 </el-row>
                                 <el-row>
@@ -175,6 +178,75 @@
                 </el-card>
             </el-col>
         </el-row>
+        <el-row type="flex" justify="center" style="margin-top:30px">
+            <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
+
+                <router-view></router-view>
+                <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
+                    <el-row>
+                        <el-col :span="3" :offset="0">
+                            <img src="../image/a.jpg" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
+                        </el-col>
+                        <el-col :span="18" :offset="0">
+                            <div class="sendContent">
+                                <div class="edit">
+                                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">Leonnnop</div>
+                                    <el-row type="flex" justify="center" align="middle">
+                                        <el-row>
+
+                                        </el-row>
+                                        <el-col :span="6" v-show="showUploadArea"></el-col>
+                                        <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
+
+                                            <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
+                                            <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
+                                                :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
+                                                :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress"
+                                                :on-exceed="upLoadOnExceed" :show-file-list="true" :limit="9" :multiple="true"
+                                                class="upload" :data="pictureObj">
+                                                <i class="el-icon-plus"></i>
+                                            </el-upload>
+
+
+                                        </el-col>
+                                        <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;margin-left:-10%">
+                                            <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="moment.Content"></el-input>
+                                            <!-- <div class="editTag">
+                                                <el-tag :key="tag" color="#fff" v-for="tag in moment.tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
+                                                    {{tag}}
+                                                </el-tag>
+
+                                                <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag" v-model="tagsInputValue" ref="saveTagInput" size="small"
+                                                    @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
+                                                </el-input>
+                                                <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
+                                            </div> -->
+                                        </el-col>
+                                    </el-row>
+
+                                </div>
+                                <!-- <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
+                                    <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
+                                    <el-col :span="4">
+                                        <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
+                                    </el-col>
+                                </el-row> -->
+                                <el-row type="flex" justify="end" style="margin-top:10px" v-if="showTextArea">
+                                    <!-- <el-col :span="4">
+                                        <img src="../image/arrow-left.png" @click="sendLastHandler" class="sendMomentBtn">
+                                    </el-col> -->
+                                    <el-col :span="4" style="margin-top:-10px">
+                                        <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
+                                    </el-col>
+                                </el-row>
+                            </div>
+
+                        </el-col>
+                    </el-row>
+
+                </el-dialog>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -183,7 +255,27 @@
         name: 'MomentDetail',
         data() {
             return {
+                // sendText:'',
+                pictureURL: '',
+                navBarFixed: false,
+                searchInput: '',
+                topBarActiveIndex: '1',
+                sendMomentVisible: false,
+                dialogImageUrl: '',
+                dialogVisible: false,
+                showNextBtn: false,
+                showUpload: false,
+                showUploadArea: true,
+                showTextArea: false,
+                sendText: '',
+                tags: [],
+                tagsInputVisible: false,
+                tagsInputValue: '',
+                ableToAddTag: true,
                 likeListVisible: false,
+                sendMomentVisible: false,
+                showUpload: false,
+                showTextArea: false,
                 likeUsers: [{
                     ID: '1',
                     headImg: require('../image/a.jpg'),
@@ -306,7 +398,7 @@
                     ID: '222',
                     Username: 'user3',
                     userPage: '',
-                    commentTime: '2018-07-18 12:00',
+                    send_time: '2018-07-18 12:00',
                     content: '第三条评论',
                     isCommentAComment: false,
                     quoteComment: {
@@ -317,7 +409,7 @@
                     ID: '333',
                     Username: 'user2',
                     userPage: '',
-                    commentTime: '2018-07-17 15:00',
+                    send_time: '2018-07-17 15:00',
                     content: '第二条评论',
                     isCommentAComment: false,
                     quoteComment: {
@@ -328,17 +420,60 @@
                     ID: '444',
                     Username: 'user1',
                     userPage: '',
-                    commentTime: '2018-07-17 08:00',
+                    send_time: '2018-07-17 08:00',
                     content: '第一条评论',
                     isCommentAComment: false,
                     quoteComment: {
 
                     }
-                }]
+                }],
 
             }
+
         },
         methods: {
+            sendMomentInit: function () {
+                this.sendMomentVisible = true;
+                this.showUpload = true;
+            },
+            sendNextHandler: function () {
+                this.showUploadArea = false;
+                this.showTextArea = true;
+            },
+            sendLastHandler: function () {
+                this.showUploadArea = true;
+                this.showTextArea = false;
+            },
+            handleTagClose(tag) {
+                this.tags.splice(this.tags.indexOf(tag), 1);
+                if (this.tags.length <= 4) {
+                    this.ableToAddTag = true;
+                }
+            },
+
+            showTagInput() {
+                this.tagsInputVisible = true;
+                this.$nextTick(_ => {
+                    this.$refs.saveTagInput.$refs.input.focus();
+                });
+            },
+
+            handleTagInputConfirm() {
+                let tagsInputValue = this.tagsInputValue;
+                if (tagsInputValue) {
+                    this.tags.push(tagsInputValue);
+                }
+                if (this.tags.length >= 4) {
+                    this.ableToAddTag = false;
+                }
+                this.tagsInputVisible = false;
+                this.tagsInputValue = '';
+            },
+            modifyClickHandler() {
+                this.sendMomentVisible = true;
+                // this.showUpload = true;
+                this.showTextArea = true;
+            },
             likeListHandler() {
                 this.likeListVisible = true
                 this.axios.get('http://10.0.1.8:54468/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
@@ -378,7 +513,7 @@
             likeHandler: function () {
                 // console.log(item)
                 this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
-                    '&moment_id=' + this.moment.MomentID
+                    '&moment_id=' + this.moment.ID
                     // , {
                     //     email: this.$store.state.currentUserId,
                     //     moment_id: item.MomentId
@@ -439,7 +574,7 @@
                         headImg: require('../image/a.jpg'),
                         Username: 'loststars',
                         userPage: '',
-                        commentTime: '2018-07-18 23:00',
+                        send_time: '2018-07-18 23:00',
                         content: this.blogComment.comment,
                         isCommentAComment: false,
                         quoteComment: {
@@ -479,7 +614,7 @@
                         headImg: require('../image/a.jpg'),
                         Username: 'loststars',
                         userPage: '',
-                        commentTime: '2018-07-18 20:00',
+                        send_time: '2018-07-18 20:00',
                         content: this.commentComment.comment,
                         isCommentAComment: false,
                         quoteComment: {
@@ -521,17 +656,48 @@
         },
         created() {
             //
-            this.$axios.get('/moment')
+            this.axios.get('http://10.0.1.8:54468//api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
+                    '&Moment_ID=' + this.$route.params.id)
                 .then((response) => {
-                    // this.moment = response.data.moment;
-                    // this.comments = response.data.comments;
-                    // this.FollowState = response.data.FollowState;
-                    this.moment = response.data;
+                    this.moment = response.data.moment;
+                    this.moment.Username = response.data.user_username;
+
+                    if (response.FollowState == 'true') {
+                        this.moment.followState = '已关注'
+                    } else {
+                        this.moment.followState = '关注'
+                    }
+
+                    if (response.data.liked == 0) {
+                        this.moment.LikeState = true
+                    } else {
+                        this.moment.LikeState = false
+                    }
+
+                    if (response.data.collected == 0) {
+                        this.moment.collectState = true
+                    } else {
+                        this.moment.collectState = false
+                    }
+
+                    this.comments = response.data.comments;
+                    this.FollowState = response.data.FollowState;
+                    // this.moment = response.data;
                     /////
+                    this.moment.tags = response.data.tags;
+                    // this.moment.tags = [];
+                    // response.data.tags.forEach(element => {
+                    //     this.moment.tags.push({
+                    //         name: element
+                    //     })
+                    // });
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+
+
+            this.axios
         }
     }
 </script>

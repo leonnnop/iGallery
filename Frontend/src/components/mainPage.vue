@@ -315,7 +315,7 @@
         if (tags.length > 0) {
           this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag', {
             params: {
-              TagNames: tags,
+              'TagNames[]': tags,
               Moment_Id: this.$route.params.id
             },
             paramsSerializer: function (params) {
@@ -383,6 +383,7 @@
         // console.log("——————————error——————————");
         // console.log(e);
       },
+      
       handleTagClose(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
         if (this.tags.length <= 4) {
