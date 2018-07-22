@@ -48,8 +48,7 @@
                 (string)"sender_email": "2.com",
                 (string)"sender_username": "szf",
                 (string)"content": "hhh",
-                (string)"send_time": "2018/7/20 8:37:18",
-                (string)"quote": null
+                (string)"send_time": "2018/7/20 8:37:18"
             }
         ],
         (bool)"more_comments": false//是否有更多评论
@@ -101,24 +100,8 @@
     ],
     (int)"liked": 0,//0-已点赞/收藏
     (int)"collected": 1,//1-未点赞/收藏
-    "comments": [
-        {
-            (string)"sender_email": "wtx@163.com",
-            (string)"sender_username": "SarashWtx",
-            (string)"id": "3",//评论的ID
-            (string)"content": "HH！！2",
-            (string)"send_time": "2018/3/20 19:31:34",
-            		"quote": {
-            			(string)"sender_email": "",
-            			(string)"sender_username": "",
-            			(string)"id": "",//评论的ID
-            			(string)"content": "",
-            			(string)"send_time": "",
-            			(string)"quote":null//不展示多级评论
-        			}
-        }
-    ],
-    "more_comments": false
+    "comments": null,//需调用api/Coment/LdCmt再请求一次
+    "more_comments": null//详情页展示全部评论
 }
 ```
 

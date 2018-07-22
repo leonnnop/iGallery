@@ -65,19 +65,19 @@ namespace ProductsApp.Controllers
 
                 mmt.ID = rd[0].ToString();
                 mmt.SenderID = rd[1].ToString();
-                mmt.Content = rd[2].ToString();
+                if (rd[2] is DBNull)
+                {
+                    mmt.Content = null;
+                }
+                else
+                {
+                    mmt.Content = rd[2].ToString();
+                }
                 mmt.LikeNum = Convert.ToInt32(rd[3]);
                 mmt.ForwardNum = Convert.ToInt32(rd[4]);
                 mmt.CollectNum = Convert.ToInt32(rd[5]);
                 mmt.CommentNum = Convert.ToInt32(rd[6]);
-                if (rd[7] is DBNull)
-                {
-                    mmt.Time = null;
-                }
-                else
-                {
-                    mmt.Time = rd[7].ToString();
-                }
+                mmt.Time = rd[7].ToString();
                 if (rd[8] is DBNull)
                 {
                     mmt.QuoteMID = null;
@@ -111,7 +111,7 @@ namespace ProductsApp.Controllers
         {
             DisplayedMoment dm = new DisplayedMoment();
             string Email = api.UserIDToEmail(UserID);
-            //todo:更换成DBAccess的版本
+            //更换成DBAccess的版本
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
             try
@@ -206,11 +206,11 @@ namespace ProductsApp.Controllers
             //获取评论信息
             if (comment_limit == 4)
             {
-                GetComment(mmt.ID, comment_limit, false, cmd, dm);
+                GetComments(mmt.ID, comment_limit, dm);
             }
-            if (comment_limit > 4)
+            else
             {
-                GetComment(mmt.ID, comment_limit, true, cmd, dm);
+                dm.comments = null;
             }
             
 
@@ -257,11 +257,12 @@ namespace ProductsApp.Controllers
         /// </summary>
         /// <param name="id">动态的ID</param>
         /// <param name="limit">评论数的限制（若是所有评论，则赋一个很大的值）</param>
-        /// <param name="cmd">数据库命令</param>
+        /// <param name="dm">用于展示的动态</param>
         /// <returns></returns>
-        private List<DisplayedComment> GetComment(string id, int limit, bool showQuote, OracleCommand cmd, DisplayedMoment dm)
+        private List<DisplayedComment> GetComments(string id, int limit, DisplayedMoment dm)
         {
-            dm.more_comments = false;
+            dm.more_comments = false; //先假设没有更多评论
+            //创建返回对象
             List<DisplayedComment> comments = new List<DisplayedComment>();
             string sql = "select * from coment, users, publish_comment " +
                 "where coment.ID = publish_comment.comment_ID and " +
@@ -282,38 +283,7 @@ namespace ProductsApp.Controllers
                 dc.id = rd["ID"].ToString();
                 dc.content = rd["CONTENT"].ToString();
                 dc.send_time = rd["SEND_TIME"].ToString();
-                if (showQuote==false)
-                {
-                    dc.quote = null;
-                }
-                else
-                {
-                    if (rd["QUOTE_ID"] is DBNull)//没有引用评论
-                    {
-                        dc.quote = null;
-                    }
-                    else//有引用评论，需要获取所引用评论的信息
-                    {
-                        //获取被引用的评论
-                        sql = "select * from coment,users,publish_comment where coment.ID = '" + rd["quote_ID"].ToString() + "'";
-                        OracleDataReader rd_cm = Access.GetDataReader(sql);
-                        if (rd_cm.Read())
-                        {
-                            dc.quote = new DisplayedComment();
-                            //被引用的用户
-                            dc.quote.sender_email = rd_cm["EMAIL"].ToString();
-                            dc.quote.sender_username = rd_cm["USERNAME"].ToString();
 
-                            //被引用的评论内容
-                            dc.quote.id = rd_cm["coment.ID"].ToString();
-                            dc.quote.content = rd_cm["coment.content"].ToString();
-                            dc.quote.send_time = rd_cm["coment.send_time"].ToString();
-
-                            //被引用评论的引用（不展示多级评论）
-                            dc.quote.quote = null;
-                        }
-                    }
-                }
                 comments.Add(dc);
             }
             if (rd.Read()) { dm.more_comments = true; } 
