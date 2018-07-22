@@ -1,4 +1,4 @@
-﻿------
+------
 
 # 注册用户（吴桐欣）
 
@@ -174,7 +174,6 @@
 
 ------
 
-
 # 修改个人信息（韩乐桐） #
 请求地址：/api/Users/ModifyUserInfo   
 请求方式：Put   
@@ -183,23 +182,22 @@
 
 > 参数（body中）：   
 
-| 类型 | 参数名 |
-| --- | --- |
-| string | ID |
-| string | Email |
-| string | Username |
-| string | Password |
-| string | Bio |
-| string | Photo |
+| 类型 | 参数名 |  
+| --- | --- |  
+| string | id |  
+| string | UserName |  
+| string | Bio |  
 
 
 
-> 返回结果：int  
+> 返回结果：  
 
-| 状态码 | 说明 |
-| -- | -- |
-| 0 | 成功修改个人信息 |
-| 1 | 修改失败 |
+| 状态码 | 说明 |  
+| -- | -- |  
+| 0 | 成功修改用户信息 |  
+| 1 | 修改失败 |  
+
+ 
 
 
 

@@ -10,6 +10,7 @@ using System.Globalization;
 //using System.Data.OracleClient;
 using Oracle.ManagedDataAccess.Client;
 
+
 namespace ProductsApp.Controllers
 {
     public class DiscoverMomentController : ApiController
@@ -32,7 +33,7 @@ namespace ProductsApp.Controllers
             DBAccess dBAccess = new DBAccess();
 
             //创建api对象
-            UserMomentAPI api = new UserMomentAPI();
+            GeneralAPI api = new GeneralAPI();
 
             //记录该用户是否点赞该动态
             likeState = api.CheckLikeState(email, moment_id);
@@ -58,17 +59,8 @@ namespace ProductsApp.Controllers
                 }
 
                 //获取用户id
-                string user_id;
-                if (api.EmailToUserID(email) != null)
-                {
-                    user_id = api.EmailToUserID(email);
-                }
-                else//用户不存在
-                {
-                    status = 4;
-                    return Ok(status);
-                }
-                 
+                string user_id = api.EmailToUserID(email);
+                
                 //更新数据库中的点赞数
                 if (dBAccess.ExecuteSql("update MOMENT set like_num= ' " + new_like_num + " 'where  ID='" + moment_id + "' "))
                 {
@@ -131,7 +123,7 @@ namespace ProductsApp.Controllers
             List<User_Moment> resultList = new List<User_Moment>();
 
             //创建api对象
-            UserMomentAPI api = new UserMomentAPI();
+            GeneralAPI api = new GeneralAPI();
 
             while (rd.Read())//当数据库能读出一条符合条件的元组，执行循环
             {

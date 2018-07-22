@@ -7,13 +7,18 @@
           <el-row class="usr" type="flex" align="middle">
             <el-col>
               <div class="user-img border">
-                <img class="user-img img-border" src="../image/a.jpg" alt="头像" />
+                <img class="user-img img-border hover-cursor" src="../image/a.jpg" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)"/>
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
             <el-col style="margin-left:-70%;width:50%;overflow:hidden">
-              <span style="font-size:16px; font-weight:bold">{{this.userName}}</span>
-              <span style="font-size:14px; color:#999999">{{this.userName}}</span>
+              <el-row>
+                <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser(this.$store.state.currentUserId)">{{this.$store.state.currentUsername}}</div>
+              </el-row>
+              <el-row>
+                <div style="font-size:14px; color:#999999" class="self-intro">{{this.$store.state.currentUserBio}}</div>
+              </el-row>
+              
             </el-col>
           </el-row>
           <!-- </div> -->
@@ -28,17 +33,25 @@
           </el-row>
           <!-- <div class="inset-shadow"> -->
           <el-row style="overflow-y:auto;overflow-x:hidden;height:340px;width:260px;margin-bottom:12px;">
-            <el-row :key="item" v-for="item in followings" type="flex" align="middle" style="margin-bottom:12px">
+            <el-row v-if="followings.length>0" :key="index" v-for="(following,index) in followings" type="flex" align="middle" style="margin-bottom:12px">
               <el-col>
                 <div class="user-img border">
-                  <img class="user-img img-border" src="../image/a.jpg" alt="头像" />
+                  <img class="user-img img-border hover-cursor" :src="following.Photo" alt="头像" @click="jumpToUser(following.Email)"/>
                 </div>
               </el-col>
               <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
               <el-col style="margin-left:-70%;width:50%;overflow:hidden">
-                <span style="font-size:16px; font-weight:bold">{{item.userName}}</span>
-                <span style="font-size:14px; color:#999999">{{item.userName}}</span>
+                <el-row>
+                  <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser(following.Email)">{{following.Username}}</div>
+                </el-row>
+                <el-row>
+                  <div style="font-size:14px; color:#999999" class="self-intro">{{following.Bio}}</div>
+                </el-row>
+                
               </el-col>
+            </el-row>
+            <el-row v-if="followings.length==0" style="font-size:13px;color:#777;text-align:center"> 
+                暂无关注用户
             </el-row>
           </el-row>
           <!-- </div> -->
@@ -55,40 +68,71 @@
 
       <el-row style="width:600px;margin-left:18%;" type="flex" justify="center">
         <el-col>
-          <el-row v-for="card in cards" :key="card.name" class="box-color-grey">
+          <el-row v-for="moment in totalMoments" :key="moment.name" class="box-color-grey">
             <el-row>
-              <el-row class="usr" type="flex" align="middle" style="padding:7px 15px">
-                <el-col>
+              <el-row class="usr" type="flex" align="middle" style="padding:7px 15px;margin-top:5px">
+                <el-col :span="2">
                   <div class="small-user-img small-border">
-                    <img class="small-user-img small-img-border" src="../image/a.jpg" alt="头像" />
+                    <img class="small-user-img small-img-border hover-cursor" src="../image/a.jpg" alt="头像" @click="jumpToUser(moment.user_email)"/>
                   </div>
                 </el-col>
                 <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
-                <el-col style="margin-left:-91%;width:20%;overflow:hidden;margin-top:5px">
-                  <span style="font-size:16px; font-weight:bold">{{card.userName}}</span>
-                  <span style="font-size:14px; color:#999999">{{card.userName}}</span>
+                <el-col :span="6">
+                  <el-row>
+                    <span style="font-size:16px; font-weight:bold hover-cursor" @click="jumpToUser(moment.user_email)" class="hover-cursor">{{moment.user_username}}</span>
+                  </el-row>
+                  <el-row>
+                    <span style="font-size:14px; color:#999999">{{moment.user_bio}}</span>
+                  </el-row>
                 </el-col>
               </el-row>
             </el-row>
+            <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_email!=''">
+              <span>
+                <img src="../image/forwarded-icon.png" alt="forwarded-icon">
+              转发自 <span @click="jumpToUser(moment.forwarded_email)" style="color:#6191d5;display:inline-block;margin:5px 0" class="hover-cursor"> @{{moment.forwarded_username}}</span>
+                </span>
+            </el-row>
             <el-row>
-              <img :src="card.src" width="600px" class="box-img" alt="头像" />
+              <el-carousel :height="carouselHeight(moment)" :interval="0" indicator-position="outside" :arrow="showArrow(moment)">
+                    <el-carousel-item v-for="(img,index) in moment.moment.imgList" :key="index">
+                        <div class="pic">
+                            <img :src="img.url" alt="movementImg">
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
             </el-row>
 
             <el-row>
-              <img src="../image/comment-unlike.png" alt="bottomlike" height="30px" width="30px" style="margin-left:2%">
-              <img src="../image/uncollect.png" alt="collect" height="30px" width="30px" style="margin-left:2%">
-              <img src="../image/forward.png" alt="forward" height="30px" width="30px" style="margin-left:2%">
-              <img src="../image/user-more.png" alt="more" height="30px" width="30px" style="margin-right:4%;float:right">
+              <img :src="moment.likeImg" alt="bottomlike" @click="likeHandler(moment)" height="30px" width="30px" style="margin-left:2%">
+              <img :src="moment.collectImg" alt="collect" @click="collectHandler(moment)" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/forward.png" alt="forward" @click="forwardHandler(moment)" height="30px" width="30px" style="margin-left:2%">
+              <img src="../image/user-more.png" alt="more" @click="userMoreHandler(moment)" height="30px" width="30px" style="margin-right:2%;float:right">
             </el-row>
 
             <el-col style="padding:5px 15px">
               <!-- 简介 -->
               <el-row style="font-size:14px">
-                {{card.bio}}
+                <!-- {{moment.moment.Content}} -->
+                {{moment.moment.Content}}
               </el-row>
               <!-- tag -->
               <el-row>
-                 
+                 <span class="hover-cursor tag" @click="jumpToTag(tag)" v-for="(tag,index) in moment.tags" :key="index">#{{tag}}</span>
+              </el-row>
+              <!-- comments -->
+              
+              <el-row v-for="(comment,index) in moment.comments" :key="index" style="font-size:13px;">
+                
+                  <span style="display:inline-block;margin:2px 0;color:#000;font-weight:600" class="hover-cursor" @click="jumpToUser(comment.sender.ID)">{{comment.sender_username}}</span>
+                  <span>{{comment.content}}</span>
+              </el-row>
+              <span v-if="moment.more_comments" @click="jumpToDetail(moment.ID)" style="color:#999;font-size:12px;font-weight:500" class="hover-cursor">加载更多</span>
+              <el-row class="moment-time">{{moment.moment.Time}}</el-row>
+               <div style="border-top:1px solid rgb(235,238,245)"></div>
+              <el-row type="flex" justify="space-between" style="margin:10px 0">
+               
+                <input placeholder="添加评论..." v-model="moment.newComment" style="border:0;padding:5px;width:100%" @keyup.enter="commentHandler(moment)">
               </el-row>
             </el-col>
 
@@ -97,10 +141,29 @@
       </el-row>
 
     </el-row>
+
+    <!-- 更多操作 -->
+    <el-dialog title="更多" :center="true" :visible.sync="usermoreDialogVisible" width="20%" :show-close="false" top="15%">
+      <el-row>
+        <div style="border-top:1px solid rgb(235,238,245)"></div>
+        <div @click="jumpToDetail(usermoreMomentId)" style="text-align:center;margin:10px 0;letter-spacing:1px" class="hover-cursor">查看动态</div>
+        <div style="border-top:1px solid rgb(235,238,245)"></div>
+      </el-row>
+    </el-dialog>
   </el-container>
 </template>
 
 <style scoped>
+.pic {
+        width: 100%;
+        height: 500px;
+        text-align: center;
+    }
+
+    .pic img {
+        vertical-align: middle;
+        width: 100%;
+    }
   .box-color-grey {
     border-color: #e6e6e6;
     border-style: solid;
@@ -181,10 +244,6 @@
     font-size: 14px;
   }
 
-  .item {
-    margin-bottom: 18px;
-  }
-
   .clearfix:before,
   .clearfix:after {
     display: table;
@@ -214,99 +273,450 @@
   .box-img {
     width: 600px;
   }
+
+  .self-intro{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .send{
+    background: transparent;
+    height: 0;
+    padding-bottom: 30%;
+    position: relative;
+    -webkit-box-shadow:0 0;
+    box-shadow: 0 0;
+  }
+  .forwardContent{
+    height: 400px;
+    background:url('../image/send-dialog.png');
+  }
+  .edit{
+    
+    width: 100%;
+    height: 0;
+    padding-bottom: 60%;
+    overflow: hidden;
+    position: relative;
+  }
+  .moment-time{
+    margin:8px 0;
+    color:#999;
+    font-size:12px;
+    font-weight:500;
+    letter-spacing:1px;
+  }
+  .tag{
+    color:#6191d5;
+    font-size: 12px;
+    margin:5px 8px 5px 0;
+    display: inline-block;
+  }
+  .hover-cursor{
+    cursor: pointer;
+  }
 </style>
 
 <script>
+var Dictionary = (function() {
+    const items = {};
+    class Dictionary {
+        constructor() {
+        }
+        set(key, value) {//向字典中添加新的元素
+            items[key] = value; 
+        }
+        delete(key) {//删除字典中某个指定元素
+            if(this.has(key)) {
+                delete items[key];
+                return true;
+            }
+            return false;
+        }
+        has(key) {//如果某个键值存在于这个字典中，则返回true，否则返回false
+            return items.hasOwnProperty(key);
+        }
+        get(key) {//通过键值查找特定的数值并返回。
+            return this.has(key) ? items[key] : undefined;
+        };
+        clear() {//将这个字典中的所有元素全部删除。
+            items = {};
+        }
+        size() {//返回字典所包含元素的数量。
+            return Object.keys(items).length;
+        }
+        keys() {//将字典所包含的所有键名以数组形式返回。
+            return Object.keys(items);
+        }
+        values() {//将字典所包含的所有数值以数组形式返回。
+            var values = [];
+            for(var k in items) {
+                if(this.has(k)) {
+                    values.push(items[k]);
+                }
+            }
+            return values;
+        }
+        each(fn) {//遍历每个元素并且执行方法
+            for(var k in items) {
+                if(this.has(k)) {
+                    fn(k, items[k]);
+                }
+            }
+        }
+        getItems() {//返回字典
+            return items;
+        }
+    }
+    return Dictionary;
+})();
+
+var dic=new Dictionary();
+dic.set('/static/img/ins1.20711e9.png',748);
+dic.set('/static/img/ins2.cbee6d5.png',748);
+dic.set('/static/img/ins3.31b3f70.png',398);
+
   export default {
     data() {
       return {
         followings: [{
-            userName: 'leonnnop'
-
+            ID:'',
+            Username: 'leonnnop',
+            Bio:'self introduction self introduction self introduction self introduction',
+            Email:'',
+            Photo:require('../image/a.jpg')
           },
           {
-            userName: 'leonnnop'
-
+            ID:'',
+            Username: 'leonnnop',
+            Bio:'self introduction',
+            Email:'',
+            Photo:require('../image/a.jpg')
           },
           {
-            userName: 'leonnnop'
-
+            ID:'',
+            Username: 'leonnnop',
+            Bio:'self introduction',
+            Email:'',
+            Photo:require('../image/a.jpg')
           },
           {
-            userName: 'leonnnop'
-
+            ID:'',
+            Username: 'leonnnop',
+            Bio:'self introduction',
+            Email:'',
+            Photo:require('../image/a.jpg')
           },
           {
-            userName: 'leonnnop'
-
+            ID:'',
+            Username: 'leonnnop',
+            Bio:'self introduction',
+            Email:'',
+            Photo:require('../image/a.jpg')
           },
           {
-            userName: 'leonnnop'
-
+            ID:'',
+            Username: 'leonnnop',
+            Bio:'self introduction',
+            Email:'',
+            Photo:require('../image/a.jpg')
           },
         ],
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
 
-        userName: 'Leonnnop',
-
-        cards: [{
-            id: 1,
-            index: 0,
-            title: '',
-            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
-            userName: 'leonnnop',
-            src: require('../image/ins1.png')
+        totalMoments: [{
+            //请求的数据
+            user_email:'',
+            user_username:'leonnnop',
+            user_bio:'leonnnop',
+            forwarded_email:'dzq@qq.com',
+            forwarded_username:'dzq',
+            moment:{
+              ID:'1',
+              Content:'恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+              Time:'2018/7/20 8:37:18' ,
+              QuoteMID:'',
+              imgList:[{url:require('../image/ins1.png')},{url:require('../image/ins2.png')}]
+            },
+            tags:[
+              'tag1','tag2'
+            ],
+            liked:false,
+            collected:false,
+            comments:[{
+              sender_email:'',
+              sender_username:'user1',
+              content:'恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。'
+            },{
+              sender_email:'',
+              sender_username:'user1',
+              content:'comment1'
+            },{
+              sender_email:'',
+              sender_username:'user1',
+              content:'comment1'
+            },{
+              sender_email:'',
+              sender_username:'user1',
+              content:'comment1'
+            }],
+            more_comments:true,
+            //请求图片
+            src: require('../image/ins1.png'),
+            photo:require('../image/a.jpg'),
+            //增加的属性
+            likeImg:require('../image/comment-unlike.png'),
+            collectImg:require('../image/uncollect.png'),
+            newComment:'',
           },
           {
-            id: 2,
-            index: 1,
-            title: '',
-            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
-            userName: 'leonnnop',
-            src: require('../image/ins2.png')
+            //请求的数据
+            user_email:'',
+            user_username:'leonnnop',
+            user_bio:'leonnnop',
+            forwarded_email:'',
+            forwarded_username:'',
+            moment:{
+              ID:'2',
+              Content:'恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+              Time:'2018/7/20 8:37:18' ,
+              QuoteMID:'',
+              imgList:[{url:require('../image/ins2.png')}]
+            },
+            tags:[
+              'tag1'
+            ],
+            liked:false,
+            collected:false,
+            comments:[{
+              sender_email:'',
+              sender_username:'user1',
+              content:'comment1'
+            }],
+            more_comments:false,
+            //请求图片
+            src: require('../image/ins1.png'),
+            photo:require('../image/a.jpg'),
+            //增加的属性
+            likeImg:require('../image/comment-unlike.png'),
+            collectImg:require('../image/uncollect.png'),
+            newComment:'',
           },
           {
-            id: 3,
-            index: 2,
-            title: '',
-            bio: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
-            userName: 'leonnnop',
-            src: require('../image/ins3.png')
-          },
-        ]
+            //请求的数据
+            user_email:'',
+            user_username:'leonnnop',
+            user_bio:'leonnnop',
+            forwarded_email:'',
+            forwarded_username:'',
+            moment:{
+              ID:'3',
+              Content:'恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
+              Time:'2018/7/20 8:37:18' ,
+              QuoteMID:'',
+              imgList:[{url:require('../image/ins3.png')}]
+            },
+            tags:[
+
+            ],
+            liked:false,
+            collected:false,
+            comments:[
+
+            ],
+            more_comments:false,
+            //请求图片
+            src: require('../image/ins1.png'),
+            photo:require('../image/a.jpg'),
+            //增加的属性
+            likeImg:require('../image/comment-unlike.png'),
+            collectImg:require('../image/uncollect.png'),
+            newComment:'',
+          }],
+        usermoreDialogVisible:false,
+        usermoreMomentId:'',
+        askNum:0 //再次请求动态的次数
       }
     },
-
     created() {
-      this.axios.get('http://10.0.1.61:51738/api/products/1')
-        ///// 箭头函数会改变this的作用域
+      //请求动态
+      //监听滚动条，到底时请求动态...
+
+      this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/Followings',{
+        params:{
+          UserID: this.$store.state.currentUserId,
+          Begin:0+10*this.askNum,
+          End:9+10*this.askNum
+        }
+      })
         .then((response) => {
-          this.tableData = [];
-          this.totalElements = response.data.totalElements;
-          let content = response.data.content;
+          this.totalMoments = response.data;
+          
+          this.totalMoments.forEach(element => {
+            //点赞状态
+            if(element.liked){
+              element.likeImg=require('../image/comment-like.png');
+            }else{
+              element.likeImg=require('../image/comment-unlike.png');
+            }
+            //收藏状态
+            if(element.collected){
+              element.collectImg=require('../image/collect.png');
+            }else{
+              element.collectImg=require('../image/uncollect.png');
+            }
+
+            //请求图片
+            this.axios.get('http://10.0.1.8:54468//api/Picture/FirstGet?id='+element.moment.ID+'&type=1')
+            .then((response) => {
+              response.data.forEach(ele => {
+                element.moment.imgList=[];
+                element.moment.imgList.push({
+                  url:'http://10.0.1.8:54468/api/Picture/Gets?id='+ele
+                });
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+            element.newComment='';
+          });
         })
-        .catch(function (error) {
+        .catch((error) => {
+          console.log(error);
+        });
+        //请求关注列表
+        this.axios.post('http://192.168.43.249:54468/api/Users/FollowList',{
+          user_id: this.$store.state.currentUserId
+        })
+        .then((response) => {
+          if(response.data!='Not found'){
+            this.followings=response.data;
+          }else{
+            this.followings=[];
+          }
+        })
+        .catch((error) => {
           console.log(error);
         });
     },
-
     methods: {
+      showArrow:function(moment){
+        if(moment.moment.imgList.length>1){
+          return 'hover';
+        }else{
+          return 'never';
+        }
+      },
+      carouselHeight:function(moment){
+        return dic.get(moment.moment.imgList[0].url)+'px';
+      },
+      likeHandler:function(moment){
+        this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+          '&moment_id=' + moment.moment.ID)
+        .then((response) => {
+          if(response.data==0){
+            if(moment.liked){
+              moment.likeImg=require('../image/comment-unlike.png');
+            }else{
+              moment.likeImg=require('../image/comment-like.png');
+            }
+          }else{
+            this.$message.error('点赞失败，请重试！');
+          }
+        })
+        .catch((error) => {            
+          console.log(error);
+        });
+      },
+      collectHandler:function(moment){
+        if(moment.collected){
+          moment.collectImg=require('../image/uncollect.png');
+        }else{
+          moment.collectImg=require('../image/collect.png');
+        }
+        moment.collected=!moment.collected;
+        //传本用户email和动态id
+      },
+      forwardHandler:function(moment){
+        this.$confirm('', '确定转发？', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          center:true
+        }).then(() => {
+          this.axios.post('http://192.168.43.249:54468/api/Moment/ForwardMoment',{
+            User_Id:this.$store.state.currentUserId,
+            Moment_Id:moment.moment.ID
+          })
+          .then((response) => {
+            if(response.data==1){
+              this.$message({
+                message:'转发成功！',
+                type:'success'
+              });
+            }else{
+              this.$message.error('转发失败，请稍后重试！')
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        })
+        .catch(() => {
+        });
+      },
+      userMoreHandler:function(moment){
+        this.usermoreDialogVisible=true;
+        this.usermoreMomentId=moment.moment.ID;
+      },
+      commentHandler:function(moment){
+        var formdata=new FormData();
+        formdata.append('Mid',moment.moment,ID);
+        formdata.append('Sender_id',this.$store.state.currentUserId);
+        formdata.append('Content',moment.newComment);
+        formdata.append('Send_time','');
+        formdata.append('Quote_comment_id','');
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }; 
+        this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt',formdata,config)
+        .then((response) => {
+          if(response.data=='OK'){
+            this.$message({
+              message:'评论成功！',
+              type:'success'
+            });
+            if(moment.comments.length==4){
+              moment.more_comments=true;
+            }else{
+              moment.comments.push({
+                sender_email:'',
+                sender_username:'Leonnnop',
+                content:moment.newComment,
+                send_time:'2018/7/20 8:37:18'
+              });
+            }
+          }else{
+            this.$message.error('评论失败，请稍后重试！');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+      },
+      jumpToDetail:function(momentId){
+        // console.log(momentId);
+        this.$router.push('/main/momentDetail/'+momentId);
+      },
+      jumpToTag:function(tag){
+        this.$router.push('/main/tag/'+tag);
+      },
+      jumpToUser:function(email){
+        this.$router.push('/main/userpage');
+      },
+
       getSrc(src) {
         console.log(src);
         return src;
@@ -318,10 +728,10 @@
           type: 'info'
         }).then(() => {
           // for 循环
-          var length = this.cards.length;
+          var length = this.totalMoments.length;
           for (var i = 0; i < length; i++) {
-            if (this.cards[i].index == index) {
-              this.cards.splice(i, 1);
+            if (this.totalMoments[i].index == index) {
+              this.totalMoments.splice(i, 1);
             }
           }
           this.$message({
@@ -337,31 +747,8 @@
 
       }
     },
-
-    beforeRouteEnter(to, from, next) {
-      // 处理无法访问的情况
-      next((vm) => {
-        vm.axios.get('http://192.168.0.37:5000/feed/sss')
-          .then((response) => {
-            for (let index = 0; index < response.length; index++) {
-              let responce = response[index].data;
-              let card = {};
-              let author = responce.author;
-              card.index = index;
-              card.authorName = author.name;
-              card.authorURL = author.url;
-              card.url = responce.url;
-              card.title = responce.title;
-              card.excerpt = responce.excerpt;
-
-              this.cards.push(card);
-            }
-          })
-          .catch();
-      });
-    },
     beforeRouteLeave(to, from, next) {
-      this.cards = [];
+      this.totalMoments = [];
       this.tableData = [];
       next();
     }

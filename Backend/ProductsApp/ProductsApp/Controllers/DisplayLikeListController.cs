@@ -33,7 +33,7 @@ namespace ProductsApp.Controllers
             List<User_Follow> resultList = new List<User_Follow>();
 
             //创建api对象
-            UserMomentAPI api = new UserMomentAPI();
+            GeneralAPI api = new GeneralAPI();
 
             while ( rd.Read() )//当数据库能读出一条符合条件的元组，执行循环
             {
