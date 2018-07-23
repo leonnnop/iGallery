@@ -15,6 +15,7 @@
 | string | Username   |
 | string | Bio        |
 | string | Photo      |
+| string | FollowState（True为已关注，False为未关注））
 |Not found|未找到用户 |
 
 
@@ -31,7 +32,9 @@
 |状态码  |    说明    |
 
 （标签列表）:tags
-| string | Content    |
+| string | UserID  |
+| string | Tag     |
+| string | FollowState（True为已关注，False为未关注） |
 
 （动态列表）:moments
 | string | ID          |
@@ -42,5 +45,4 @@
 | int    | Collect_num |
 | int    | Comment_num |
 |string  | time        |
-
 |null    |未找到任何相关内容 |
