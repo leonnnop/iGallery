@@ -31,13 +31,6 @@
 
 （标签列表）
 | string | Content    |
-（用户列表）
-| string | ID         |
-| string | Email      |
-| string | Password   |
-| string | Username   |
-| string | Bio        |
-| string | Photo      |
 
 （动态列表）
 | string | ID          |

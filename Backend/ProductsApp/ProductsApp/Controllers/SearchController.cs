@@ -55,12 +55,12 @@ namespace ProductsApp.Controllers
             return Json<List<Users>>(User_list);
         }
         /// <summary>
-        /// 搜索有关动态（用户）、标签
+        /// 搜索有关动态、标签
         /// </summary>
         /// <param name="keyword">string</param>
         /// <returns></returns>
         [HttpGet]
-        public Tuple<List<Tag>,List<Users>, List<Moment>> Search_all(string keyword)
+        public Tuple<List<Tag>, List<Moment>> Search_all(string keyword)
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -84,7 +84,6 @@ namespace ProductsApp.Controllers
                 tags.Add(temp);
             }
             List<Moment> moments = new List<Moment>();
-            List<Users> user_list = new List<Users>();
             cmd.CommandText = "select MOMENT_ID from Moment_Tag where Tag like'%"+keyword+"%'";
             cmd.Connection = conn;
             OracleDataReader rd1 = cmd.ExecuteReader();
@@ -106,31 +105,16 @@ namespace ProductsApp.Controllers
                     int commentnum = Convert.ToInt32(rd["COMMENT_NUM"]);
                     string time = rd["TIME"].ToString();
                     moments.Add(new Moment(Id, sender_id, content, likenum, forwardnum, collectnum, commentnum, time));
-                    OracleCommand cmd2 = new OracleCommand();
-                    cmd2.CommandText = "select * from Users where ID='" + sender_id+"'";
-                    cmd2.Connection = conn;
-                    OracleDataReader rd3 = cmd2.ExecuteReader();
-                    while(rd3.Read())
-                    {
-                        Users temp = new Users();
-                        temp.ID = rd3["ID"].ToString();
-                        temp.Email = rd3["EMAIL"].ToString();
-                        temp.Password = rd3["PASSWORD"].ToString();
-                        temp.Username = rd3["USERNAME"].ToString();
-                        temp.Bio = rd3["BIO"].ToString();
-                        temp.Photo = rd3["PHOTO"].ToString();
-                        user_list.Add(temp);
-                    }
                 }
             }
-            Tuple<List<Tag>, List<Users>,List<Moment>> result = new Tuple<List<Tag>, List<Users>, List<Moment>>(null,null,null);
-            if (moments.Count == 0&&tags.Count==0&&user_list.Count==0)
+            Tuple<List<Tag>,List<Moment>> result = new Tuple<List<Tag>,List<Moment>>(null,null);
+            if (moments.Count == 0&&tags.Count==0)
             {
                 return result;
             }
            else
             {
-                result = new Tuple<List<Tag>, List<Users>, List<Moment>>(tags, user_list, moments);
+                result = new Tuple<List<Tag>, List<Moment>>(tags,moments);
                 return result;
             }
         }
