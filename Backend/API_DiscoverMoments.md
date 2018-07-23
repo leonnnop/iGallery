@@ -60,6 +60,7 @@
 
 | 类型 | 属性 | 说明 |    
 | -- | -- |  
+| string | SenderID |   
 | string | Username |  
 | string | Email |  
 | string | Bio |  
