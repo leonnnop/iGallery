@@ -56,7 +56,7 @@ namespace ProductsApp.Controllers
                 }
                 else
                 {
-                    mmt.Content = rd[2].ToString();
+                   mmt.Content = rd[2].ToString();
                 }
                 mmt.LikeNum = Convert.ToInt32(rd[3]);
                 mmt.ForwardNum = Convert.ToInt32(rd[4]);

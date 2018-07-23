@@ -125,8 +125,7 @@ namespace ProductsApp.Controllers
 
             }
             //返回按时间排好序的commenter的评论体
-            //cmts.Sort();
-            cmts.Sort(new SendTimeAsc());
+            cmts.Sort();
             return Json<List<Comment>>(cmts);
         }
 
@@ -209,7 +208,7 @@ namespace ProductsApp.Controllers
 
        
 
-        [HttpDelete]
+        [HttpPost]
         public HttpResponseMessage DelCmt()
         {
             HttpResponseMessage response = new HttpResponseMessage();
@@ -230,7 +229,7 @@ namespace ProductsApp.Controllers
 
 
             //找到原平作者
-            string quote_id="2";
+            string quote_id="";
             cmd.CommandText = "select USER_ID from PUBLISH_COMMENT where COMMENT_ID='"+comment.Cid+"'";
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
@@ -264,14 +263,6 @@ namespace ProductsApp.Controllers
 
     }
 
-    class SendTimeAsc : IComparer<Comment>
-    {
-
-        public int Compare(Comment x, Comment y)
-        {
-            return x.Send_time.CompareTo(y.Send_time);
-        }
-
-    }
+    
     
 }

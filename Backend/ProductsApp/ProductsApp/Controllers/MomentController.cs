@@ -103,12 +103,18 @@ namespace ProductsApp.Controllers
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.HasRows)
             {
-                status = 1;
+                status = 1;//转发了自己的
+                return Ok(status);
+            }
+            cmd.CommandText = "select * from forward where forward.user_id='" + forward.User_ID + "' and moment_id='" + forward.Moment_ID + "'";
+            rd = cmd.ExecuteReader();
+            if (rd.HasRows)
+            {
+                status = 3;//已经转发过
                 return Ok(status);
             }
             cmd.CommandText = "insert into FORWARD(USER_ID,MOMENT_ID) " +
                     "values('" + forward.User_ID + "','" + forward.Moment_ID + "')";
-
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {
@@ -116,10 +122,14 @@ namespace ProductsApp.Controllers
                 return Ok(status);
             }
 
-            cmd.CommandText = "select * from moment" +
+            //插入新动态
+            cmd.CommandText = "select * from moment " +
                               "where id='" + forward.Moment_ID + "'";
-            if (!rd.HasRows)
+            rd = cmd.ExecuteReader();
+            if (!rd.Read())
             {
+                cmd.CommandText= "delete from forward where forward.user_id='" + forward.User_ID + "' and moment_id='" + forward.Moment_ID + "'";
+                rd = cmd.ExecuteReader();
                 status = 2;
                 return Ok(status);
             }
@@ -129,22 +139,30 @@ namespace ProductsApp.Controllers
             moment.SenderID = forward.User_ID;
             moment.Content = rd["CONTENT"].ToString();
             moment.LikeNum = 0;
+            int forwardNum = Convert.ToInt32(rd["FORWARD_NUM"]);
             moment.ForwardNum = 0;
             moment.CollectNum = 0;
             moment.CommentNum= 0;
-            string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
-            moment.Time = currentTime;
+            moment.Time = DateTime.Now.ToString();
             moment.QuoteMID = forward.Moment_ID;
             
-            cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTEMID) " +
+            cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTE_MID) " +
                               "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "'," +
-                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "','" + moment.Time + "','" + moment.QuoteMID + "')";
+                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss.ff'),'" + moment.QuoteMID + "')";
             int result1 = cmd.ExecuteNonQuery();
             if (result1 != 1)//插入出现错误
             {
+                cmd.CommandText = "delete from forward where forward.user_id='" + forward.User_ID + "' and moment_id='" + forward.Moment_ID + "'";
+                rd = cmd.ExecuteReader();
                 status = 2;
                 return Ok(status);
             }
+            //插入成功，更改转发数
+            forwardNum++;
+            cmd.CommandText = "update moment " +
+                            "set forward_num= '"+forwardNum +
+                            "' where id='" + forward.Moment_ID + "'";
+            rd = cmd.ExecuteReader();
             //关闭数据库连接
             conn.Close();
 

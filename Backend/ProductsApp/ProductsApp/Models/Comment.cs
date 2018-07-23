@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ProductsApp.Models
 {
-    public class Comment
+    public class Comment : IComparable<Comment>
     {
         public string Mid { get; set; }
         public string Sender_id { get; set; }
@@ -17,6 +17,11 @@ namespace ProductsApp.Models
         public string Quote_id { get; set; }
         public string Type { get; set; }
         public string Quote_content { get; set; }
+
         
+        public int CompareTo(Comment other)
+        {
+            return other.Send_time.CompareTo(this.Send_time);
+        }
     }
 }
