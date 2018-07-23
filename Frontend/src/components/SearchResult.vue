@@ -4,7 +4,7 @@
             <el-row class="box user-container">
                 <el-row style="margin:20px">
                     <span style="margin-left:20px;color:#777">相关用户</span>
-                    <span class="more hover-cursor" @click="moreHandler(keyword)" v-if="hasUser">查看全部</span>
+                    <!-- <span class="more hover-cursor" @click="moreHandler(keyword)" v-if="hasUser">查看全部</span> -->
                 </el-row>
                 <el-row class="user-inner" v-if="hasUser">
                     <div class="arrow arrow-left" :class="{'arrow-display':showUsersLeftArrow}" @click="slideToRightUsers">
@@ -38,7 +38,7 @@
             <el-row class="box tag-container">
                 <el-row style="margin:20px">
                     <span style="margin-left:20px;color:#777">相关标签</span>
-                    <span class="more hover-cursor" @click="moreHandler(keyword)" v-if="hasTag">查看全部</span>
+                    <!-- <span class="more hover-cursor" @click="moreHandler(keyword)" v-if="hasTag">查看全部</span> -->
                 </el-row>
                 <el-row class="tag-inner" v-if="hasTag">
                     <div class="arrow arrow-left" :class="{'arrow-display':showTagsLeftArrow}" @click="slideToRightTags">
@@ -52,9 +52,9 @@
                             <div class="display-tag" v-for="(tag,index) in tags" :key="index">
                                 <el-row style="width:80%;margin:0 auto">
                                     <el-row>
-                                        <img :src="tag.src" alt="tagImg" class="tag-img hover-cursor" @click="jumpToTag(tag.Content)">
+                                        <img :src="tag.Pic" alt="tagImg" class="tag-img hover-cursor" @click="jumpToTag(tag.Tag)">
                                     </el-row>
-                                    <el-row style="margin-top:10%;color:#333;font-weight:600">#{{tag.Content}}</el-row>
+                                    <el-row style="margin-top:10%;color:#333;font-weight:600">#{{tag.Tag}}</el-row>
                                     <el-row>
                                         <el-button plain size="medium" type="primary" style="width:80%;margin-top:15%" @click="followUserHandler(tag.Content)">{{tag.followWord}}</el-button>
                                     </el-row>
@@ -80,7 +80,7 @@
                                     <el-row type="flex" justify="space-between">
                                         <el-col :span="8">
                                             <img src="../image/like-white.png" alt="">
-                                            <div>{{moment.Like_num}}</div>
+                                            <div>{{moment.LikeNum}}</div>
                                         </el-col>
                                         <el-col :span="8">
                                             <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
@@ -98,7 +98,7 @@
                                     <el-row type="flex" justify="space-between">
                                         <el-col :span="8">
                                             <img src="../image/like-white.png" alt="">
-                                            <div>{{moment.Like_num}}</div>
+                                            <div>{{moment.LikeNum}}</div>
                                         </el-col>
                                         <el-col :span="8">
                                             <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
@@ -116,7 +116,7 @@
                                     <el-row type="flex" justify="space-between">
                                         <el-col :span="8">
                                             <img src="../image/like-white.png" alt="">
-                                            <div>{{moment.Like_num}}</div>
+                                            <div>{{moment.LikeNum}}</div>
                                         </el-col>
                                         <el-col :span="8">
                                             <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
@@ -437,17 +437,17 @@
                         this.users = res1.data;
                         //关注状态
                         this.users.forEach(element => {
-                            if(element.ID==this.$store.state.currentUserId_ID){
-                                Vue.set(element,'showFollowBtn','false');
-                            }else{
-                                Vue.set(element,'showFollowBtn','true');
+                            if (element.ID == this.$store.state.currentUserId_ID) {
+                                Vue.set(element, 'showFollowBtn', 'false');
+                            } else {
+                                Vue.set(element, 'showFollowBtn', 'true');
                                 if (element.FollowState == 'True') {
                                     Vue.set(element, 'followWord', '已关注');
                                 } else {
                                     Vue.set(element, 'followWord', '关注');
                                 }
                             }
-                            
+
                             var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo)
@@ -464,6 +464,7 @@
                     //tag和动态
                     if (res2.data.m_Item1 != null) {
                         this.tags = res2.data.m_Item1;
+                        console.log(this.tags)
                     } else {
                         this.hasTag = false;
                         console.log(this.hasTag)
@@ -472,12 +473,17 @@
 
                     if (res2.data.m_Item2 != null) {
                         var moments = res2.data.m_Item2;
+                        // Vue.set()
                         moments.forEach(element => {
-                            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id='+ element.ID +'&type=1')
-                            .then((response) => {
-                                Vue.set(element,'src','http://10.0.1.8:54468/api/Picture/Gets?pid='+response.data[0]);
-                            })
-                            
+                            Vue.set(element,'LikeNum',element.LikeNum)
+                            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                                    '&type=1')
+                                .then((response) => {
+                                    Vue.set(element, 'src',
+                                        'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                        response.data[0]);
+                                })
+
                         })
                         console.log(moments)
                     } else {
@@ -488,12 +494,14 @@
                         this.hasTag = true;
                         //tag的关注状态
                         this.tags.forEach(element => {
-                            
+
                             if (element.FollowState == 'True') {
                                 Vue.set(element, 'followWord', '已关注');
                             } else {
                                 Vue.set(element, 'followWord', '关注');
                             }
+                            var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + element.Pic;
+                            Vue.set(element,'Pic',Pic)
                         })
                     } else {
                         this.hasTag = false;

@@ -29,12 +29,12 @@
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src" alt="hex" height="40px" width="40px" @click="jumpToUser(item.SenderID)">
-                                        <span style="margin-left:-30%; font-size:18px"  @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
+                                        <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+                                    <img :src="item.contentSrc" @click="jumpToMoment(item.ID)" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -54,7 +54,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+                                    <img :src="item.contentSrc" @click="jumpToMoment(item.ID)" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -74,7 +74,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+                                    <img :src="item.contentSrc" @click="jumpToMoment(item.ID)" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -94,7 +94,7 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="280px;" style="margin:-20px">
+                                    <img :src="item.contentSrc" @click="jumpToMoment(item.ID)" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -344,6 +344,10 @@
         },
 
         methods: {
+            jumpToMoment: function (momentId) {
+                // console.log(momentId);
+                this.$router.push('/main/momentDetail/' + momentId);
+            },
             followClickHandler() {
                 this.axios.put('http://10.0.1.8:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
                         '&tag=' + this.$route.params.id)
