@@ -204,35 +204,6 @@ namespace ProductsApp.Controllers
            
             return dm;
         }
-        /// <summary>
-        /// 获取用户信息
-        /// </summary>
-        /// <param name="id">用户的ID</param>
-        /// <param name="cmd">数据库命令</param>
-        /// <returns>User类型</returns>
-        private Users GetUserInfo(string id, OracleCommand cmd)
-        {
-            Users user = new Users();
-            cmd.CommandText = "select * from users where users.id = '" + id + "'";
-            OracleDataReader rd = cmd.ExecuteReader();
-            if (rd.Read())
-            {
-                user.ID = null;
-                user.Email = rd["EMAIL"].ToString();
-                user.Password = null;
-                user.Username = rd["USERNAME"].ToString();
-                if (rd["BIO"] is DBNull)
-                {
-                    user.Bio = null;
-                }
-                else
-                {
-                    user.Bio = rd["BIO"].ToString();
-                }
-               
-            }
-            return user;
-        }
 
         /// <summary>
         /// 获取一条动态的评论
@@ -253,7 +224,7 @@ namespace ProductsApp.Controllers
                 "order by send_time asc";
             OracleDataReader rd = Access.GetDataReader(sql);
             int count = 0;
-            while (rd.Read() && ++count <= limit)
+            while (++count <= limit && rd.Read())
             {
                 DisplayedComment dc = new DisplayedComment();
 

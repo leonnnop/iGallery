@@ -45,7 +45,7 @@ namespace ProductsApp.Controllers
             //利用id查 用户表 【头像】 和 评论体 【内容+时间+引用】
 
             List<Comment> cmts = new List<Comment>();
-
+            
 
             //逐条评论构造Comment
             for (int j = 0; j < users.Count; j++)
@@ -72,13 +72,18 @@ namespace ProductsApp.Controllers
                         //原评论信息
                         cmd.CommandText = "select USER_ID from PUBLISH_COMMENT where COMMENT_ID='" + cmt.Quote_id + "'"; //PUBLIC
                         rd = cmd.ExecuteReader();
-                        rd.Read();
-
+                        string uid="";
+                        while (rd.Read())
+                        {
+                            uid = rd[0].ToString();
+                        }
                         //@用户名
-                        cmd.CommandText = "select USERNAME from USERS where ID='" + rd[0].ToString() + "'"; //PUBLIC
+                        cmd.CommandText = "select USERNAME from USERS where ID='" + uid + "'"; //PUBLIC
                         rd = cmd.ExecuteReader();
-                        rd.Read();
-                        cmt.Quote_username = rd[0].ToString();
+                        while (rd.Read())
+                        {
+                            cmt.Quote_username = rd[0].ToString();
+                        }
                     }
                     else
                     {
@@ -90,14 +95,16 @@ namespace ProductsApp.Controllers
                         rd.Read();
                         cmt.Quote_username = rd[0].ToString();
                     }
-
+                    
                     //原评论的内容
                     if (cmt.Type.Equals("1"))
                     {
                         cmd.CommandText = "select CONTENT from COMENT where ID='" + cmt.Quote_id + "'"; //PUBLIC
                         rd = cmd.ExecuteReader();
-                        rd.Read();
-                        cmt.Quote_content = rd[0].ToString();
+                        while (rd.Read())
+                        {
+                            cmt.Quote_content = rd[0].ToString();
+                        }
                     }
                     else
                     {
@@ -109,17 +116,19 @@ namespace ProductsApp.Controllers
                 //发评论者的头像和昵称
                 cmd.CommandText = "select USERNAME from USERS where ID='" + users.ElementAt(j) + "'";
                 rd = cmd.ExecuteReader();
-                rd.Read();
-                cmt.Sender_username = rd[0].ToString();
-
+                while (rd.Read())
+                {
+                    cmt.Sender_username = rd[0].ToString();
+                }
                 //插入列表
                 cmts.Add(cmt);
 
             }
-            //返回带commenter的评论体
+            //返回按时间排好序的commenter的评论体
+            cmts.Sort();
             return Json<List<Comment>>(cmts);
         }
-
+        
 
 
 
@@ -131,21 +140,22 @@ namespace ProductsApp.Controllers
 
             var coment = HttpContext.Current.Request.Params;
             Comment comment = new Comment();
-
+           
             //永久保存数据
             comment.Mid = coment["Mid"];
             comment.Sender_id = coment["Sender_id"];
             comment.Content = coment["Content"];
-            comment.Send_time = coment["Send_time"];
+            //comment.Send_time = coment["Send_time"];
+            comment.Send_time = DateTime.Now.ToString();
             comment.Quote_id = coment["Quote_id"];
-
-
+            
+            
             //打开数据库连接
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
             conn.Open();
 
-
+            
 
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
@@ -155,9 +165,9 @@ namespace ProductsApp.Controllers
             //保存评论体
             GeneralAPI g = new GeneralAPI();
 
-            comment.Cid = g.NewIDOf("COMENT");
+           comment.Cid= g.NewIDOf("COMENT");
 
-            if (comment.Quote_id.Trim().Equals("") || comment.Quote_id==null) //搞定评论类型
+            if (comment.Quote_id.Trim().Equals("")) //搞定评论类型
             {
                 comment.Type = "0";
             }
@@ -186,14 +196,7 @@ namespace ProductsApp.Controllers
              * hh +2 DEBUG
              * */
 
-            /*
-            OracleDataAdapter orcladapter = new OracleDataAdapter();
-            DataTable dt = new DataTable("VECTOR.PUBLISH_COMMENT");
-            orcladapter.Update(dt);
-            dt = new DataTable("VECTOR.COMMENT");
-            orcladapter.Update(dt);
-            conn.Close();*/
-           
+            
 
             if (success != true)
             {
@@ -252,14 +255,8 @@ namespace ProductsApp.Controllers
             {
                 response.StatusCode = HttpStatusCode.NotFound; //404
             }
-            /*
-            OracleDataAdapter orcladapter = new OracleDataAdapter();
-            DataTable dt = new DataTable("VECTOR.PUBLISH_COMMENT");
-            orcladapter.Update(dt);
-            dt = new DataTable("VECTOR.COMMENT");
-            orcladapter.Update(dt);*/
-            conn.Close();
-            
+          
+          
             conn.Close();
             return response;
         }
