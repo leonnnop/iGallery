@@ -68,7 +68,7 @@ Json
 
 ##### ![1532192777619](C:\Users\李\AppData\Local\Temp\1532192777619.png)
 
-```
+```json
 [
     {(全是string)
         "Mid": "81767",

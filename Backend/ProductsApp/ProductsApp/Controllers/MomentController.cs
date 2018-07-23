@@ -99,7 +99,7 @@ namespace ProductsApp.Controllers
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
             cmd.CommandText = "select * from moment " +
-                               "where sender_id='" + forward.USER_ID + "' and id='" + forward.MOMENT_ID + "'";
+                               "where sender_id='" + forward.User_ID + "' and id='" + forward.Moment_ID + "'";
             OracleDataReader rd = cmd.ExecuteReader();
             if (rd.HasRows)
             {
@@ -107,7 +107,7 @@ namespace ProductsApp.Controllers
                 return Ok(status);
             }
             cmd.CommandText = "insert into FORWARD(USER_ID,MOMENT_ID) " +
-                    "values('" + forward.USER_ID + "','" + forward.MOMENT_ID + "')";
+                    "values('" + forward.User_ID + "','" + forward.Moment_ID + "')";
 
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
@@ -117,7 +117,7 @@ namespace ProductsApp.Controllers
             }
 
             cmd.CommandText = "select * from moment" +
-                              "where id='" + forward.MOMENT_ID + "'";
+                              "where id='" + forward.Moment_ID + "'";
             if (!rd.HasRows)
             {
                 status = 2;
@@ -126,7 +126,7 @@ namespace ProductsApp.Controllers
             Moment moment = new Moment();
             GeneralAPI api = new GeneralAPI();
             moment.ID = api.NewIDOf("moment");
-            moment.SenderID = forward.USER_ID;
+            moment.SenderID = forward.User_ID;
             moment.Content = rd["CONTENT"].ToString();
             moment.LikeNum = 0;
             moment.ForwardNum = 0;
@@ -134,7 +134,7 @@ namespace ProductsApp.Controllers
             moment.CommentNum= 0;
             string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
             moment.Time = currentTime;
-            moment.QuoteMID = forward.MOMENT_ID;
+            moment.QuoteMID = forward.Moment_ID;
             
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTEMID) " +
                               "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "'," +

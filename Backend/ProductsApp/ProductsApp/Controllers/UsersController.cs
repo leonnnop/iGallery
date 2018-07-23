@@ -126,8 +126,8 @@ namespace ProductsApp.Controllers
               message.Subject = "欢迎注册iGallery";
               Random r = new Random();
               string yzm = null;
-              Random rd = new Random();
-              yzm += rd.Next(100000, 999999);
+              Random random = new Random();
+              yzm += random.Next(100000, 999999);
               message.IsBodyHtml = true;
               message.BodyEncoding = System.Text.Encoding.UTF8;
               string htmlBodyContent = "<img src=\"cid:img_logo\">";
@@ -244,8 +244,8 @@ namespace ProductsApp.Controllers
                 message.Subject = "欢迎注册iGallery";
                 Random r = new Random();
                 string yzm = null;
-                Random rd = new Random();
-                yzm += rd.Next(100000, 999999);
+                Random random = new Random();
+                yzm += random.Next(100000, 999999);
                 message.IsBodyHtml = true;
                 message.BodyEncoding = System.Text.Encoding.UTF8;
                 string htmlBodyContent = "<img src=\"cid:img_logo\">";
