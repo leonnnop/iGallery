@@ -7,6 +7,7 @@
 参数类型：string keyword
 
 返回结果：
+用户列表：User_list
 |状态码  |说明        |
 | string | ID         |
 | string | Email      |
@@ -29,10 +30,10 @@
 返回结果：
 |状态码  |    说明    |
 
-（标签列表）
+（标签列表）:tags
 | string | Content    |
 
-（动态列表）
+（动态列表）:moments
 | string | ID          |
 | string | Sender_Id   |
 | string | Content     |
