@@ -44,7 +44,7 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-row type="flex" align="middle" justify="center">
-                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor" @click="forwardHandler">{{moment.ForwardNum}}
+                                    <img src="../image/forward.png" alt="forward" class="op-img hover-cursor" @click="forwardHandler()">{{moment.ForwardNum}}
                                 </el-row>
                             </el-col>
                             <el-col :span="6">
@@ -70,18 +70,19 @@
                                 <img :src="userHeadImg" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
-                                <el-form ref="blogComment" :model="blogComment">
-                                    <el-row>
-                                        <el-form-item>
-                                            <el-input type="textarea" v-model="blogComment.comment" placeholder="评论（不超过120个字符）" size="medium" resize="none" autosize
-                                                maxlength="120"></el-input>
-                                        </el-form-item>
-                                    </el-row>
-                                    <el-row type="flex" justify="end">
-                                        <el-form-item>
-                                            <el-button type="primary" @click="submitBlogComment" plain size="small">评论</el-button>
-                                        </el-form-item>
-                                    </el-row>
+                                <el-form ref="blogComment" :model="blogComment" :inline="true">
+                                    <!-- <el-row> -->
+                                    <el-form-item style="width:80%;">
+                                        <el-input type="textarea" v-model="blogComment.comment" placeholder="评论（不超过120个字符）" size="medium" resize="none" autosize
+                                            maxlength="120" style="width:370px;"></el-input>
+                                    </el-form-item>
+                                    <!-- </el-row> -->
+                                    <!-- <el-row type="flex" justify="end" style="margin-top:-59px"> -->
+                                    <!-- <el-row type="flex" justify="end"> -->
+                                    <el-form-item>
+                                        <el-button type="primary" @click="submitBlogComment" plain size="small">评论</el-button>
+                                    </el-form-item>
+                                    <!-- </el-row> -->
                                 </el-form>
                             </el-col>
                         </el-row>
@@ -89,9 +90,7 @@
                         <div v-for="(comment,index) in comments" :key="index" class="show-comment">
                             <el-row type="flex" align="middle">
                                 <el-col :span="3">
-
-                                    <img src="../image/a.jpg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.userPage)">
-
+                                    <img :src="comment.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.userPage)">
                                 </el-col>
                                 <el-col :span="3">
                                     <span class="hover-cursor" @click="jumpToUser(comment.userPage)">{{comment.Username}}</span>
@@ -109,8 +108,11 @@
                                 </el-card>
                             </el-row>
                             <el-row type="flex" justify="space-between" align="middle">
-                                <el-col :span="6">
+                                <el-col :span="20">
                                     <time class="time">{{ comment.send_time }}</time>
+                                </el-col>
+                                <el-col :span="1" v-show="moment.SenderID==$store.state.currentUserId_ID">
+                                    <el-button type="text" @click="deleteAComment(comment)">删除</el-button>
                                 </el-col>
                                 <el-col :span="1">
                                     <el-button type="text" @click="commentAComment(comment)">回复</el-button>
@@ -118,19 +120,23 @@
                             </el-row>
                             <!-- 点击回复显示评论框 -->
                             <el-row type="flex" align="middle" v-if="comment.isCommentAComment">
-                                <el-col :span="24">
+                                <el-col>
                                     <el-form ref="commentComment" :model="commentComment">
-                                        <el-col :span="21">
-                                            <el-form-item>
-                                                <el-input type="textarea" v-model="commentComment.comment" placeholder="评论（不超过120个字符）" resize="none" autosize maxlength="120"></el-input>
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-                                            <el-form-item>
-                                                <el-button type="primary" @click="submitCommentComment(comment)" plain size="small" style="margin-top:8px">评论</el-button>
-                                            </el-form-item>
-                                        </el-col>
-
+                                        <el-row type="flex" align="middle" justify="center">
+                                            <el-col :span="21">
+                                                <el-form-item>
+                                                    <el-row>
+                                                        <el-input type="textarea" v-model="commentComment.comment" placeholder="评论（不超过120个字符）" resize="none" autosize maxlength="120"></el-input>
+                                                        <!-- <el-button type="primary" @click="submitCommentComment(comment)" plain size="small" style="margin-top:8px">评论</el-button> -->
+                                                    </el-row>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="2" :offset="1">
+                                                <el-form-item>
+                                                    <el-button type="primary" @click="submitCommentComment(comment)" plain size="small" style="margin-top:8px">评论</el-button>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
                                     </el-form>
                                 </el-col>
 
@@ -254,12 +260,14 @@
 </template>
 
 <script>
+    import Vue from 'vue'
     export default {
         name: 'MomentDetail',
         data() {
             return {
                 // sendText:'',
-                userHeadImg:'',
+                displayDelete: false,
+                userHeadImg: '',
                 hackReset: false,
                 pictureURL: '',
                 navBarFixed: false,
@@ -354,7 +362,7 @@
                     followState: '关注'
                 }],
                 ID: '000',
-                Username: 'loststars',
+                Username: this.$store.state.currentUsername,
                 Bio: '万年单身汪',
                 likeSrc: require('../image/comment-unlike.png'),
                 collectSrc: require('../image/uncollect.png'),
@@ -454,6 +462,40 @@
                         } else {
                             this.$message.error('删除失败，服务器内部错误，请重试。');
                         }
+                    })
+            },
+            deleteAComment(comment) {
+                //////////////api/Coment/DelCmt
+                var formdata = new FormData();
+                formdata.append('Cid', comment.ID);
+                console.log(comment.ID)
+                // formdata.append('Sender_id', this.$store.state.currentUserId_ID);
+                // formdata.append('Content', moment.newComment);
+                // formdata.append('Send_time', '');
+                // formdata.append('Quote_comment_id', '');
+                let config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                };
+                this.axios.post('http://10.0.1.8:54468/api/Coment/DelCmt', formdata, config)
+                    .then((response) => {
+                        // if (response.data == 'OK') {
+                        if (true) {
+                            this.$message({
+                                message: '评论删除成功！',
+                                type: 'success'
+                            });
+                            // this.$router.push('/main/momentDetail/' + this.$route.params.id);
+                            setTimeout("history.go(0)", 3000)
+
+                        }
+                        location.reload();
+                        //////////////
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.$message.error('评论删除失败，请稍后重试！');
                     })
             },
             sendMomentInit: function () {
@@ -594,6 +636,7 @@
 
             handleTagClose(tag) {
                 this.moment.tags.splice(this.moment.tags.indexOf(tag), 1);
+                // console.log(this.moment.tags)
                 if (this.moment.tags.length <= 4) {
                     this.ableToAddTag = true;
                 }
@@ -690,7 +733,35 @@
                 this.moment.LikeState = !this.moment.LikeState;
             },
             forwardHandler: function () {
-
+                this.$confirm('', '确定转发？', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        center: true
+                    }).then(() => {
+                        this.axios.post('http://10.0.1.8:54468/api/Moment/ForwardMoment', {
+                                User_ID: this.$store.state.currentUserId_ID,
+                                Moment_ID: this.moment.ID
+                            })
+                            .then((response) => {
+                                if (response.data == 0) {
+                                    this.$message({
+                                        message: '转发成功！',
+                                        type: 'success'
+                                    });
+                                } else if (response.data == 1) {
+                                    this.$message({
+                                        message: '不可以转发自己的动态哦！',
+                                        type: 'warning'
+                                    });
+                                } else {
+                                    this.$message.error('转发失败，请稍后重试！')
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    })
+                    .catch(() => {});
             },
             followHandler: function (user, FollowState) {
                 console.log(user)
@@ -718,13 +789,44 @@
                         }
                     });
             },
+            getNowFormatDate() {
+                var date = new Date();
+                var strMonth = date.getMonth() + 1;
+                var strDate = date.getDate();
+                var strHour = date.getHours();
+                var strMin = date.getMinutes();
+                var strSec = date.getSeconds();
+                if (strMonth >= 1 && strMonth <= 9) {
+                    strMonth = "0" + strMonth;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                if (strHour >= 0 && strHour <= 9) {
+                    strHour = "0" + strHour;
+                }
+                if (strMin >= 0 && strMin <= 9) {
+                    strMin = "0" + strMin;
+                }
+                if (strSec >= 0 && strSec <= 9) {
+                    strSec = "0" + strSec;
+                }
+                var currentdate = date.getFullYear() + '-' +
+                    strMonth + '-' +
+                    strDate + ' ' +
+                    strHour + ':' +
+                    strMin + ':' +
+                    strSec;
+                return currentdate;
+            },
             submitBlogComment: function () {
                 if (this.blogComment.comment) {
                     this.comments.unshift({
-                        headImg: require('../image/a.jpg'),
-                        Username: 'loststars',
+                        headImg: 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                            '&type=2',
+                        Username: this.$store.state.currentUsername,
                         userPage: '',
-                        send_time: '2018-07-18 23:00',
+                        send_time: this.getNowFormatDate(),
                         content: this.blogComment.comment,
                         isCommentAComment: false,
                         quoteComment: {
@@ -732,25 +834,56 @@
                         }
                     });
                     this.moment.CommentNum++;
-                    this.$message('评论成功！');
-                    this.blogComment.comment = '';
+                    // this.$message('评论成功！');
+                    // this.blogComment.comment = '';
 
-                    this.axios.post('/moment', {
-                            CommentNum: this.moment.CommentNum,
-                            comment: this.comments[0]
-                        })
+                    //////////////
+                    // this.axios.post('/moment', {
+                    //         CommentNum: this.moment.CommentNum,
+                    //         comment: this.comments[0]
+                    //     })
+                    //     .then((response) => {
+                    //         if (response.data.code) {
+                    //             this.$message('评论成功！');
+                    //             this.blogComment.comment = '';
+                    //         } else {
+                    //             this.$message.error('评论失败，请重试！');
+                    //         }
+
+                    //     })
+                    //     .catch((error) => {
+                    //         console.log(error);
+                    //     });
+
+                    var formdata = new FormData();
+                    formdata.append('Mid', this.$route.params.id);
+                    formdata.append('Sender_id', this.$store.state.currentUserId_ID);
+                    // console.log(this.commentComment.comment)
+                    formdata.append('Content', this.blogComment.comment);
+                    formdata.append('Send_time', '');
+                    formdata.append('Quote_id', '');
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    };
+                    this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
-                            if (response.data.code) {
-                                this.$message('评论成功！');
+                            // if (response.data == 'OK') {
+                            if (true) {
+                                this.$message({
+                                    message: '评论成功！',
+                                    type: 'success'
+                                });
                                 this.blogComment.comment = '';
                             } else {
-                                this.$message.error('评论失败，请重试！');
+                                this.$message.error('评论失败，请稍后重试！');
                             }
-
                         })
                         .catch((error) => {
                             console.log(error);
-                        });
+                            this.$message.error('评论失败，请稍后重试！');
+                        })
                 } else {
                     this.$message.error('请输入评论！');
                     return false;
@@ -761,10 +894,11 @@
             submitCommentComment: function (comment) {
                 if (this.commentComment.comment) {
                     this.comments.unshift({
-                        headImg: require('../image/a.jpg'),
-                        Username: 'loststars',
+                        headImg: 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                            '&type=2',
+                        Username: this.$store.state.currentUsername,
                         userPage: '',
-                        send_time: '2018-07-18 20:00',
+                        send_time: this.getNowFormatDate(),
                         content: this.commentComment.comment,
                         isCommentAComment: false,
                         quoteComment: {
@@ -774,25 +908,54 @@
                         }
                     });
                     this.moment.CommentNum++;
-                    this.$message('评论成功！');
-                    this.commentComment.comment = '';
+                    // this.$message('评论成功！');
+                    // this.commentComment.comment = '';
                     this.commentAComment(comment);
-
-                    this.$axios.post('/moment', {
-                            CommentNum: this.moment.CommentNum,
-                            comment: this.comments[0]
-                        })
+                    //////////////
+                    // this.$axios.post('/moment', {
+                    //         CommentNum: this.moment.CommentNum,
+                    //         comment: this.comments[0]
+                    //     })
+                    //     .then((response) => {
+                    //         if (response.data.code) {
+                    //             this.$message('评论成功！');
+                    //             this.commentComment.comment = '';
+                    //         } else {
+                    //             this.$message.error('评论失败，请重试！');
+                    //         }
+                    //     })
+                    //     .catch((error) => {
+                    //         console.log(error);
+                    //     });
+                    var formdata = new FormData();
+                    formdata.append('Mid', this.$route.params.id);
+                    formdata.append('Sender_id', this.$store.state.currentUserId_ID);
+                    formdata.append('Content', this.commentComment.comment);
+                    formdata.append('Send_time', '');
+                    console.log(comment.ID)
+                    formdata.append('Quote_id', comment.ID);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    };
+                    this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
-                            if (response.data.code) {
-                                this.$message('评论成功！');
+                            // if (response.data == 'OK') {
+                            if (true) {
+                                this.$message({
+                                    message: '评论成功！',
+                                    type: 'success'
+                                });
                                 this.commentComment.comment = '';
                             } else {
-                                this.$message.error('评论失败，请重试！');
+                                this.$message.error('评论失败，请稍后重试！');
                             }
                         })
                         .catch((error) => {
                             console.log(error);
-                        });
+                            this.$message.error('评论失败，请稍后重试！');
+                        })
                 } else {
                     this.$message.error('请输入评论！');
                     return false;
@@ -830,9 +993,10 @@
 
                     this.moment = response.data.moment;
                     this.moment.Username = response.data.user_username;
+                    // this.moment.displayDelete = 
 
                     this.userHeadImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
-                    '&type=2';
+                        '&type=2';
                     // this.imgList = [{
                     //     url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
                     // }];
@@ -860,7 +1024,8 @@
                     this.FollowState = response.data.FollowState;
                     // this.moment = response.data;
                     /////
-                    this.moment.tags = response.data.tags;
+                    Vue.set(this.moment, 'tags', response.data.tags)
+                    // this.moment.tags = response.data.tags;
                     // this.moment.tags = [];
                     // response.data.tags.forEach(element => {
                     //     this.moment.tags.push({
@@ -873,8 +1038,35 @@
                     console.log(error);
                 });
 
+            this.axios.get('http://10.0.1.8:54468/api/Coment/LdCmt?Mid=' + this.$route.params.id)
+                .then((response) => {
+                    this.comments = [];
+                    response.data.forEach(element => {
+                        var comment = {};
+                        var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.Sender_id +
+                            '&type=2';
 
-            this.axios
+                        Vue.set(comment, 'headImg', headImg)
+                        comment.ID = element.Cid;
+                        comment.Username = element.Sender_username;
+                        comment.send_time = element.Send_time;
+                        comment.content = element.Content;
+                        comment.isCommentAComment = false;
+                        if (element.Quote_username != null) {
+                            comment.quoteComment = {
+                                Username: element.Quote_username,
+                                content: element.Quote_content,
+                            }
+                        } else {
+                            comment.quoteComment = {}
+                        }
+
+                        this.comments.push(comment);
+                    });
+                })
+
+
+            // this.axios
         }
     }
 </script>

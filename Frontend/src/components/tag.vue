@@ -28,8 +28,8 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_1">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
-                                        <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                                        <img :src="item.src" alt="hex" height="40px" width="40px" @click="jumpToUser(item.SenderID)">
+                                        <span style="margin-left:-30%; font-size:18px"  @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
@@ -48,8 +48,8 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_2">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
-                                        <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                                        <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                                        <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
@@ -68,8 +68,8 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_3">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
-                                        <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                                        <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                                        <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
@@ -88,8 +88,8 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_4">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
-                                        <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
+                                        <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                                        <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
@@ -327,6 +327,7 @@
                                     response.data[0]);
                                 // element.contentSrc = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
                                 //     response.data[0]
+                                // console.log(element)
                             })
                     });
                     let momentNum = totalMoments.length;
@@ -334,6 +335,8 @@
                     this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 3), Math.floor(2 * momentNum /
                         3));
                     this.items_col_3 = totalMoments.slice(Math.floor(2 * momentNum / 3));
+                    // console.log('totalmoments:')
+                    // console.log(totalMoments)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -392,6 +395,14 @@
                     //     moment_id: item.MomentId
                     //   }
                 )
+            },
+            jumpToUser: function (ID) {
+                console.log('ge')
+                if (ID == this.$store.state.currentUserId_ID) {
+                    this.$router.push('/main/personalpage/');
+                } else {
+                    this.$router.push('/main/userpage/' + ID);
+                }
             },
             getNaturalWidth(id) {
                 var image = new Image()
