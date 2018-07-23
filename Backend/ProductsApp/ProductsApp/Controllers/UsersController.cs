@@ -522,5 +522,59 @@ namespace ProductsApp.Controllers
             conn.Close();
             return Json<List<Users>>(following_list);
         }
+
+
+        /// <summary>
+        /// 返回粉丝列表
+        /// </summary>
+        /// <param name="user_id">Users</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult FanList(string user_id)       //返回关注列表
+        {
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            OracleCommand cmd = new OracleCommand();
+            cmd.CommandText = "select USER_ID from Follow_User where FOLLOWING_ID='" + user_id + "'";//找到所有关注此用户的ID
+            cmd.Connection = conn;
+            OracleDataReader rd = cmd.ExecuteReader();
+            List<Users> followed_list = new List<Users>();
+            if (!rd.HasRows)
+            {
+                conn.Close();
+                return Ok("Not found");
+            }
+            while (rd.Read())
+            {
+                string followed_id = rd["USER_ID"].ToString();
+                OracleCommand cmd1 = new OracleCommand();
+                cmd1.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找用户的所有信息
+                cmd1.Connection = conn;
+                OracleDataReader rd1 = cmd1.ExecuteReader();
+                if (rd1.Read())
+                {
+                    Users temp = new Users();
+                    temp.ID = rd1["ID"].ToString();
+                    temp.Email = rd1["EMAIL"].ToString();
+                    temp.Password = rd1["PASSWORD"].ToString();
+                    temp.Username = rd1["USERNAME"].ToString();
+                    temp.Bio = rd1["BIO"].ToString();
+                    temp.Photo = rd1["PHOTO"].ToString();
+                    followed_list.Add(temp);
+                }
+                rd1.Close();
+            }
+            rd.Close();
+            conn.Close();
+            return Json<List<Users>>(followed_list);
+        }
     }
 }
