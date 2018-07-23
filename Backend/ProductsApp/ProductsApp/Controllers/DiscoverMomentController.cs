@@ -110,14 +110,14 @@ namespace ProductsApp.Controllers
         /// <param name="email">string</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetRankingMoments( string email )
+        public IHttpActionResult GetRankingMoments(string email)
         {
 
             //todo:连接数据库
             DBAccess dBAccess = new DBAccess();
 
             //执行数据库select操作
-            OracleDataReader rd = dBAccess.GetDataReader("select* from (select m.ID, m.content, m.like_num, m.forward_num, m.collect_num, m.comment_num, m.time, u.username, u.email, u.bio, u.photo, ROWNUM rn from MOMENT m,USERS u where m.sender_id = u.ID order by m.like_num desc) where rn<=20");
+            OracleDataReader rd = dBAccess.GetDataReader("select* from (select m.ID, m.content, m.like_num, m.forward_num, m.collect_num, m.comment_num, m.time, u.id sender_id, u.username, u.email, u.bio, u.photo, ROWNUM rn from MOMENT m,USERS u where m.sender_id = u.ID order by m.like_num desc) where rn<=20");
 
             //创建User_Moment对象List，并向其中添加读出的数据库信息
             List<User_Moment> resultList = new List<User_Moment>();
@@ -139,7 +139,7 @@ namespace ProductsApp.Controllers
                 um.ForwardNum = int.Parse(rd["FORWARD_NUM"].ToString());
                 um.CollectNum = int.Parse(rd["COLLECT_NUM"].ToString());
                 um.CommentNum = int.Parse(rd["COMMENT_NUM"].ToString());
-                um.Time =  rd["TIME"].ToString();
+                um.Time = rd["TIME"].ToString();
                 //获取该用户的点赞状态
                 int likeState = api.CheckLikeState(email, um.MomentID);
                 if (likeState == 1)//未点赞过
@@ -156,11 +156,11 @@ namespace ProductsApp.Controllers
                 }
 
                 resultList.Add(um);
-                
+
             }
-            
+
             //以json格式返回数组
-            return Json<List<User_Moment>> (resultList);
+            return Json<List<User_Moment>>(resultList);
 
         }
     }
