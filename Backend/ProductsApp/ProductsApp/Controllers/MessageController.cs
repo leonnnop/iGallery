@@ -32,6 +32,7 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             cmd.CommandText = "insert into MESSAGE(SENDER_ID,RECEIVER_ID,SEND_TIME,CONTENT) " +
                     "values('" + message.Sender_ID + "','" + message.Receiver_ID + "','" + message.Send_Time + "','" + message.Content + "')";
+            OracleDataReader rd = cmd.ExecuteReader();
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {
@@ -74,10 +75,10 @@ namespace ProductsApp.Controllers
             List<int> IdentityList = new List<int>();
             while (rd.Read())
             {
-                string name = rd[0].ToString();
+                string name = rd["SENDER_ID"].ToString();
                 if (name == Sender_ID) IdentityList.Add(0);
                 else IdentityList.Add(1);
-                string content = rd[1].ToString();
+                string content = rd["CONTENT"].ToString();
                 ContentList.Add(content);
             }
             Tuple<List<int>, List<string>> result = new Tuple<List<int>, List<string>>(null, null);

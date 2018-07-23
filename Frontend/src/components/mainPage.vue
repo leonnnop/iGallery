@@ -29,7 +29,7 @@
           <el-input placeholder="请输入搜索内容" v-model="searchInput" clearable> </el-input>
         </el-col>
         <el-col :span="2" :offset="1">
-          <el-button round>搜索</el-button>
+          <el-button round @click="searchHandler">搜索</el-button>
         </el-col>
         <el-col :span="1">
           <i class="el-icon-bell"></i>
@@ -327,7 +327,7 @@
 
         if (this.tags.length > 0) {
           // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
+          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
             params: {
               TagNames: this.tags,
               // Moment_Id: this.$route.params.id
@@ -355,8 +355,12 @@
       sendMomentHandler: function () {
         // console.log('————发布内容————');
         // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
+<<<<<<< HEAD
         this.$refs.upload.submit()
         // .then(()=>{location.reload()}) //上传图片
+=======
+        this.$refs.upload.submit(); //上传图片
+>>>>>>> 53f7fcc8f0539ac405adb0f49cbfdf4ded7907da
 
         this.uploadImgs2 = [];
         this.tags = [];
@@ -367,17 +371,18 @@
         this.showTextArea = false;
         this.showUpload = false;
 
-
-        // history.go(0)
-
         this.$message({
           message: '发布成功！',
           type: 'success'
+<<<<<<< HEAD
         })
 
         setTimeout(this.refresh(), 4000)
 
         // location.reload();
+=======
+        });
+>>>>>>> 53f7fcc8f0539ac405adb0f49cbfdf4ded7907da
 
         // this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
         //     ID: this.currentMomentID,
@@ -501,7 +506,10 @@
       uploadOnSuccess(e, file, fileList) { //上传附件
         // console.log("——————————success——————————")
         // console.log(fileList);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 53f7fcc8f0539ac405adb0f49cbfdf4ded7907da
       },
       upLoadOnExceed: function (files, fileList) {
         this.$message.error('exceed');
@@ -541,7 +549,10 @@
       // uploadOnProgress(event, file, fileList) {
       //   console.log(fileList)
       // }
-
+      searchHandler:function(){
+        this.$router.push('/main/searchResult/'+this.searchInput);
+        this.searchInput='';
+      }
     },
 
   };
