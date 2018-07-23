@@ -36,16 +36,49 @@ namespace ProductsApp.Controllers
             }
 
             //执行数据库操作
-            OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + moment_id + "'and SENDER_ID = '"+user_id+"'");
+            OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + moment_id + "'and SENDER_ID = '" + user_id + "'");
             if (rd.Read())
             {
-                if (dBAccess.ExecuteSql("delete from MOMENT where sender_id = '" + user_id + "'and id = '" + moment_id + "'")) 
+                //获取该动态的quote_mid
+                string quote_mid = rd["QUOTE_MID"].ToString();
+
+                if (dBAccess.ExecuteSql("delete from MOMENT where sender_id = '" + user_id + "'and id = '" + moment_id + "'"))
                 {
                     status = 0;//成功删除
                 }
                 else
                 {
                     status = 3;//动态删除失败
+                }
+                if (quote_mid != "")//该条动态来自转发，同时修改forward表
+                {
+                    rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + quote_mid + "'");
+                    if (rd.Read())
+                    {
+                        //设置新的转发数
+                        int new_forward_num = int.Parse(rd["FORWARD_NUM"].ToString()) - 1;
+
+                        if (dBAccess.ExecuteSql("delete from FORWARD where user_id = '" + user_id + "'and moment_id = '" + quote_mid + "'"))
+                        {
+                            if (dBAccess.ExecuteSql("update MOMENT set forward_num= ' " + new_forward_num + " 'where  ID='" + quote_mid + "' "))
+                            {
+                                status = 0;//成功删除该动态和转发表项，并且源动态转发数减一
+                            }
+                            else
+                            {
+                                status = 6;//成功删除该动态和转发表项，但源动态转发数没有更改
+                            }
+                        }
+                        else
+                        {
+                            status = 5;//转发表项删除失败
+                        }
+
+                    }
+                    else
+                    {
+                        status = 4;//该动态删除成功，找不到源动态
+                    }
                 }
             }
             else
