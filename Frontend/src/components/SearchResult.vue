@@ -433,7 +433,7 @@
                 ])
                 .then(this.axios.spread((res1, res2) => {
                     //用户
-                    if (res1.data != 'Not Found') {
+                    if (res1.data != 'Not found') {
                         this.users = res1.data;
                         //关注状态
                         this.users.forEach(element => {
@@ -449,13 +449,14 @@
                         this.hasUser = true;
                     } else {
                         this.hasUser = false;
+                        this.users = []
                     }
 
                     this.userListLength = length(this.users);
 
                     //tag和动态
                     if (res2.data.m_Item1 != null) {
-                        this.tags = res2.data.tags;
+                        this.tags = res2.data.m_Item1;
                     } else {
                         this.hasTag = false;
                         console.log(this.hasTag)
@@ -463,7 +464,8 @@
                     }
 
                     if (res2.data.m_Item2 != null) {
-                        let moments = res2.data.moments;
+                        var moments = res2.data.m_Item2;
+                        console.log(moments)
                     } else {
                         this.hasMoment = false;
                     }
