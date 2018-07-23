@@ -15,7 +15,6 @@ namespace ProductsApp.Controllers
 {
     public class DiscoverMomentController : ApiController
     {
-        
 
         /// <summary>
         /// “发现”界面点赞更新
@@ -24,7 +23,7 @@ namespace ProductsApp.Controllers
         /// <param name="moment_id">string</param>
         /// <returns></returns>
         [HttpPut]
-        public IHttpActionResult UpdateLiking ( string email, string moment_id )
+        public IHttpActionResult UpdateLiking(string email, string moment_id)
         {
             int status = 0;
             int likeState = -1;
@@ -42,6 +41,9 @@ namespace ProductsApp.Controllers
             OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + moment_id + "'");
             if (rd.Read())
             {
+                //获取该动态的quote_mid
+                string quote_mid = rd["QUOTE_MID"].ToString();
+
                 //设置新的点赞数
                 int new_like_num;
                 if (likeState == 0)//取消点赞，赞数减一
@@ -60,7 +62,7 @@ namespace ProductsApp.Controllers
 
                 //获取用户id
                 string user_id = api.EmailToUserID(email);
-                
+
                 //更新数据库中的点赞数
                 if (dBAccess.ExecuteSql("update MOMENT set like_num= ' " + new_like_num + " 'where  ID='" + moment_id + "' "))
                 {
@@ -68,32 +70,87 @@ namespace ProductsApp.Controllers
                     {
                         if (dBAccess.ExecuteSql("insert into FAVORITE(USER_ID,MOMENT_ID) values('" + user_id + "','" + moment_id + "')"))
                         {
-                            status = 0;//moment表和favorite表都修改成功，返回成功状态码0
+                            status = 0;//该动态moment表和favorite表都修改成功
                         }
                         else
                         {
-                            status = 1;//moment表修改成功，favorite表修改失败
+                            status = 1;//该动态moment表修改成功，favorite表修改失败
                         }
                     }
                     else if (likeState == 0)//取消点赞
                     {
-                        if (dBAccess.ExecuteSql("delete from FAVORITE where user_id = '"+user_id+"' and moment_id = '"+moment_id+"'"))
+                        if (dBAccess.ExecuteSql("delete from FAVORITE where user_id = '" + user_id + "' and moment_id = '" + moment_id + "'"))
                         {
-                            status = 0;//moment表和favorite表都修改成功，返回成功状态码0
+                            status = 0;//该动态moment表和favorite表都修改成功
                         }
                         else
                         {
-                            status = 1;//moment表修改成功，favorite表修改失败
+                            status = 1;//该动态moment表修改成功，favorite表修改失败
                         }
                     }
 
                 }
-                else//moment表修改失败，未修改favorite表
+                else//该动态moment表修改失败，未修改favorite表
                 {
                     status = 2;
                 }
+
+
+
+
+                if (quote_mid != "")//该条动态来自转发，同时修改源动态点赞数
+                {
+                    rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + quote_mid + "'");
+                    if (rd.Read())
+                    {
+                        if (likeState == 0)//取消点赞，赞数减一
+                        {
+                            new_like_num = int.Parse(rd["LIKE_NUM"].ToString()) - 1;
+                        }
+                        else if (likeState == 1)//点赞，赞数加一
+                        {
+                            new_like_num = int.Parse(rd["LIKE_NUM"].ToString()) + 1;
+                        }
+
+                        //更新数据库中源动态的点赞数
+                        if (dBAccess.ExecuteSql("update MOMENT set like_num= ' " + new_like_num + " 'where  ID='" + quote_mid + "' "))
+                        {
+                            if (likeState == 1)//点赞
+                            {
+                                if (dBAccess.ExecuteSql("insert into FAVORITE(USER_ID,MOMENT_ID) values('" + user_id + "','" + quote_mid + "')"))
+                                {
+                                    status = 0;//源动态moment表和favorite表都修改成功，返回成功状态码0
+                                }
+                                else
+                                {
+                                    status = 6;//源动态moment表修改成功，favorite表修改失败
+                                }
+                            }
+                            else if (likeState == 0)//取消点赞
+                            {
+                                if (dBAccess.ExecuteSql("delete from FAVORITE where user_id = '" + user_id + "' and moment_id = '" + quote_mid + "'"))
+                                {
+                                    status = 0;//源动态moment表和favorite表都修改成功，返回成功状态码0
+                                }
+                                else
+                                {
+                                    status = 6;//源动态moment表修改成功，favorite表修改失败
+                                }
+                            }
+
+                        }
+                        else//源动态moment表修改失败，未修改favorite表
+                        {
+                            status = 5;
+                        }
+                    }
+                    else
+                    {
+                        status = 7;//找不到源动态
+                    }
+                }
             }
-            else//找不到指定动态
+            else//找不到该动态
             {
                 status = 3;
             }
