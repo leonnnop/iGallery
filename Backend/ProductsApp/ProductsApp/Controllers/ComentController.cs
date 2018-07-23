@@ -45,7 +45,7 @@ namespace ProductsApp.Controllers
             //利用id查 用户表 【头像】 和 评论体 【内容+时间+引用】
 
             List<Comment> cmts = new List<Comment>();
-            
+
 
             //逐条评论构造Comment
             for (int j = 0; j < users.Count; j++)
@@ -72,7 +72,7 @@ namespace ProductsApp.Controllers
                         //原评论信息
                         cmd.CommandText = "select USER_ID from PUBLISH_COMMENT where COMMENT_ID='" + cmt.Quote_id + "'"; //PUBLIC
                         rd = cmd.ExecuteReader();
-                        string uid="";
+                        string uid = "";
                         while (rd.Read())
                         {
                             uid = rd[0].ToString();
@@ -95,7 +95,7 @@ namespace ProductsApp.Controllers
                         rd.Read();
                         cmt.Quote_username = rd[0].ToString();
                     }
-                    
+
                     //原评论的内容
                     if (cmt.Type.Equals("1"))
                     {
@@ -125,10 +125,11 @@ namespace ProductsApp.Controllers
 
             }
             //返回按时间排好序的commenter的评论体
-            cmts.Sort();
+            //cmts.Sort();
+            cmts.Sort(new SendTimeAsc());
             return Json<List<Comment>>(cmts);
         }
-        
+
 
 
 
@@ -140,7 +141,7 @@ namespace ProductsApp.Controllers
 
             var coment = HttpContext.Current.Request.Params;
             Comment comment = new Comment();
-           
+
             //永久保存数据
             comment.Mid = coment["Mid"];
             comment.Sender_id = coment["Sender_id"];
@@ -148,14 +149,14 @@ namespace ProductsApp.Controllers
             //comment.Send_time = coment["Send_time"];
             comment.Send_time = DateTime.Now.ToString();
             comment.Quote_id = coment["Quote_id"];
-            
-            
+
+
             //打开数据库连接
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
             conn.Open();
 
-            
+
 
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
@@ -165,9 +166,9 @@ namespace ProductsApp.Controllers
             //保存评论体
             GeneralAPI g = new GeneralAPI();
 
-           comment.Cid= g.NewIDOf("COMENT");
+            comment.Cid = g.NewIDOf("COMENT");
 
-            if (comment.Quote_id.Trim().Equals("")) //搞定评论类型
+            if (comment.Quote_id==null || comment.Quote_id.Trim().Equals("")) //搞定评论类型
             {
                 comment.Type = "0";
             }
@@ -262,4 +263,15 @@ namespace ProductsApp.Controllers
         }
 
     }
+
+    class SendTimeAsc : IComparer<Comment>
+    {
+
+        public int Compare(Comment x, Comment y)
+        {
+            return x.Send_time.CompareTo(y.Send_time);
+        }
+
+    }
+    
 }

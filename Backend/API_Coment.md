@@ -67,3 +67,21 @@ Json
 值：以下Keys为Attributes的对象
 
 ##### ![1532192777619](C:\Users\李\AppData\Local\Temp\1532192777619.png)
+
+```
+[
+    {(全是string)
+        "Mid": "81767",
+        "Sender_id": "16",
+        "Sender_username": "leonnnop",
+        "Cid": "89760",
+        "Content": "尝试评论",
+        "Quote_username": null,
+        "Send_time": "2018/7/23 13:59:22",
+        "Quote_id": "",
+        "Type": "0",
+        "Quote_content": null
+    }
+]
+```
+
