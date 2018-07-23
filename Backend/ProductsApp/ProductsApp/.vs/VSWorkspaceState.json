@@ -4,6 +4,6 @@
     "\\Controllers",
     "\\Models"
   ],
-  "SelectedNode": "\\Models\\Moment.cs",
+  "SelectedNode": "\\Controllers\\UsersController.cs",
   "PreviewInSolutionExplorer": false
 }

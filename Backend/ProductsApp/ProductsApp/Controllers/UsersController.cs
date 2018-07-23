@@ -120,25 +120,35 @@ namespace ProductsApp.Controllers
             }
             else//邮箱未注册
             {
-                MailMessage message = new MailMessage();    //创建一个邮件信息的对象
-                message.From = new MailAddress("1871373978@qq.com");
-                message.To.Add(Email);
-                message.Subject = "欢迎注册iGallery";
-                string yzm = null;
-                Random rde = new Random();
-                yzm += rde.Next(100000, 999999);
-                message.Body = "您的验证码为 " + yzm;
-                message.IsBodyHtml = false;              //是否为html格式
-                message.Priority = MailPriority.High;    //发送邮件的优先等级
-                SmtpClient sc = new SmtpClient();        //简单邮件传输协议
-                sc.Host = "smtp.qq.com";                 //指定发送邮件端口
-                sc.Port = 25;
-                sc.UseDefaultCredentials = true;
-                sc.EnableSsl = false;
-                sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
-                sc.Send(message);   //发送邮件
-                //response.StatusCode = HttpStatusCode.OK;
-                status = yzm;
+               MailMessage message = new MailMessage();    //创建一个邮件信息的对象
+               message.From = new MailAddress("1871373978@qq.com");
+              message.To.Add(Email);
+              message.Subject = "欢迎注册iGallery";
+              Random r = new Random();
+              string yzm = null;
+              Random rd = new Random();
+              yzm += rd.Next(100000, 999999);
+              message.IsBodyHtml = true;
+              message.BodyEncoding = System.Text.Encoding.UTF8;
+              string htmlBodyContent = "<img src=\"cid:img_logo\">";
+              htmlBodyContent += "<p>【iGallery】您的邮箱验证码为：" + yzm +"</p>";
+              //htmlBodyContent += "<p>您的iGallery账号正在重置密码，若非本人操作请及时登录处理。</p>";
+              htmlBodyContent += "<p>注册iGallery，分享精彩视界</p>";
+              AlternateView htmlBody = AlternateView.CreateAlternateViewFromString(htmlBodyContent, null, "text/html");
+              LinkedResource lrlmage = new LinkedResource(@"C:\Users\mac\Desktop\logo_img.png","image/gif");
+              lrlmage.ContentId = "img_logo";
+              htmlBody.LinkedResources.Add(lrlmage);
+              message.AlternateViews.Add(htmlBody); 
+              message.IsBodyHtml = true;
+              message.Priority = MailPriority.High;    //发送邮件的优先等级
+              SmtpClient sc = new SmtpClient();        //简单邮件传输协议
+              sc.Host = "smtp.qq.com";                 //指定发送邮件端口
+              sc.Port = 25;
+              sc.UseDefaultCredentials = true;
+              sc.EnableSsl = false;
+              sc.Credentials = new System.Net.NetworkCredential("1871373978@qq.com", "rneyzgzhukkpcfbf");
+              sc.Send(message);   //发送邮件
+              status=yzm;
             }
 
             //关闭数据库连接
@@ -231,12 +241,23 @@ namespace ProductsApp.Controllers
                 MailMessage message = new MailMessage();    //创建一个邮件信息的对象
                 message.From = new MailAddress("1871373978@qq.com");
                 message.To.Add(Email);
-                message.Subject = "iGallery重置密码";
+                message.Subject = "欢迎注册iGallery";
+                Random r = new Random();
                 string yzm = null;
-                Random rde = new Random();
-                yzm += rde.Next(100000, 999999);
-                message.Body = "您的验证码为 " + yzm;
-                message.IsBodyHtml = false;              //是否为html格式
+                Random rd = new Random();
+                yzm += rd.Next(100000, 999999);
+                message.IsBodyHtml = true;
+                message.BodyEncoding = System.Text.Encoding.UTF8;
+                string htmlBodyContent = "<img src=\"cid:img_logo\">";
+                htmlBodyContent += "<p>【iGallery】您的邮箱验证码为：" + yzm +"</p>";
+                //htmlBodyContent += "<p>您的iGallery账号正在重置密码，若非本人操作请及时登录处理。</p>";
+                htmlBodyContent += "<p>注册iGallery，分享精彩视界</p>";
+                AlternateView htmlBody = AlternateView.CreateAlternateViewFromString(htmlBodyContent, null, "text/html");
+                LinkedResource lrlmage = new LinkedResource(@"C:\Users\mac\Desktop\logo_img.png","image/gif");
+                lrlmage.ContentId = "img_logo";
+                htmlBody.LinkedResources.Add(lrlmage);
+                message.AlternateViews.Add(htmlBody);
+                message.IsBodyHtml = true;
                 message.Priority = MailPriority.High;    //发送邮件的优先等级
                 SmtpClient sc = new SmtpClient();        //简单邮件传输协议
                 sc.Host = "smtp.qq.com";                 //指定发送邮件端口
