@@ -8,6 +8,7 @@ namespace ProductsApp.Models
 {
     public class User_Moment
     {
+        public string SenderID { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string Bio { get; set; }

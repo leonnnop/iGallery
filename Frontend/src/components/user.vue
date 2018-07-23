@@ -7,8 +7,7 @@
           <el-row class="usr" type="flex" align="middle">
             <el-col>
               <div class="user-img border">
-                <img class="user-img img-border hover-cursor" src="../image/a.jpg" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)"
-                />
+                <img class="user-img img-border hover-cursor" src="../image/a.jpg" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)"/>
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
@@ -74,7 +73,7 @@
               <el-row class="usr" type="flex" align="middle" style="padding:7px 15px;margin-top:5px">
                 <el-col :span="2">
                   <div class="small-user-img small-border">
-                    <img class="small-user-img small-img-border hover-cursor" src="../image/a.jpg" alt="头像" @click="jumpToUser(moment.user_email)"
+                    <img class="small-user-img small-img-border hover-cursor" :src="moment.Photo" alt="头像" @click="jumpToUser(moment.user_email)"
                     />
                   </div>
                 </el-col>
@@ -100,7 +99,7 @@
               <el-carousel :height="carouselHeight(moment)" :interval="0" indicator-position="outside" :arrow="showArrow(moment)">
                 <el-carousel-item v-for="(img,index) in moment.moment.imgList" :key="index">
                   <div class="pic">
-                    <img :src="img.url" alt="movementImg">
+                    <img :src="img" alt="movementImg">
                   </div>
                 </el-carousel-item>
               </el-carousel>
@@ -444,11 +443,7 @@
               Content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
               Time: '2018/7/20 8:37:18',
               QuoteMID: '',
-              imgList: [{
-                url: require('../image/ins1.png')
-              }, {
-                url: require('../image/ins2.png')
-              }]
+              imgList: ['']
             },
             tags: [
               'tag1', 'tag2'
@@ -473,9 +468,7 @@
               content: 'comment1'
             }],
             more_comments: true,
-            //请求图片
-            src: require('../image/ins1.png'),
-            photo: require('../image/a.jpg'),
+            Photo: require('../image/a.jpg'),
             //增加的属性
             likeImg: require('../image/comment-unlike.png'),
             collectImg: require('../image/uncollect.png'),
@@ -493,9 +486,7 @@
               Content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
               Time: '2018/7/20 8:37:18',
               QuoteMID: '',
-              imgList: [{
-                url: require('../image/ins2.png')
-              }]
+              imgList: ['']
             },
             tags: [
               'tag1'
@@ -508,9 +499,7 @@
               content: 'comment1'
             }],
             more_comments: false,
-            //请求图片
-            src: require('../image/ins1.png'),
-            photo: require('../image/a.jpg'),
+            Photo: require('../image/a.jpg'),
             //增加的属性
             likeImg: require('../image/comment-unlike.png'),
             collectImg: require('../image/uncollect.png'),
@@ -528,9 +517,7 @@
               Content: '恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。恭喜生活喜提我狗命。',
               Time: '2018/7/20 8:37:18',
               QuoteMID: '',
-              imgList: [{
-                url: require('../image/ins3.png')
-              }]
+              imgList: ['']
             },
             tags: [
 
@@ -541,9 +528,7 @@
 
             ],
             more_comments: false,
-            //请求图片
-            src: require('../image/ins1.png'),
-            photo: require('../image/a.jpg'),
+            Photo: require('../image/a.jpg'),
             //增加的属性
             likeImg: require('../image/comment-unlike.png'),
             collectImg: require('../image/uncollect.png'),
@@ -584,19 +569,20 @@
             }
 
             //请求图片
-            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
-              .then((response) => {
-                response.data.forEach(ele => {
-                  element.moment.imgList = [];
-                  element.moment.imgList.push({
-                    url: 'http://10.0.1.8:54468/api/Picture/Gets?id=' + ele
-                  });
-                });
-              })
-              .catch((error) => {
-                console.log(error);
+            this.axios.get('http://10.0.1.8:54468//api/Picture/FirstGet?id='+element.moment.ID+'&type=1')
+            .then((response) => {
+              let list=response.data;
+              //将id数组变为url数组
+              list.forEach(ele => {
+                ele='http://10.0.1.8:54468/api/Picture/Gets?pid='+ele;
               });
-            element.newComment = '';
+              Vue.set(element.moment,'imgList',list);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+            element.newComment='';
+            element.Photo='http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID + '&type=2';
           });
         })
         .catch((error) => {
@@ -649,13 +635,40 @@
           });
       },
       collectHandler: function (moment) {
-        if (moment.collected) {
-          moment.collectImg = require('../image/uncollect.png');
-        } else {
-          moment.collectImg = require('../image/collect.png');
+        if(moment.collected){
+          this.axios.post('http://10.0.1.8:54468/api/',{
+            moment_id:moment.moment.ID,
+            user_id:this.$store.state.currentUserId_ID
+          })
+          .then((response) => {
+            if(response.data==0){
+              moment.collectImg=require('../image/uncollect.png');
+              moment.collected=!moment.collected;
+            }else{
+              this.$message.error('取消收藏失败，请重试！');
+            }
+          })
+          .catch((error) => {            
+            console.log(error);
+          });
+        }else{
+          this.axios.post('http://10.0.1.8:54468/api/',{
+            moment_id:moment.moment.ID,
+            founder_id:this.$store.state.currentUserId_ID,
+            name:''
+          })
+          .then((response) => {
+            if(response.data==0){
+              moment.collectImg=require('../image/collect.png');
+              moment.collected=!moment.collected;
+            }else{
+              this.$message.error('收藏失败，请重试！');
+            }
+          })
+          .catch((error) => {            
+            console.log(error);
+          });
         }
-        moment.collected = !moment.collected;
-        //传本用户email和动态id
       },
       forwardHandler: function (moment) {
         this.$confirm('', '确定转发？', {
@@ -689,8 +702,8 @@
       },
       commentHandler: function (moment) {
         var formdata = new FormData();
-        formdata.append('Mid', moment.moment, ID);
-        formdata.append('Sender_id', this.$store.state.currentUserId);
+        formdata.append('Mid', moment.moment.ID);
+        formdata.append('Sender_id', this.$store.state.currentUserId_ID);
         formdata.append('Content', moment.newComment);
         formdata.append('Send_time', '');
         formdata.append('Quote_comment_id', '');
