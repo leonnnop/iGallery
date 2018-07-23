@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using Oracle.ManagedDataAccess.Client;
+using ProductsApp;
+
 namespace Utility
 {
     public class Util
@@ -136,11 +138,12 @@ namespace Utility
                 if (type == 1)
                 {
                     //插入PICTURE一条记录
-                    cmd.CommandText = "select count(*) from PICTURE";
-                    int pid = Convert.ToInt32(cmd.ExecuteScalar()) + 1;
+                    GeneralAPI g = new GeneralAPI();
+
+                    string pid = g.NewIDOf("PICTURE");
                     //文件路径不重名
-                    filepath = @"C:\mmps\" + (Convert.ToString(pid)) + fileExt;
-                    cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + Convert.ToString(pid) + "','" + filepath + "','" + id + "')";
+                    filepath = @"C:\mmps\" + pid + fileExt;
+                    cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) values('" + pid+ "','" + filepath + "','" + id + "')";
                     if (cmd.ExecuteNonQuery() != 1)
                     {
                        flag = false;
