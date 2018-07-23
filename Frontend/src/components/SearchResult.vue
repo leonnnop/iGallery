@@ -8,14 +8,14 @@
                 </el-row>
                 <el-row class="user-inner" v-if="hasUser">
                     <div class="arrow arrow-left" :class="{'arrow-display':showUsersLeftArrow}" @click="slideToRightUsers">
-                        <img src="../image/sm-arrow-left.png" class="arrow-img" alt="left-arrow"  >
+                        <img src="../image/sm-arrow-left.png" class="arrow-img" alt="left-arrow">
                     </div>
                     <div class="arrow arrow-right" :class="{'arrow-display':showUsersRightArrow}" @click="slideToLeftUsers">
-                        <img src="../image/sm-arrow-right.png" class="arrow-img" alt="right-arrow"  >
+                        <img src="../image/sm-arrow-right.png" class="arrow-img" alt="right-arrow">
                     </div>
 
-                    <el-row type="flex" justify="space-around" >
-                        <div  id="user-list" :style="{width:userListLength+'px'}">
+                    <el-row type="flex" justify="space-around">
+                        <div id="user-list" :style="{width:userListLength+'px'}">
                             <div class="display-user" v-for="(user,index) in users" :key="index">
                                 <el-row style="width:80%;margin:0 auto">
                                     <el-row>
@@ -42,10 +42,10 @@
                 </el-row>
                 <el-row class="tag-inner" v-if="hasTag">
                     <div class="arrow arrow-left" :class="{'arrow-display':showTagsLeftArrow}" @click="slideToRightTags">
-                        <img src="../image/sm-arrow-left.png" class="arrow-img" alt="left-arrow"  >
+                        <img src="../image/sm-arrow-left.png" class="arrow-img" alt="left-arrow">
                     </div>
                     <div class="arrow arrow-right" :class="{'arrow-display':showTagsRightArrow}" @click="slideToLeftTags">
-                        <img src="../image/sm-arrow-right.png" class="arrow-img" alt="right-arrow"  >
+                        <img src="../image/sm-arrow-right.png" class="arrow-img" alt="right-arrow">
                     </div>
                     <el-row type="flex" justify="space-around">
                         <div style="height:260px;" id="tag-list" :style="{width:tagListLength+'px'}">
@@ -77,7 +77,7 @@
                         <div v-for="(moment,index) in moments_col_1" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
                             <div class="moment-inner">
                                 <div class="icon">
-                                    <el-row type="flex" justify="space-between"> 
+                                    <el-row type="flex" justify="space-between">
                                         <el-col :span="8">
                                             <img src="../image/like-white.png" alt="">
                                             <div>{{moment.Like_num}}</div>
@@ -95,7 +95,7 @@
                         <div v-for="(moment,index) in moments_col_2" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
                             <div class="moment-inner">
                                 <div class="icon">
-                                    <el-row type="flex" justify="space-between"> 
+                                    <el-row type="flex" justify="space-between">
                                         <el-col :span="8">
                                             <img src="../image/like-white.png" alt="">
                                             <div>{{moment.Like_num}}</div>
@@ -113,7 +113,7 @@
                         <div v-for="(moment,index) in moments_col_3" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
                             <div class="moment-inner">
                                 <div class="icon">
-                                    <el-row type="flex" justify="space-between"> 
+                                    <el-row type="flex" justify="space-between">
                                         <el-col :span="8">
                                             <img src="../image/like-white.png" alt="">
                                             <div>{{moment.Like_num}}</div>
@@ -137,21 +137,23 @@
 </template>
 
 <style scoped>
-.more{
-    float:right;
-    margin-right:20px;
-    color:#6191d5;
-    font-size:13px;
-}
-.message{
-    height:270px;
-    width:100%;
-    line-height:270px;
-    text-align:center;
-    color:#999;
-    letter-spacing:1px;
-    border-top:1px solid rgb(235, 238, 245);
-}
+    .more {
+        float: right;
+        margin-right: 20px;
+        color: #6191d5;
+        font-size: 13px;
+    }
+
+    .message {
+        height: 270px;
+        width: 100%;
+        line-height: 270px;
+        text-align: center;
+        color: #999;
+        letter-spacing: 1px;
+        border-top: 1px solid rgb(235, 238, 245);
+    }
+
     .arrow {
         position: absolute;
         top: 50%;
@@ -161,7 +163,7 @@
         border-radius: 30px;
         display: none;
         z-index: 10;
-        background-color:rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5);
         text-align: center;
     }
 
@@ -172,15 +174,17 @@
     .arrow-right {
         right: 1%;
     }
-    .arrow-img{
-        height:15px;
-        width:15px;
+
+    .arrow-img {
+        height: 15px;
+        width: 15px;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
 
     }
+
     .box {
         width: 900px;
         margin: 0 auto;
@@ -205,14 +209,14 @@
         display: block;
     }
 
-    .tag-inner:hover .arrow-display{
+    .tag-inner:hover .arrow-display {
         display: block;
     }
 
     .tag-container {
         height: 340px;
         position: relative;
-        margin-top:30px;
+        margin-top: 30px;
     }
 
     .tag-inner {
@@ -292,7 +296,8 @@
         font-size: 12px;
     }
 
-    #user-list,#tag-list{
+    #user-list,
+    #tag-list {
         position: absolute;
         top: 0;
         left: 0;
@@ -300,7 +305,7 @@
 </style>
 
 <script>
-
+    import Vue from 'vue';
 
     function length(list) {
         let length = list.length;
@@ -316,55 +321,55 @@
     export default {
         data() {
             return {
-                keyword:'',
+                keyword: '',
                 showUsersLeftArrow: false,
                 showUsersRightArrow: false,
                 showTagsLeftArrow: false,
                 showTagsRightArrow: false,
                 userListLength: 2700,
                 tagListLength: 1800,
-                hasUser:true,
-                hasTag:true,
-                hasMoment:true,
+                hasUser: true,
+                hasTag: true,
+                hasMoment: true,
                 users: [{
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '123@qq.com',
                     Bio: 'self introduction self introduction self introduction',
                     Photo: require('../image/a.jpg')
                 }, {
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '',
                     Bio: 'self introduction',
                     Photo: require('../image/a.jpg')
                 }, {
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '',
                     Bio: 'self introduction',
                     Photo: require('../image/a.jpg')
                 }, {
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '',
                     Bio: 'self introduction',
                     Photo: require('../image/a.jpg')
                 }, {
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '',
                     Bio: 'self introduction',
                     Photo: require('../image/a.jpg')
                 }, {
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '',
                     Bio: 'self introduction',
                     Photo: require('../image/a.jpg')
                 }, {
                     Username: 'loststars',
-                    ID:'',
+                    ID: '',
                     Email: '',
                     Bio: 'self introduction',
                     Photo: require('../image/a.jpg')
@@ -421,75 +426,87 @@
         },
         created() {
             //用户
-            this.axios.all([this.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword='+this.keyword),
-                this.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword='+this.keyword)])
-                .then(this.axios.spread((res1,res2) => {
+            this.axios.all([this.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + this.$route.params
+                        .keyword + '&user_id=' + this.$store.state.currentUserId_ID),
+                    this.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword=' + this.$route.params.keyword +
+                        '&user_id=' + this.$store.state.currentUserId_ID)
+                ])
+                .then(this.axios.spread((res1, res2) => {
                     //用户
-                    if(res1.data!='Not Found'){
-                        this.users=res1.data;
+                    if (res1.data != 'Not Found') {
+                        this.users = res1.data;
                         //关注状态
                         this.users.forEach(element => {
-                            if(element.FollowState=='True'){
-                                Vue.set(element,'followWord','已关注');
-                            }else{
-                                Vue.set(element,'followWord','关注');
+                            if (element.FollowState == 'True') {
+                                Vue.set(element, 'followWord', '已关注');
+                            } else {
+                                Vue.set(element, 'followWord', '关注');
                             }
-                            element.Photo='http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
+                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                                '&type=2';
+                            Vue.set(element, 'Photo', photo)
                         });
-                        this.hasUser=true;
-                    }else{
-                        this.hasUser=false;
+                        this.hasUser = true;
+                    } else {
+                        this.hasUser = false;
                     }
-                    
+
                     this.userListLength = length(this.users);
 
                     //tag和动态
-                    if(res2.data!='null'){
-                        this.tags=res2.data.tags;
-                        let moments=res2.data.moments;
-                    }else{
-                        this.hasTag=false;
-                        this.hasMoment=false;
+                    if (res2.data.m_Item1 != null) {
+                        this.tags = res2.data.tags;
+                    } else {
+                        this.hasTag = false;
+                        console.log(this.hasTag)
+                        this.tags = []
                     }
 
-                    if(this.tags.length){
-                        this.hasTag=true;
+                    if (res2.data.m_Item2 != null) {
+                        let moments = res2.data.moments;
+                    } else {
+                        this.hasMoment = false;
+                    }
+
+                    if (this.tags.length) {
+                        this.hasTag = true;
                         //tag的关注状态
                         this.tags.forEach(element => {
-                            if(element.FollowState=='True'){
-                                Vue.set(element,'followWord','已关注');
-                            }else{
-                                Vue.set(element,'followWord','关注');
+                            if (element.FollowState == 'True') {
+                                Vue.set(element, 'followWord', '已关注');
+                            } else {
+                                Vue.set(element, 'followWord', '关注');
                             }
                         })
-                    }else{
-                        this.hasTag=false;
+                    } else {
+                        this.hasTag = false;
                     }
-                    
+
                     this.tagListLength = length(this.tags);
-                    
-                    if(moments.length){
-                        this.hasMoment=true;
-                        let momentNum=moments.length;
+
+                    if (moments.length) {
+                        this.hasMoment = true;
+                        let momentNum = moments.length;
                         this.moments_col_1 = moments.slice(0, Math.floor(momentNum / 3));
-                        this.moments_col_2 = moments.slice(Math.floor(momentNum / 3), Math.floor(2 * momentNum /3));
+                        this.moments_col_2 = moments.slice(Math.floor(momentNum / 3), Math.floor(2 * momentNum /
+                            3));
                         this.moments_col_3 = moments.slice(Math.floor(2 * momentNum / 3));
-                    }else{
-                        this.hasMoment=false;
+                    } else {
+                        this.hasMoment = false;
                     }
-                    
-                    
+
+
                 }))
                 .catch((error) => {
                     console.log(error);
                 });
-                if (this.users.length > 3) {
-                    this.showUsersRightArrow = true;
-                }
-                if (this.tags.length > 3) {
-                    this.showTagsRightArrow = true;
-                }
-            
+            if (this.users.length > 3) {
+                this.showUsersRightArrow = true;
+            }
+            if (this.tags.length > 3) {
+                this.showTagsRightArrow = true;
+            }
+
         },
         methods: {
             followUserHandler: function (user) {
@@ -497,12 +514,12 @@
                         '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
-                            if(!user.FollowState){
-                                user.followWord='已关注';
-                            }else{
-                                user.followWord='关注';
+                            if (!user.FollowState) {
+                                user.followWord = '已关注';
+                            } else {
+                                user.followWord = '关注';
                             }
-                            user.FollowState=!user.FollowState;
+                            user.FollowState = !user.FollowState;
                         } else {
                             this.$message.error('关注失败，服务器内部错误，请重试。');
                         }
@@ -511,18 +528,18 @@
             followTagHandler: function (tag) {
                 this.axios.put('http://10.0.1.8:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
                         '&tag=' + tag)
-                .then((response) => {
-                    if (response.data) {
-                        if (tag.FollowState=='False') {
-                            tag.followWord = '已关注'
+                    .then((response) => {
+                        if (response.data) {
+                            if (tag.FollowState == 'False') {
+                                tag.followWord = '已关注'
+                            } else {
+                                tag.followWord = '关注'
+                            }
+                            tag.FollowState = !tag.FollowState;
                         } else {
-                            tag.followWord = '关注'
+                            this.$message.error('服务器内部错误。请重试。');
                         }
-                        tag.FollowState=!tag.FollowState;
-                    } else {
-                        this.$message.error('服务器内部错误。请重试。');
-                    }
-                })
+                    })
             },
             jumpToUser: function (email) {
                 if (email == this.$store.state.currentUserId) {
@@ -532,12 +549,12 @@
                 }
             },
             jumpToTag: function (tag) {
-                this.$router.push('/main/tag/'+tag);
+                this.$router.push('/main/tag/' + tag);
             },
             jumpToDetail: function (momentId) {
-                this.$router.push('/main/momentDetail/'+momentId);
+                this.$router.push('/main/momentDetail/' + momentId);
             },
-            moreHandler:function(){
+            moreHandler: function () {
 
             },
             slideToLeftUsers: function () {
@@ -549,8 +566,8 @@
                 this.showUsersLeftArrow = true;
                 if (list.offsetLeft - 1800 == -width) {
                     this.showUsersRightArrow = false;
-                }else{
-                    this.showUsersRightArrow=true;
+                } else {
+                    this.showUsersRightArrow = true;
                 }
             },
             slideToRightUsers: function () {
@@ -559,11 +576,11 @@
                 var width = list.style.width;
                 list.style.left = list.offsetLeft + 900 + 'px';
                 list.style.transition = "all 1s";
-                this.showUsersRightArrow=true;
+                this.showUsersRightArrow = true;
                 if (list.offsetLeft + 900 == 0) {
                     this.showUsersLeftArrow = false;
-                    this.showUsersRightArrow=true;
-                }else{
+                    this.showUsersRightArrow = true;
+                } else {
                     this.showUsersLeftArrowtrue;
                 }
             },
@@ -573,11 +590,11 @@
                 var width = parseInt(list.style.width);
                 list.style.left = list.offsetLeft - 900 + 'px';
                 list.style.transition = "all 1s";
-                this.showTagsLeftArrow=true;
+                this.showTagsLeftArrow = true;
                 if (list.offsetLeft - 1800 == -width) {
                     this.showTagsRightArrow = false;
-                }else{
-                    this.showUsersRightArrow=true;
+                } else {
+                    this.showUsersRightArrow = true;
                 }
             },
             slideToRightTags: function () {
@@ -588,12 +605,12 @@
                 list.style.transition = "all 1s";
                 if (list.offsetLeft + 900 == 0) {
                     this.showTagsLeftArrow = false;
-                    this.showTagsRightArrow=true;
-                }else{
-                    this.showTagsLeftArrow=true;
+                    this.showTagsRightArrow = true;
+                } else {
+                    this.showTagsLeftArrow = true;
                 }
             },
-            
+
         }
     }
 </script>
