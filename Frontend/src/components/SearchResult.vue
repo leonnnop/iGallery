@@ -24,7 +24,7 @@
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">{{user.Username}}</el-row>
                                     <el-row style="margin-top:5%;color:#777;font-size:13px" class="self-intro">{{user.Bio}}</el-row>
                                     <el-row>
-                                        <el-button plain type="primary" size="medium" style="width:80%;margin-top:15%" @click="followUserHandler(user)">关注</el-button>
+                                        <el-button plain type="primary" size="medium" style="width:80%;margin-top:15%" @click="followUserHandler(user)" v-if="user.showFollowBtn">{{user.followWord}}</el-button>
                                     </el-row>
                                 </el-row>
                             </div>
@@ -56,7 +56,7 @@
                                     </el-row>
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">#{{tag.Content}}</el-row>
                                     <el-row>
-                                        <el-button plain size="medium" type="primary" style="width:80%;margin-top:15%" @click="followUserHandler(tag.Content)">关注</el-button>
+                                        <el-button plain size="medium" type="primary" style="width:80%;margin-top:15%" @click="followUserHandler(tag.Content)">{{tag.followWord}}</el-button>
                                     </el-row>
                                 </el-row>
                             </div>
@@ -437,11 +437,17 @@
                         this.users = res1.data;
                         //关注状态
                         this.users.forEach(element => {
-                            if (element.FollowState == 'True') {
-                                Vue.set(element, 'followWord', '已关注');
-                            } else {
-                                Vue.set(element, 'followWord', '关注');
+                            if(element.ID==this.$store.state.currentUserId_ID){
+                                Vue.set(element,'showFollowBtn','false');
+                            }else{
+                                Vue.set(element,'showFollowBtn','true');
+                                if (element.FollowState == 'True') {
+                                    Vue.set(element, 'followWord', '已关注');
+                                } else {
+                                    Vue.set(element, 'followWord', '关注');
+                                }
                             }
+                            
                             var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo)
@@ -453,6 +459,7 @@
                     }
 
                     this.userListLength = length(this.users);
+                    console.log(this.userListLength);
 
                     //tag和动态
                     if (res2.data.m_Item1 != null) {
@@ -465,6 +472,13 @@
 
                     if (res2.data.m_Item2 != null) {
                         var moments = res2.data.m_Item2;
+                        moments.forEach(element => {
+                            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id='+ element.ID +'&type=1')
+                            .then((response) => {
+                                Vue.set(element,'src','http://10.0.1.8:54468/api/Picture/Gets?pid='+response.data[0]);
+                            })
+                            
+                        })
                         console.log(moments)
                     } else {
                         this.hasMoment = false;
@@ -474,6 +488,7 @@
                         this.hasTag = true;
                         //tag的关注状态
                         this.tags.forEach(element => {
+                            
                             if (element.FollowState == 'True') {
                                 Vue.set(element, 'followWord', '已关注');
                             } else {
@@ -485,6 +500,7 @@
                     }
 
                     this.tagListLength = length(this.tags);
+                    console.log(this.tagListLength);
 
                     if (moments.length) {
                         this.hasMoment = true;
@@ -502,10 +518,10 @@
                 .catch((error) => {
                     console.log(error);
                 });
-            if (this.users.length > 3) {
+            if (this.userListLength > 900) {
                 this.showUsersRightArrow = true;
             }
-            if (this.tags.length > 3) {
+            if (this.tagListLength > 900) {
                 this.showTagsRightArrow = true;
             }
 
