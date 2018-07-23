@@ -1,5 +1,6 @@
 <template>
-  <el-container style="height: 1200px; border: 1px solid #eee;background-color;background-color: #fafafa;">
+  <el-container style="" class="container-back">
+    <div class="container-background"></div>
     <el-col>
       <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
@@ -28,7 +29,7 @@
           <el-input placeholder="请输入搜索内容" v-model="searchInput" clearable> </el-input>
         </el-col>
         <el-col :span="2" :offset="1">
-          <el-button round>搜索</el-button>
+          <el-button round @click="searchHandler">搜索</el-button>
         </el-col>
         <el-col :span="1">
           <i class="el-icon-bell"></i>
@@ -117,6 +118,22 @@
 </template>
 
 <style>
+  .container-back {
+    /* background-color: #fafafa; */
+    background-image: url(../image/slash.png);
+    background-repeat: repeat;
+    background-size: 100% 100%
+    /* background- */
+  }
+
+  .container-background {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-image: url(../image/slash.png);
+    background-repeat: repeat;
+  }
+
   .navBarWrap {
     position: fixed;
     top: 0;
@@ -310,7 +327,7 @@
 
         if (this.tags.length > 0) {
           // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
+          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
             params: {
               TagNames: this.tags,
               // Moment_Id: this.$route.params.id
@@ -328,11 +345,17 @@
         this.showUploadArea = false;
         this.showTextArea = true;
       },
+      refresh() {
+        history.go(0)
+        this.$store.commit('addCurrentUsername', this.getCookie(Username));
+        this.$store.commit('addCurrentUserPassword', this.getCookie(Password));
+        this.$store.commit('addCurrentUserBio', this.getCookie(Bio));
+        this.$store.commit('addCurrentUserPhoto', this.getCookie(Photo));
+      },
       sendMomentHandler: function () {
         // console.log('————发布内容————');
         // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
-        this.$refs.upload.submit()
-          // .then(()=>{location.reload()}) //上传图片
+        this.$refs.upload.submit(); //上传图片
 
         this.uploadImgs2 = [];
         this.tags = [];
@@ -343,15 +366,12 @@
         this.showTextArea = false;
         this.showUpload = false;
 
-
-        // history.go(0)
-
         this.$message({
           message: '发布成功！',
           type: 'success'
         })
 
-        setTimeout("history.go(0)",3000)
+        setTimeout(this.refresh(), 4000)
 
         // location.reload();
 
@@ -417,6 +437,16 @@
         // }
       },
       //上传组件
+      getCookie(name) {
+        var strCookie = document.cookie;
+        var arrCookie = strCookie.split("; ");
+        for (var i = 0; i < arrCookie.length; i++) {
+          var arr = arrCookie[i].split("=");
+          if (arr[0] == name)
+            return arr[1];
+        }
+        return "";
+      },
       handleRemove(file, fileList) {
         if (!fileList.length) {
           this.showNextBtn = false;
@@ -467,7 +497,6 @@
       uploadOnSuccess(e, file, fileList) { //上传附件
         // console.log("——————————success——————————")
         // console.log(fileList);
-        
       },
       upLoadOnExceed: function (files, fileList) {
         this.$message.error('exceed');
@@ -507,7 +536,10 @@
       // uploadOnProgress(event, file, fileList) {
       //   console.log(fileList)
       // }
-
+      searchHandler:function(){
+        this.$router.push('/main/searchResult/'+this.searchInput);
+        this.searchInput='';
+      }
     },
 
   };

@@ -12,7 +12,7 @@
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -32,7 +32,7 @@
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -52,7 +52,7 @@
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -72,7 +72,7 @@
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -284,6 +284,10 @@
     },
 
     methods: {
+      jumpToMoment(momentId) {
+        // console.log(momentId);
+        this.$router.push('/main/momentDetail/' + momentId);
+      },
       jumpToUser: function (ID) {
         console.log('ge')
         if (ID == this.$store.state.currentUserId_ID) {
