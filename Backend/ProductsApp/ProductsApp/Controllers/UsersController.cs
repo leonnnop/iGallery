@@ -241,7 +241,7 @@ namespace ProductsApp.Controllers
                 MailMessage message = new MailMessage();    //创建一个邮件信息的对象
                 message.From = new MailAddress("1871373978@qq.com");
                 message.To.Add(Email);
-                message.Subject = "欢迎注册iGallery";
+                message.Subject = "【iGallery】重置密码";
                 Random r = new Random();
                 string yzm = null;
                 Random random = new Random();
@@ -250,8 +250,8 @@ namespace ProductsApp.Controllers
                 message.BodyEncoding = System.Text.Encoding.UTF8;
                 string htmlBodyContent = "<img src=\"cid:img_logo\">";
                 htmlBodyContent += "<p>【iGallery】您的邮箱验证码为：" + yzm +"</p>";
-                //htmlBodyContent += "<p>您的iGallery账号正在重置密码，若非本人操作请及时登录处理。</p>";
-                htmlBodyContent += "<p>注册iGallery，分享精彩视界</p>";
+                htmlBodyContent += "<p>您的iGallery账号正在重置密码，若非本人操作请及时登录处理。</p>";
+                //htmlBodyContent += "<p>注册iGallery，分享精彩视界</p>";
                 AlternateView htmlBody = AlternateView.CreateAlternateViewFromString(htmlBodyContent, null, "text/html");
                 LinkedResource lrlmage = new LinkedResource(@"C:\Users\mac\Desktop\logo_img.png","image/gif");
                 lrlmage.ContentId = "img_logo";
