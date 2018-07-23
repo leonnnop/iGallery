@@ -1,6 +1,6 @@
 ------
 
-# 注册用户（吴桐欣）
+# 注册用户（吴桐欣）Finished
 
 请求地址：/api/Users/Register
 
@@ -53,22 +53,21 @@
 |yzm（验证码）       | 邮箱没有被注册过，给邮箱发送一个验证码         |
 | 1        | 邮箱被注册过         |
 
-
 ------
-# 登录（陈阳）
+# 登录（陈阳）Finished
 请求地址：/api/Users/Login   
 请求方式：Get   
 支持格式：json    
 
 
-> 参数（body中）：Users
+> 参数：string Email，string Password
 
 > 返回消息：
-| 状态码 | 说明             |
-| ------ | ---------------- |
-| 0      | 登录成功         |
-| 1      | 用户名或密码错误 |
-| 2      | 找不到此用户     |
+| 状态码   | 说明                 |
+| -------- | ---------------------|
+| string   | 登录成功，返回用户ID |
+| Error    | 密码错误             |
+| NotFound | 找不到此用户         |
 
 ------
 
@@ -97,7 +96,7 @@
 
 ------
 
-# 修改用户密码（苏昭帆）
+# 修改用户密码（苏昭帆）Finished
 
 请求地址：api/Users/ChangePassword
 说明：修改用户密码，参数为字符串，用户邮箱，用户新密码
@@ -121,7 +120,7 @@
 | false      | 修改不成功   |
 ------
 
-#邮箱验证#
+#邮箱验证 Finished#
 请求地址：/api/Users/VerifyMail
 
 说明：邮箱验证是否存在，并向邮箱传递一个验证码
@@ -147,7 +146,7 @@
 -------------
 
 
-# 获取个人信息(韩乐桐) #
+# 获取个人信息(韩乐桐) Finished #
 请求地址：/api/Users/GetUserInfo  
 请求方式：Get   
 支持格式：json    
@@ -174,7 +173,7 @@
 
 ------
 
-# 修改个人信息（韩乐桐） #
+# 修改个人信息（韩乐桐）Finished #
 请求地址：/api/Users/ModifyUserInfo   
 请求方式：Put   
 支持格式：json    
@@ -182,20 +181,20 @@
 
 > 参数（body中）：   
 
-| 类型 | 参数名 |  
-| --- | --- |  
-| string | id |  
-| string | UserName |  
-| string | Bio |  
+| 类型 | 参数名 |
+| --- | --- |
+| string | id |
+| string | UserName |
+| string | Bio |
 
 
 
 > 返回结果：  
 
-| 状态码 | 说明 |  
-| -- | -- |  
-| 0 | 成功修改用户信息 |  
-| 1 | 修改失败 |  
+| 状态码 | 说明 |
+| -- | -- |
+| 0 | 成功修改用户信息 |
+| 1 | 修改失败 |
 
  
 
@@ -203,7 +202,7 @@
 
 ------
 
-# （取消）关注用户 （陈阳、李璐）
+# （取消）关注用户 （陈阳、李璐）Finished
 请求地址：/api/Users/Follow
 请求方式：Get   
 支持格式：json    
@@ -223,11 +222,11 @@
 | 1 | 失败 |
 ------
 
-# 查看关注列表 （陈阳）
+# 查看关注列表 （陈阳）Finished
 请求地址：/api/Users/FollowList
-请求方式：Post   
+请求方式：Get   
 参数类型：string
-参数（body中）：UserID
+参数：userID
 
 
 > 返回消息：
@@ -238,6 +237,7 @@
 | string   | Username |
 | string   | Bio      |
 | string   | Photo    |
+未找到
 | string   | Not found|
 
 

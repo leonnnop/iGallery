@@ -184,5 +184,6 @@ namespace ProductsApp
         {
             return "delete from " + TableName + " where " + Conditions;
         }
+        
     }
 }

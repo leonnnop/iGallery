@@ -60,7 +60,7 @@
 
 ------
 
-# 单个动态的详情页（吴桐欣）
+# 单个动态的详情页（吴桐欣） Finished
 
 请求地址：/api/DisplayMoments/Detail
 
