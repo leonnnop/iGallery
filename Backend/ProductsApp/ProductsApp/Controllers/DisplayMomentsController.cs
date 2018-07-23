@@ -27,24 +27,9 @@ namespace ProductsApp.Controllers
 
             //获取用户ID
             string UserID = api.EmailToUserID(Email);
-
-            //连接数据库
-            //todo:更换成使用DBAcces的版本
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-
+            
             //获取朋友圈中所有Moment
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, time, quote_mid " +
+            string CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, time, quote_mid " +
                 "from users,moment " +
                 "where moment.sender_id = users.id and " +
                 "(users.id = '" + UserID + "' or " +
@@ -52,7 +37,7 @@ namespace ProductsApp.Controllers
                 "from follow_user " +
                 "where follow_user.user_id = '" + UserID + "')) " +
                 "order by moment.time desc";
-            OracleDataReader rd = cmd.ExecuteReader();
+            OracleDataReader rd = Access.GetDataReader(CommandText);
 
             for(int i = 1; i < Begin; i++)
             {
@@ -88,16 +73,14 @@ namespace ProductsApp.Controllers
                 }
 
                 //通过Moment取得每一条动态的相关信息，并加入list
-                moments.Add(All_Info_Of(mmt, Email, 4, cmd));
+                moments.Add(All_Info_Of(mmt, Email, 4));
 
                 count++;
                 if (count >= End)
                 {
-                    conn.Close();
                     return Json(moments);
                 }
             }
-            conn.Close();
             return Json(moments);
         }
         /// <summary>
@@ -153,7 +136,7 @@ namespace ProductsApp.Controllers
                 }
             }
 
-            dm = All_Info_Of(mmt, Email, 1000, cmd);
+            dm = All_Info_Of(mmt, Email, 1000);
             dm.FollowState = api.CheckFollowState(UserID, mmt.SenderID);
 
             return Json(dm);
@@ -165,9 +148,8 @@ namespace ProductsApp.Controllers
         /// </summary>
         /// <param name="mmt">Moment类型的动态</param>
         /// <param name="email">发送请求的用户的邮箱</param>
-        /// <param name="cmd">数据库命令</param>
         /// <returns>用于展示的DisplayedMoment类型</returns>
-        private DisplayedMoment All_Info_Of(Moment mmt, string email, int comment_limit, OracleCommand cmd)
+        private DisplayedMoment All_Info_Of(Moment mmt, string email, int comment_limit)
         {
             DisplayedMoment dm = new DisplayedMoment();
 
@@ -175,7 +157,7 @@ namespace ProductsApp.Controllers
             dm.moment = mmt;
 
             //获取发送动态的用户信息
-            Users user= GetUserInfo(mmt.SenderID, cmd);
+            Users user = api.GetUserInfoByID(mmt.SenderID);
             dm.user_email = user.Email;
             dm.user_username = user.Username;
             dm.user_bio = user.Bio;
@@ -184,7 +166,7 @@ namespace ProductsApp.Controllers
             OracleDataReader rd = Access.GetDataReader(Access.Select("sender_ID", "moment", "ID='"+mmt.QuoteMID+"'"));
             if (rd.Read())
             {
-                Users forwarded = GetUserInfo(rd[0].ToString(), cmd);
+                Users forwarded = api.GetUserInfoByID(rd[0].ToString());
                 dm.forwarded_email = forwarded.Email;
                 dm.forwarded_username = forwarded.Username;
             }
@@ -196,8 +178,8 @@ namespace ProductsApp.Controllers
 
             //获取标签信息
             dm.tags = new List<string>();
-            cmd.CommandText = "select tag from moment_tag where moment_id = '"+mmt.ID+"'";
-            rd = cmd.ExecuteReader();
+            string CommandText = "select tag from moment_tag where moment_id = '"+mmt.ID+"'";
+            rd = Access.GetDataReader(CommandText);
             while (rd.Read())
             {
                 dm.tags.Add(rd[0].ToString());

@@ -474,6 +474,7 @@ namespace ProductsApp.Controllers
             List<Users> following_list = new List<Users>();
             if (!rd.HasRows)
             {
+                conn.Close();
                 return Ok("Not found");
             }
             while (rd.Read())
