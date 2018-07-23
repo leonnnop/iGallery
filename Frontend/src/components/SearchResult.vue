@@ -67,14 +67,13 @@
                 <div v-if="!hasTag" class="message">没有找到相关标签</div>
             </el-row>
 
-            <el-row style="width:60%;margin:50px auto;border:1px solid rgb(235, 238, 245);border-radius:5px;background:#fff;">
-                <el-row style="margin:20px 0;">
+            <el-row style="width:902px;margin:50px auto;border:1px solid rgb(235, 238, 245);border-radius:5px;background:#fff;">
+                <el-row style="margin:20px 0;;width:902px">
                     <div style="color:#777;text-align:center;letter-spacing:1px">相关动态</div>
                 </el-row>
                 <div v-if="!hasMoment" class="message">没有找到相关动态</div>
-                <el-row type="flex" justify="space-between" v-if="hasMoment">
-                    <el-col :span="7">
-                        <div v-for="(moment,index) in moments_col_1" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
+                <div style="width:902px" class="moment-container">
+                    <div v-for="(moment,index) in moments" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
                             <div class="moment-inner">
                                 <div class="icon">
                                     <el-row type="flex" justify="space-between">
@@ -90,45 +89,7 @@
                                 </div>
                             </div>
                         </div>
-                    </el-col>
-                    <el-col :span="7">
-                        <div v-for="(moment,index) in moments_col_2" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
-                            <div class="moment-inner">
-                                <div class="icon">
-                                    <el-row type="flex" justify="space-between">
-                                        <el-col :span="8">
-                                            <img src="../image/like-white.png" alt="">
-                                            <div>{{moment.LikeNum}}</div>
-                                        </el-col>
-                                        <el-col :span="8">
-                                            <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
-                                            <span>查看</span>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-                            </div>
-                        </div>
-                    </el-col>
-                    <el-col :span="7">
-                        <div v-for="(moment,index) in moments_col_3" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
-                            <div class="moment-inner">
-                                <div class="icon">
-                                    <el-row type="flex" justify="space-between">
-                                        <el-col :span="8">
-                                            <img src="../image/like-white.png" alt="">
-                                            <div>{{moment.LikeNum}}</div>
-                                        </el-col>
-                                        <el-col :span="8">
-                                            <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
-                                            <span>查看</span>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-row>
-
+                </div>
             </el-row>
 
         </el-row>
@@ -186,7 +147,7 @@
     }
 
     .box {
-        width: 900px;
+        width: 902px;
         margin: 0 auto;
         border: 1px solid rgb(235, 238, 245);
         border-radius: 5px;
@@ -265,17 +226,22 @@
     }
 
     .moment {
-        width: 100%;
+        width: 260px;
         height: 0;
-        padding-bottom: 100%;
-        margin-bottom: 30px;
+        padding-bottom: 260px;
+        margin:0 60px 30px 0;
         background-position: center;
         background-size: cover;
+        display: inline-block;
+        box-sizing: border-box;
+    }
+    .moment-container div:nth-child(3n){
+        margin:0 0 30px 0;
     }
 
     .moment-inner {
         height: 0;
-        width: 100%;
+        width: 260px;
         padding-bottom: 100%;
         display: none;
         background: rgba(0, 0, 0, 0.3);
@@ -310,11 +276,11 @@
     function length(list) {
         let length = list.length;
         if (length % 3 == 0) {
-            return (length / 3) * 900;
+            return (length / 3) * 902;
         } else if (length % 3 == 1) {
-            return ((length + 2) / 3) * 900;
+            return ((length + 2) / 3) * 902;
         } else if (length % 3 == 2) {
-            return ((length + 1) / 3) * 900;
+            return ((length + 1) / 3) * 902;
         }
         // console.log(this.userListLength);
     }
@@ -390,7 +356,7 @@
                     Content: 'tag5',
                     src: require('../image/hex.jpeg')
                 }],
-                moments_col_1: [{
+                moments:[{
                     ID: '1',
                     src: require('../image/photo1.jpg')
                 }, {
@@ -399,8 +365,7 @@
                 }, {
                     ID: '3',
                     src: require('../image/photo3.jpg')
-                }],
-                moments_col_2: [{
+                },{
                     ID: '4',
                     src: require('../image/photo1.jpg')
                 }, {
@@ -408,18 +373,15 @@
                     Sender_Id: '',
                     src: require('../image/photo2.jpg')
                 }, {
-                    ID: '6',
+                    ID: '3',
                     src: require('../image/photo3.jpg')
-                }],
-                moments_col_3: [{
-                    ID: '7',
+                },{
+                    ID: '4',
                     src: require('../image/photo1.jpg')
                 }, {
-                    ID: '8',
+                    ID: '5',
+                    Sender_Id: '',
                     src: require('../image/photo2.jpg')
-                }, {
-                    ID: '9',
-                    src: require('../image/photo3.jpg')
                 }]
 
             }
@@ -464,16 +426,16 @@
                     //tag和动态
                     if (res2.data.m_Item1 != null) {
                         this.tags = res2.data.m_Item1;
-                        console.log(this.tags)
                     } else {
                         this.hasTag = false;
-                        console.log(this.hasTag)
                         this.tags = []
                     }
 
                     if (res2.data.m_Item2 != null) {
-                        var moments = res2.data.m_Item2;
+                        this.moments = res2.data.m_Item2;
+                        this.hasMoment=true;
                         // Vue.set()
+                        
                         moments.forEach(element => {
                             Vue.set(element,'LikeNum',element.LikeNum)
                             this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
@@ -483,9 +445,9 @@
                                         'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
                                         response.data[0]);
                                 })
-
                         })
-                        console.log(moments)
+                        console.log('moments----------');
+                        console.log(this.moments);
                     } else {
                         this.hasMoment = false;
                     }
@@ -508,30 +470,18 @@
                     }
 
                     this.tagListLength = length(this.tags);
-                    console.log(this.tagListLength);
 
-                    if (moments.length) {
-                        this.hasMoment = true;
-                        let momentNum = moments.length;
-                        this.moments_col_1 = moments.slice(0, Math.floor(momentNum / 3));
-                        this.moments_col_2 = moments.slice(Math.floor(momentNum / 3), Math.floor(2 * momentNum /
-                            3));
-                        this.moments_col_3 = moments.slice(Math.floor(2 * momentNum / 3));
-                    } else {
-                        this.hasMoment = false;
+                    if (this.userListLength > 902) {
+                        this.showUsersRightArrow = true;
                     }
-
-
+                    if (this.tagListLength > 902) {
+                        this.showTagsRightArrow = true;
+                    }
                 }))
                 .catch((error) => {
                     console.log(error);
                 });
-            if (this.userListLength > 900) {
-                this.showUsersRightArrow = true;
-            }
-            if (this.tagListLength > 900) {
-                this.showTagsRightArrow = true;
-            }
+            
 
         },
         methods: {
@@ -587,7 +537,7 @@
                 var list = document.getElementById('user-list');
                 var offset = list.offsetLeft;
                 var width = parseInt(list.style.width);
-                list.style.left = list.offsetLeft - 900 + 'px';
+                list.style.left = list.offsetLeft - 902 + 'px';
                 list.style.transition = "all 1s";
                 this.showUsersLeftArrow = true;
                 if (list.offsetLeft - 1800 == -width) {
@@ -600,10 +550,10 @@
                 var list = document.getElementById('user-list');
                 var offset = list.offsetLeft;
                 var width = list.style.width;
-                list.style.left = list.offsetLeft + 900 + 'px';
+                list.style.left = list.offsetLeft + 902 + 'px';
                 list.style.transition = "all 1s";
                 this.showUsersRightArrow = true;
-                if (list.offsetLeft + 900 == 0) {
+                if (list.offsetLeft + 902 == 0) {
                     this.showUsersLeftArrow = false;
                     this.showUsersRightArrow = true;
                 } else {
@@ -614,7 +564,7 @@
                 var list = document.getElementById('tag-list');
                 var offset = list.offsetLeft;
                 var width = parseInt(list.style.width);
-                list.style.left = list.offsetLeft - 900 + 'px';
+                list.style.left = list.offsetLeft - 902 + 'px';
                 list.style.transition = "all 1s";
                 this.showTagsLeftArrow = true;
                 if (list.offsetLeft - 1800 == -width) {
@@ -627,9 +577,9 @@
                 var list = document.getElementById('tag-list');
                 var offset = list.offsetLeft;
                 var width = list.style.width;
-                list.style.left = list.offsetLeft + 900 + 'px';
+                list.style.left = list.offsetLeft + 902 + 'px';
                 list.style.transition = "all 1s";
-                if (list.offsetLeft + 900 == 0) {
+                if (list.offsetLeft + 902 == 0) {
                     this.showTagsLeftArrow = false;
                     this.showTagsRightArrow = true;
                 } else {
