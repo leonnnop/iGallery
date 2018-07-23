@@ -163,6 +163,23 @@ namespace ProductsApp.Controllers
                             "set forward_num= '"+forwardNum +
                             "' where id='" + forward.Moment_ID + "'";
             rd = cmd.ExecuteReader();
+            //建立图片的联系
+            cmd.CommandText = "select id from picture " +
+                              "where moment_id='"+forward.MOMENT_ID+"'";
+            rd = cmd.ExecuteReader();
+            while(rd.Read())
+            {
+                string p_id = rd["ID"].ToString();
+                cmd.CommandText = "insert into PICTURE(ID,MOMENT_ID) " +
+                    "values('" + p_id + "','" + moment.ID + "')";
+                int result2 = cmd.ExecuteNonQuery();
+                if (result2 != 1)//插入出现错误
+                {
+                    status = 2;
+                    return Ok(status);
+                }
+            }
+            
             //关闭数据库连接
             conn.Close();
 
