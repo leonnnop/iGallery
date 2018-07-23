@@ -67,7 +67,8 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img :src="userHeadImg" alt="" style="width:40px;height:40px;border-radius:40px;">
+                                <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                        '&type=2'" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment" :inline="true">
@@ -160,7 +161,7 @@
                                         <span class="hover-cursor" @click="jumpToUser(moment.userPage)">{{moment.Username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)"
+                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.FollowState)"
                                             :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
                                         <!-- <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit"></i> -->
                                         <el-row type="flex" align="middle">
@@ -464,6 +465,23 @@
                         }
                     })
             },
+            refresh() {
+                history.go(0)
+                this.$store.commit('addCurrentUsername', this.getCookie(Username));
+                this.$store.commit('addCurrentUserPassword', this.getCookie(Password));
+                this.$store.commit('addCurrentUserBio', this.getCookie(Bio));
+                this.$store.commit('addCurrentUserPhoto', this.getCookie(Photo));
+            },
+            getCookie(name) {
+                var strCookie = document.cookie;
+                var arrCookie = strCookie.split("; ");
+                for (var i = 0; i < arrCookie.length; i++) {
+                    var arr = arrCookie[i].split("=");
+                    if (arr[0] == name)
+                        return arr[1];
+                }
+                return "";
+            },
             deleteAComment(comment) {
                 //////////////api/Coment/DelCmt
                 var formdata = new FormData();
@@ -487,10 +505,10 @@
                                 type: 'success'
                             });
                             // this.$router.push('/main/momentDetail/' + this.$route.params.id);
-                            setTimeout("history.go(0)", 3000)
+                            setTimeout(this.refresh(), 3000)
 
                         }
-                        location.reload();
+                        // location.reload();
                         //////////////
                     })
                     .catch((error) => {
@@ -693,13 +711,46 @@
             },
             collectHandler: function () {
                 if (!this.moment.collectState) {
-                    this.collectSrc = require('../image/collect.png');
-                    this.moment.CollectNum++;
+                    this.axios.get('http://10.0.1.8:54468/api/Collect/InsertCollect?moment_id=' + this.moment.ID +
+                            '&founder_id=' + this.$store.state.currentUserId_ID +
+                            '&name=' + '默认收藏夹'
+                        )
+                        .then((response) => {
+                            if (response.data == 0) {
+                                this.collectSrc = require('../image/collect.png');
+                                this.moment.CollectNum++;
+                                this.moment.collectState = !this.moment.collectState;
+
+                            } else {
+                                this.$message.error('收藏失败，请重试！');
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                    // this.collectSrc = require('../image/collect.png');
+                    // this.moment.CollectNum++;
                 } else {
-                    this.collectSrc = require('../image/uncollect.png');
-                    this.moment.CollectNum--;
+                    this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id=' + this.moment.ID +
+                            '&user_id=' + this.$store.state.currentUserId_ID
+                        )
+                        .then((response) => {
+                            if (response.data == 0) {
+                                this.collectSrc = require('../image/uncollect.png');
+                                this.moment.CollectNum--;
+                                this.moment.collectState = !this.moment.collectState;
+
+                            } else {
+                                this.$message.error('取消收藏失败，请重试！');
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                    // this.collectSrc = require('../image/uncollect.png');
+                    // this.moment.CollectNum--;
                 }
-                this.moment.collectState = !this.moment.collectState;
+
             },
             likeHandler: function () {
                 // console.log(item)
@@ -767,8 +818,8 @@
                 console.log(user)
                 console.log(this.$store.state.currentUserId_ID)
                 console.log(user.FollowState);
-
-                if (!FollowState) {
+                //////////////
+                if (!user.FollowState) {
                     user.followState = '已关注';
                 } else {
                     user.followState = '关注';
@@ -1001,10 +1052,17 @@
                     //     url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
                     // }];
 
-                    if (response.FollowState == 'true') {
-                        this.moment.followState = '已关注'
+                    if (response.data.FollowState == 0) {
+                        this.moment.FollowState = true
+                        var string = '已关注'
+                        Vue.set(this.moment, 'followState', string)
+                        // this.moment.followState = '已关注'
                     } else {
-                        this.moment.followState = '关注'
+                        this.moment.FollowState = false
+                        // this.moment.followState = '关注'
+                        var astring = '关注'
+
+                        Vue.set(this.moment, 'followState', astring)
                     }
 
                     if (response.data.liked == 0) {
@@ -1016,6 +1074,7 @@
 
                     if (response.data.collected == 0) {
                         this.moment.collectState = true
+                        this.collectSrc = require('../image/collect.png');
                     } else {
                         this.moment.collectState = false
                     }

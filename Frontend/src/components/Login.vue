@@ -102,6 +102,10 @@
                       this.$store.commit('addCurrentUserBio', response.data.Bio);
                       this.$store.commit('addCurrentUserPhoto', response.data.Photo);
 
+                      var exp = new Date();
+                      exp.setTime(exp.getTime() + 1000 * 60 * 60 * 24); //这里表示保存24小时
+                      this.document.cookie = "username=" + esponse.data.Username + "password=" + esponse.data.Password + "bio=" + esponse.data.Bio + "Photo=" + esponse.data.Photo + ";expires=" + exp.toGMTString();
+
                       console.log(this.$store.state)
                     })
 
