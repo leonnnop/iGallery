@@ -38,14 +38,41 @@ namespace ProductsApp.Controllers
                 "where follow_user.user_id = '" + UserID + "')) " +
                 "order by moment.time desc";
             OracleDataReader rd = Access.GetDataReader(CommandText);
+            //int page = End / 10;
+            //DataSet ds = Access.GetDataSet(CommandText, "ds", 10, page);
 
+            
             for(int i = 1; i < Begin; i++)
             {
                 if (!rd.Read()) { return Ok(false); }
             }
-            int count = Begin - 1;
+
+            /*
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                Moment mmt = new Moment();
+
+                mmt.ID = rd[0].ToString();
+
+                foreach (DataColumn mDc in ds.Tables[0].Columns)
+                {
+                    Console.WriteLine(row[mDc].ToString());
+                }
+            }
+            */
+            /*
+            for (int i = 0; i < 10; i++)
+            {
+                if (rd.IsClosed)
+            {
+                return Ok(false) ;
+            }
+            }
+            */
+
             while (rd.Read())
             {
+                int count = Begin - 1;
                 Moment mmt = new Moment();
 
                 mmt.ID = rd[0].ToString();
@@ -80,7 +107,12 @@ namespace ProductsApp.Controllers
                 {
                     return Json(moments);
                 }
+                if (rd.IsClosed)
+                {
+                    break; 
+                }
             }
+
             return Json(moments);
         }
         /// <summary>
@@ -151,6 +183,7 @@ namespace ProductsApp.Controllers
         /// <returns>用于展示的DisplayedMoment类型</returns>
         private DisplayedMoment All_Info_Of(Moment mmt, string email, int comment_limit)
         {
+            DBAccess access = new DBAccess();
             DisplayedMoment dm = new DisplayedMoment();
 
             //获取动态内容
@@ -163,7 +196,7 @@ namespace ProductsApp.Controllers
             dm.user_bio = user.Bio;
 
             //获取原始动态的用户信息
-            OracleDataReader rd = Access.GetDataReader(Access.Select("sender_ID", "moment", "ID='"+mmt.QuoteMID+"'"));
+            OracleDataReader rd = access.GetDataReader(Access.Select("sender_ID", "moment", "ID='"+mmt.QuoteMID+"'"));
             if (rd.Read())
             {
                 Users forwarded = api.GetUserInfoByID(rd[0].ToString());
@@ -179,7 +212,7 @@ namespace ProductsApp.Controllers
             //获取标签信息
             dm.tags = new List<string>();
             string CommandText = "select tag from moment_tag where moment_id = '"+mmt.ID+"'";
-            rd = Access.GetDataReader(CommandText);
+            rd = access.GetDataReader(CommandText);
             while (rd.Read())
             {
                 dm.tags.Add(rd[0].ToString());
@@ -188,7 +221,7 @@ namespace ProductsApp.Controllers
             //获取评论信息
             if (comment_limit == 4)
             {
-                GetComments(mmt.ID, comment_limit, dm);
+                GetComments(mmt.ID, comment_limit, dm, access);
             }
             else
             {
@@ -212,7 +245,7 @@ namespace ProductsApp.Controllers
         /// <param name="limit">评论数的限制（若是所有评论，则赋一个很大的值）</param>
         /// <param name="dm">用于展示的动态</param>
         /// <returns></returns>
-        private List<DisplayedComment> GetComments(string id, int limit, DisplayedMoment dm)
+        private List<DisplayedComment> GetComments(string id, int limit, DisplayedMoment dm, DBAccess dbAccess)
         {
             dm.more_comments = false; //先假设没有更多评论
             //创建返回对象
@@ -221,8 +254,8 @@ namespace ProductsApp.Controllers
                 "where coment.ID = publish_comment.comment_ID and " +
                 "publish_comment.user_ID = users.ID and " +
                 "publish_comment.moment_ID = '" + id + "' " +
-                "order by send_time asc";
-            OracleDataReader rd = Access.GetDataReader(sql);
+                "order by send_time desc";
+            OracleDataReader rd = dbAccess.GetDataReader(sql);
             int count = 0;
             while (++count <= limit && rd.Read())
             {

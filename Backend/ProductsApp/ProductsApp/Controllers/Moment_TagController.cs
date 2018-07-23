@@ -58,19 +58,20 @@ namespace ProductsApp.Controllers
                 {
                     string id = rd["ID"].ToString();
                     string sender_id = rd["SENDER_ID"].ToString();
-                    DBAccess db = new DBAccess();
-                    string SQL = db.Select("USERNAME", "USERS", "ID='" + sender_id + "'");
-                    OracleDataReader R = Access.GetDataReader(SQL);
-                    while(R.Read())
-                    {
-                        users.Add(R["USERNAME"].ToString());
-                    }
                     string content = rd["CONTENT"].ToString();
                     int likes = int.Parse(rd["LIKE_NUM"].ToString());
                     int forwards = int.Parse(rd["FORWARD_NUM"].ToString());
                     int collects = int.Parse(rd["COLLECT_NUM"].ToString());
                     int comments = int.Parse(rd["COMMENT_NUM"].ToString());
                     string time = rd["TIME"].ToString().Replace('T', ' ');
+
+                    DBAccess db = new DBAccess();
+                    string SQL = db.Select("USERNAME", "USERS", "ID='" + sender_id + "'");
+                    OracleDataReader R = db.GetDataReader(SQL);
+                    while (R.Read())
+                    {
+                        users.Add(R["USERNAME"].ToString());
+                    }
                     GeneralAPI A = new GeneralAPI();
                     states.Add(A.CheckLikeState(Email, id));
                     moments.Add(new Moment(id, sender_id, content, likes, forwards, collects, comments, time));

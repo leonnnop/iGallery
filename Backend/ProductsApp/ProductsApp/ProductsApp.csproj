@@ -161,6 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CmtAPI.cs" />
+    <Compile Include="Controllers\CollectController.cs" />
+    <Compile Include="Controllers\CollectionController.cs" />
     <Compile Include="Controllers\ComentController.cs" />
     <Compile Include="Controllers\DiscoverMomentController.cs" />
     <Compile Include="Controllers\DisplayLikeListController.cs" />
@@ -179,6 +182,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\Coment.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DisplayedComment.cs" />
@@ -190,6 +194,7 @@
     <Compile Include="Models\Moment.cs" />
     <Compile Include="Models\Moment_Tag.cs" />
     <Compile Include="Models\MyMoments.cs" />
+    <Compile Include="Models\Picture.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\User_Follow.cs" />

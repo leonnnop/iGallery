@@ -10,5 +10,6 @@ namespace ProductsApp.Models
         public string UserId { get; set; }
         public string Tag { get; set; }
         public string FollowState { get; set; }
+        public string Pic { get; set; }
     }
 }
