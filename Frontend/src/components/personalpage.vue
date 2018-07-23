@@ -45,107 +45,15 @@
           <span style="font-size:12px;color:#000009">{{favors.length+1}}</span></el-menu-item>
         <el-menu-item index="set">设置</el-menu-item>
       </el-menu>
-      <!--el-tabs>
-        <el-tab-pane label="我的动态">
-          
-            <el-row>
-              <el-col v-for="moment in moments" :key=moment.name :span="6">
-                <el-col class="moments">
-                  <img :src="moment.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
-                </el-col>
-              </el-col>
-            </el-row>
-         
-        </el-tab-pane>
-        <el-tab-pane label="收藏夹">
-          <el-row v-if="isFavor">
-            <el-row style="background-color:#dedfe6">
-              <el-col :span="12" :offset="9">
-                <div style="padding:10px;">收藏夹内容仅自己可见</div>
-              </el-col>
-              <el-col :span="2">
-                <el-button  type="text" style="font-size:15px" @click="dialogFormVisible=true">新建收藏夹</el-button>
-              </el-col>
-              <el-dialog title="新建收藏夹" :visible.sync="dialogFormVisible">
-                  <el-form ref="form" :model="ruleform" :rules="rules">
-                    <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname">
-                      <el-input v-model="ruleform.fname" auto-complete="off" style="width:200px"></el-input>
-                    </el-form-item>
-                  </el-form>
-                  <div slot="footer" class="dialog-footer">
-                    <el-button @click="cancelHandler">取 消</el-button>
-                    <el-button type="primary" @click="finishHandler('ruleform')">确 定</el-button>
-                  </div>
-              </el-dialog>
-            </el-row>
-            <el-row>
-              <el-col v-for="(favor,index) in favors" :key="index" :span="6">
-                <el-col class="favor">
-                <div style="header">
-                  <el-card shadow="always" :body-style="{ padding: '0px' }">
-                    <img :src="favor.url" class="img" alt="收藏夹封面" @click="toCollect"/>
-                    <el-row>
-                      <el-col :span="17" :offset="1">
-                        <el-tooltip effect="dark" :content="favor.favorName" placement="bottom-end">
-                          <el-button type="text" @click="toCollect">{{favor.favorName+'('+favor.collectNum+')'}}</el-button>
-                        </el-tooltip>
-                      </el-col>
-                      <el-col :span="6">
-                        <el-dropdown @command="handleCommand" v-if="favor.favorName!='默认收藏夹'">
-                          <span class="el-dropdown-link">
-                            <i class="el-icon-arrow-down el-icon--right"></i>
-                          </span>
-                          <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="del">删除</el-dropdown-item>
-                            <el-dropdown-item command="change" divided>编辑名称</el-dropdown-item>
-                          </el-dropdown-menu>
-                        </el-dropdown>
-                        
-                      </el-col>
-                    </el-row>
-                  </el-card>
-                </div>
-                </el-col>
-              </el-col>
-            </el-row>
-          </el-row>
-          <el-row v-if="isCollect">
-            <el-row>
-              <el-button type="text" style="font-size:15px;padding-left:15px" @click="backToFavors">返回</el-button>
-            </el-row>
-            <el-row>
-              <el-col v-for="collect in collects.collectList" :key=collect.name :span="6">
-                <el-col class="moments">
-                    <img :src="collect.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
-                </el-col>
-              </el-col>
-            </el-row>
-          </el-row>
-        </el-tab-pane>
-      </el-tabs-->
     </el-row>
-  
-  <el-row>
-  </el-row>
-
-  <el-row v-if="isDynamic">
+  <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
     <el-col v-for="moment in moments" :key=moment.name :span="6">
-                <el-col >
-                  <el-card shadow="always" :body-style="{ padding: '0px' }" class="moments">
-                    <img :src="moment.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
-                     <el-row>
-                      <el-col :span="20" :offset="2">
-                        <span style="font-size:13px">文案：这只是一段话{{moment.text}}</span>
-                      </el-col>
-                    </el-row>
-                  </el-card>
-                </el-col>
-              </el-col>
-    <!--el-col v-for="moment in moments" :key=moment.name :span="6">
-      <el-col class="moments">
-        <img :src="moment.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
+      <el-col>
+        <!--el-card shadow="always" :body-style="{ padding: '0px' }"-->
+          <div class="moments" :style="{backgroundImage:'url('+moment.url+')'}" @click="toMoment"></div>
+        <!--/el-card-->
       </el-col>
-    </el-col-->
+     </el-col>
   </el-row>
   <el-row v-if="isFavors">
     <!--el-row  v-if="isFavor">
@@ -232,7 +140,7 @@
                   </el-form>
                   <div  slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="finishHandler('ruleform')" size="middle">确定</el-button>
-                    <el-button @click="cancelHandler" size="middle">取消</el-button></div>
+                    <el-button @click="dialogFormVisible=false" size="middle">取消</el-button></div>
             </el-dialog>
           </el-row>
         </div>
@@ -240,7 +148,7 @@
       <el-menu-item index="默认收藏夹">
             <el-col :span="18">
               <el-row>
-                <el-col  :span="7"><img style="width:60%" src="../image/heart.png"/></el-col>
+                <el-col :span="7"><img style="width:60%" src="../image/heart.png"/></el-col>
                 <el-col :span="17">{{'默认收藏夹'+'('+defaultCollectNum+')'}}</el-col>
               </el-row>
             </el-col>
@@ -270,7 +178,7 @@
                    </el-form>
                   <div  slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="finishHandler2('ruleform2','index')" size="middle">确 定</el-button>
-                    <el-button @click="cancelHandler2" size="middle">取 消</el-button></div>
+                    <el-button @click="dialogFormVisible2=false" size="middle">取 消</el-button></div>
                 </el-dialog>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -278,58 +186,39 @@
           </el-row>
           </el-menu-item>
       </el-row>
-        <!--/el-submenu-->
     </el-menu>
-      
-
     </el-col>
-    <el-col :span="19">
-      <el-row>
-            <!--el-row>
-              <el-button type="text" style="font-size:15px;padding-left:15px" @click="backToFavors">返回</el-button>
-            </el-row-->
-              <el-col v-for="collect in collects" :key=collect.name :span="8">
-                <el-col >
-                  <el-card shadow="always" :body-style="{ padding: '0px' }" class="moments">
-                    <img :src="collect.url" class="img" @click="toMoment('momentID')" alt="动态的图片"/>
-                    <el-row>
-                      <el-col :span="17" :offset="2">
-                        <span style="font-size:13px" >文案wenan 这只是一段话test{{collect.text}}</span>
-                      </el-col>
-                      <el-col :span="2">
-                        <el-dropdown >
-                          <span class="el-dropdown-link">
-                            <i class="el-icon-more"></i>
-                          </span>
-                          <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="deleteCollect">删除收藏</el-dropdown-item>
-                            <el-dropdown-item @click.native="dialogFormVisible3=true">移动</el-dropdown-item>
-                            <el-dialog title="移动" :visible.sync="dialogFormVisible3" class="checkForm" :modal-append-to-body="false">
-                              
-                               <el-checkbox-group 
-                                v-model="checkedFavor" :min="1" :max="1">
-                                <el-checkbox><span style="width:100px">默认收藏夹</span></el-checkbox>
-              
-                                <el-checkbox v-for="favor in favors" :label="favor.favorName" :key="favor">
-                                  <span style="width:300px">{{favor.favorName}}</span></el-checkbox> 
-                               
-                              </el-checkbox-group>
-                              <div slot="footer" class="dialog-footer">
-                                <el-button type="primary" @click="moveHandler" size="middle">确认</el-button>
-                                <el-button @click="cancelHandler3" size="middle">取消</el-button>
-                              </div>                     
-                            </el-dialog>
-                          </el-dropdown-menu>
-                        </el-dropdown>
-                      </el-col>
-                    </el-row>
-                  </el-card>
-                </el-col>
-              </el-col>
-      </el-row>
+    <el-col :span="19" style="padding-left:30px;padding-top:15px">
+      <el-col v-for="collect in collects" :key=collect.name :span="8">
+        <el-col >
+          <div class="moments" :style="{backgroundImage:'url('+collect.url+')'}" @click="toMoment"></div>
+            <!--el-col :span="2">
+              <el-dropdown >
+                <span class="el-dropdown-link">
+                   <i class="el-icon-more"></i>
+                </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="deleteCollect">删除收藏</el-dropdown-item>
+                <el-dropdown-item @click.native="dialogFormVisible3=true">移动</el-dropdown-item>
+                <el-dialog title="移动" :visible.sync="dialogFormVisible3" class="checkForm" :modal-append-to-body="false">
+                  <el-checkbox-group v-model="checkedFavor" :min="1" :max="1">
+                    <ul><li>
+                      <el-checkbox v-for="favor in favors" :label="favor.favorName" :key="favor"><span>{{favor.favorName}}</span></el-checkbox> 
+                    </li></ul>
+                  </el-checkbox-group>
+                  <div slot="footer" class="dialog-footer">
+                      <el-button type="primary" @click="moveHandler" size="middle">确认</el-button>
+                      <el-button @click="dialogFormVisible3=false" size="middle">取消</el-button>
+                  </div>                     
+                </el-dialog>
+              </el-dropdown-menu>
+              </el-dropdown>
+            </el-col-->
+          
+        </el-col>
+      </el-col>
     </el-col>
     </el-row>
-  
   </el-card>
   </el-col>
 </template>
@@ -360,11 +249,16 @@
   .moments{
     display:block;
     width:200px;
-    height:240px;
-    margin:15px;
-    /*background-image: url('../image/ins1.png');
-    background-position:center;
-    background-repeat:no-repeat*/
+    height:200px;
+    margin:10px 0;
+    /*background-image: url('../image/ins1.png');*/
+    border:1px;
+    background-image:url('../image/ins1.png');
+    background-repeat:no-repeat;
+    background-size:cover;
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    -o-background-size:cover;
   }
   .img{
     display:block;
@@ -372,13 +266,8 @@
     height:200px;
     border-radius:5px;
   }
-  .img:hover{
-    opacity: 0.9; 
-  }
-  .text{
-    overflow: hidden !important;
-    white-space: pre-wrap !important;
-    text-overflow: ellipsis !important; /*超出部分用...代替*/
+  .moments:hover{
+    opacity: 0.85; 
   }
   /*
   .favor{
@@ -433,6 +322,13 @@
   export default {
     name:'personalpage',
     data(){
+      var validateName = (rule, value, callback) => {
+        if (value === '') {
+          return callback(new Error('请输入名称'));
+        } else {
+          return callback();
+        }
+      };
       return{
         defaultCollectNum:0,
         activeIndex:'1',
@@ -509,7 +405,7 @@
         },
         rules:{
           fname:[            
-            { validator: true,
+            { validator: validateName,
               message:'请输入名称',
               trigger: 'blur' 
             },{
@@ -525,7 +421,7 @@
         },
         rules2:{
           fname2:[          
-            { validator: true,
+            { validator: validateName,
               message:'请输入新名称',
               trigger: 'blur' 
             },{
@@ -593,7 +489,7 @@
       },
       //+++++++++++++++++++向后端发送headUrl sendHeadUrl(){},
       toMoment(key){
-        this.$router.push('momentDetail'+key);
+        this.$router.push('momentDetail/'+key);
       },
       handleSettingClick(){
         this.$router.push('set');
@@ -604,17 +500,8 @@
       toFavor2(){
         this.dialogFormVisible2=false;
       },
-      /*
-    handleCommand(command){
-      if(command=='del'){
-        this.deleteFavor('index');
-      }else  if(command=='change'){
-        this.dialogFormVisible2=true;
-        console.log(this.dialogFormVisible2);
-      }
-    },*/
       deleteFavor:function(index){
-        this.$axios.post('http://10.0.1.8:54468/api/Users/DeleteCollection',{
+        this.$axios.post('http://10.0.1.8:54468/api/Collection/DeleteCollection',{
           founder_id:this.$store.state.currentUseId_ID,
           name:index,
         })
@@ -625,21 +512,14 @@
             this.$message.error('删除失败，请重试！');
           }
         })
-      },/*
-      handleCommand2(command){
-        if(command=='del'){
-        this.deleteCollect('index');
-      }else  if(command=='move'){
-        this.dialogFormVisible3=true;
-        console.log(this.dialogFormVisible3);
-      }},*/
+      },
       deleteCollect(){
 
       },
       //新建收藏夹
       finishHandler:function(formName) {
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
+          //this.$refs[formName].validate((valid) => {
+            if (this.ruleForm.fname) {
               this.favors.unshift({
               favorName:this.ruleform.fname,
               collectNum:0,
@@ -654,7 +534,8 @@
                     this.$message({
                     message: '新建收藏夹成功！',
                     type: 'success'
-                  });
+                  })
+                  this.ruleform.fname='';
                   }else if(response==2){
                     this.$message.error('新建收藏夹失败，请重试！')
                   }else if(response==1){
@@ -667,17 +548,8 @@
           } else {
             this.$message.error('内容不合法，请重新输入！')
           }
-        });
+        //});
         this.dialogFormVisible=false;
-      },
-      cancelHandler:function(){
-        this.$confirm('放弃新建?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.dialogFormVisible=false;
-        }).catch();
       },
       //重命名收藏夹
       finishHandler2:function(formName,index) {
@@ -705,41 +577,21 @@
               this.$message.error('内容不合法，请重新输入！')
           }
               this.favors[index-1].favorName=formName.fname2;
-              this.dialogForm2Visible=false;
+              this.dialogFormVisible2=false;
               this.ruleform2.fname2='';
               
         });
-      },
-      cancelHandler2:function(){
-        this.$confirm('放弃重命名?', '提示', {
-          //distinguishCancelAndClose: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-
-          this.dialogFormVisible2=false;
-        }).catch();
       },
       //移动收藏夹内容
       moveHandler(){
         
 
       },
-      cancelHandler3:function(){
-        this.$confirm('放弃移动?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.dialogFormVisible3=false;
-        }).catch();
-      },
       showFollow(){
-        this.$router.push('follow',{userID:this.userID});
+        this.$router.push('follow/',{userID:this.userID});
       },
       showFans(){
-        this.$router.push('fans',{userID:this.userID});
+        this.$router.push('fans/',{userID:this.userID});
       }
     },
     created() {
@@ -781,13 +633,10 @@
         this.name=this.$store.state.currentUsername;
         this.desc=this.$store.state.currentUserBio;
         //this.fname2=this.$store.state.;
-
-
-
-        
-
-
 /*
+
+
+
       function getMessageList(){
         return this.axios.get('/getList');
       }
