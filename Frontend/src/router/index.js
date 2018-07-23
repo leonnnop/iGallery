@@ -16,7 +16,7 @@ import set from '@/components/set'
 import MomentDetail from '@/components/MomentDetail'
 import tag from '@/components/tag'
 import userpage from '@/components/userpage'
-
+import SearchResult from '@/components/SearchResult'
 
 Vue.use(Router)
 
@@ -89,6 +89,10 @@ export default new Router({
         path:'userpage/:id',
         name:'userpage',
         component:userpage
+      },{
+        path:'searchResult/:keyword',
+        name:'searchResult',
+        component:SearchResult
       } ]
 
     },
