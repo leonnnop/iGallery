@@ -30,12 +30,12 @@
 | 3 | 找不到动态 |  
 | 4 | 用户不存在 |  
 
-  
- 
 
-----------------
-  
-  
+
+-----------
+
+
+
 【韩乐桐】
 # '发现'界面获取动态 #
 请求地址：/api/Moment/GetRankingMoments  
@@ -60,7 +60,7 @@
 
 | 类型 | 属性 | 说明 |    
 | -- | -- |  
-| string | SenderID |   
+| string | SenderID |  
 | string | Username |  
 | string | Email |  
 | string | Bio |  
@@ -84,10 +84,3 @@
 - MomentID 为该条动态的id，用于后续传参
   
                        
-
-
-
----------------------
-
-
-

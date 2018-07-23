@@ -128,6 +128,7 @@ namespace ProductsApp.Controllers
             while (rd.Read())//当数据库能读出一条符合条件的元组，执行循环
             {
                 User_Moment um = new User_Moment();
+                um.SenderID = rd["SENDER_ID"].ToString();
                 um.MomentID = rd["ID"].ToString();
                 um.Username = rd["USERNAME"].ToString();
                 um.Email = rd["EMAIL"].ToString();
