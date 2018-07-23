@@ -1,10 +1,10 @@
-#### 删除评论
+#### 删除评论 finished
 
 ##### 请求
 
 路由：api/Coment/DelCmt
 
-方式：Post
+方式：Delete
 
 参数格式：form-data
 
@@ -12,7 +12,7 @@
 
 | 类型   | 名   | 描述   |
 | ------ | ---- | ------ |
-| string | id   | 评论id |
+| string | Cid  | 评论id |
 
 ##### 响应
 
@@ -22,7 +22,7 @@ NotFound
 
 
 
-#### 保存评论
+#### 保存评论 finished
 
 ##### 请求
 
@@ -50,7 +50,7 @@ InternalServerError
 
 
 
-#### 加载评论
+#### 加载评论 finished
 
 ##### 请求
 

@@ -86,7 +86,7 @@ export default new Router({
         name: 'tag',
         component: tag
       },{
-        path:'userpage',
+        path:'userpage/:id',
         name:'userpage',
         component:userpage
       } ]

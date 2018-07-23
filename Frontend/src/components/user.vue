@@ -7,7 +7,9 @@
           <el-row class="usr" type="flex" align="middle">
             <el-col>
               <div class="user-img border">
-                <img class="user-img img-border hover-cursor" src="../image/a.jpg" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)"/>
+                <img class="user-img img-border hover-cursor" :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+              '&type=2'" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)"
+                />
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
@@ -68,7 +70,7 @@
 
       <el-row style="width:600px;margin-left:18%;" type="flex" justify="center">
         <el-col>
-          <el-row v-for="moment in totalMoments" :key="moment.name" class="box-color-grey">
+          <el-row v-for="moment in totalMoments" :key="moment.moment.ID" class="box-color-grey">
             <el-row>
               <el-row class="usr" type="flex" align="middle" style="padding:7px 15px;margin-top:5px">
                 <el-col :span="2">
@@ -88,7 +90,7 @@
                 </el-col>
               </el-row>
             </el-row>
-            <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_email!=''">
+            <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_email!=null">
               <span>
                 <img src="../image/forwarded-icon.png" alt="forwarded-icon"> 转发自
                 <span @click="jumpToUser(moment.forwarded_email)" style="color:#6191d5;display:inline-block;margin:5px 0" class="hover-cursor">
@@ -129,7 +131,8 @@
                 <span style="display:inline-block;margin:2px 0;color:#000;font-weight:600" class="hover-cursor" @click="jumpToUser(comment.sender.ID)">{{comment.sender_username}}</span>
                 <span>{{comment.content}}</span>
               </el-row>
-              <span v-if="moment.more_comments" @click="jumpToDetail(moment.ID)" style="color:#999;font-size:12px;font-weight:500" class="hover-cursor">加载更多</span>
+              <span v-if="moment.more_comments" @click="jumpToDetail(moment.moment.ID)" style="color:#999;font-size:12px;font-weight:500"
+                class="hover-cursor">加载更多</span>
               <el-row class="moment-time">{{moment.moment.Time}}</el-row>
               <div style="border-top:1px solid rgb(235,238,245)"></div>
               <el-row type="flex" justify="space-between" style="margin:10px 0">
@@ -327,6 +330,7 @@
 </style>
 
 <script>
+  import Vue from 'vue'
   var Dictionary = (function () {
     const items = {};
     class Dictionary {
@@ -543,67 +547,149 @@
     created() {
       //请求动态
       //监听滚动条，到底时请求动态...
-
-      this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
-          params: {
-            Email: this.$store.state.currentUserId,
-            Begin: 0 + 10 * this.askNum,
-            End: 9 + 10 * this.askNum
-          }
-        })
-        .then((response) => {
-          this.totalMoments = response.data;
+      this.axios.all([this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
+            params: {
+              Email: this.$store.state.currentUserId,
+              Begin: 1 + 10 * this.askNum,
+              End: 10 + 10 * this.askNum
+            }
+          }),
+          this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+        ])
+        .then(this.axios.spread((res1, res2) => {
+          // console.log(res1)
+          // console.log(res2)
+          this.totalMoments = res1.data;
 
           this.totalMoments.forEach(element => {
             //点赞状态
-            if (element.liked) {
-              element.likeImg = require('../image/comment-like.png');
+            if (element.liked == 0) {
+              var likeImg = require('../image/comment-like.png');
+              Vue.set(element, 'likeImg', likeImg)
             } else {
-              element.likeImg = require('../image/comment-unlike.png');
+              var unlikeImg = require('../image/comment-unlike.png');
+              Vue.set(element, 'likeImg', unlikeImg)
             }
             //收藏状态
-            if (element.collected) {
-              element.collectImg = require('../image/collect.png');
+            if (element.collected == 0) {
+              var collectImg = require('../image/collect.png');
+              Vue.set(element, 'collectImg', collectImg)
+
             } else {
-              element.collectImg = require('../image/uncollect.png');
+              var uncollectImg = require('../image/uncollect.png');
+              Vue.set(element, 'collectImg', uncollectImg)
+
             }
 
             //请求图片
-            this.axios.get('http://10.0.1.8:54468//api/Picture/FirstGet?id='+element.moment.ID+'&type=1')
-            .then((response) => {
-              let list=response.data;
-              //将id数组变为url数组
-              list.forEach(ele => {
-                ele='http://10.0.1.8:54468/api/Picture/Gets?pid='+ele;
+            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
+              .then((response) => {
+                let list = response.data;
+                //将id数组变为url数组
+                // element.moment.imgList = [];
+                var imgList = []
+                list.forEach(ele => {
+                  // element.moment.imgList.push({
+                  imgList.push('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                    ele
+                  )
+                  // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
+                });
+                Vue.set(element.moment, 'imgList', imgList);
+              })
+              .catch((error) => {
+                console.log(error);
               });
-              Vue.set(element.moment,'imgList',list);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-            element.newComment='';
-            element.Photo='http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID + '&type=2';
+            element.newComment = '';
+
+            var Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
+              '&type=2';
+            Vue.set(element, 'Photo', Photo)
+            console.log(this.totalMoments)
+
+            if (res2.data != 'Not found') {
+              res2.data.forEach(element => {
+                element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
+              });
+              this.followings = res2.data;
+              console.log(this.followings)
+            } else {
+              this.followings = [];
+            }
+
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        }))
+
+      // this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
+      //     params: {
+      //       Email: this.$store.state.currentUserId,
+      //       Begin: 1 + 10 * this.askNum,
+      //       End: 10 + 10 * this.askNum
+      //     }
+      //   })
+      //   .then((response) => {
+      //     this.totalMoments = response.data;
+
+      //     this.totalMoments.forEach(element => {
+      //       //点赞状态
+      //       if (element.liked) {
+      //         element.likeImg = require('../image/comment-like.png');
+      //       } else {
+      //         element.likeImg = require('../image/comment-unlike.png');
+      //       }
+      //       //收藏状态
+      //       if (element.collected) {
+      //         element.collectImg = require('../image/collect.png');
+      //       } else {
+      //         element.collectImg = require('../image/uncollect.png');
+      //       }
+
+      //       //请求图片
+      //       this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
+      //         .then((response) => {
+      //           let list = response.data;
+      //           //将id数组变为url数组
+      //           // element.moment.imgList = [];
+      //           var imgList = []
+      //           list.forEach(ele => {
+      //             // element.moment.imgList.push({
+      //             imgList.push('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+      //               ele
+      //             )
+      //             // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
+      //           });
+      //           Vue.set(element.moment, 'imgList', imgList);
+      //         })
+      //         .catch((error) => {
+      //           console.log(error);
+      //         });
+      //       element.newComment = '';
+      //       element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
+      //         '&type=2';
+      //       console.log(this.totalMoments)
+
+      //     });
+
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
       //请求关注列表
-      this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
-        .then((response) => {
-          if (response.data != 'Not found') {
-            response.data.forEach(element => {
-              element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
-            });
-            this.followings = response.data;
-            console.log(this.followings)
-          } else {
-            this.followings = [];
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+      //   .then((response) => {
+      //     if (response.data != 'Not found') {
+      //       response.data.forEach(element => {
+      //         element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
+      //       });
+      //       this.followings = response.data;
+      //       console.log(this.followings)
+      //     } else {
+      //       this.followings = [];
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     },
     methods: {
       showArrow: function (moment) {
@@ -614,18 +700,26 @@
         }
       },
       carouselHeight: function (moment) {
-        return dic.get(moment.moment.imgList[0].url) + 'px';
+        // return dic.get(moment.moment.imgList[0].url) + 'px';
+        return '800px'
       },
-      likeHandler: function (moment) {
+      likeHandler(moment) {
+        if (moment.liked == 0) {
+          console.log('moment.liked == 0')
+          moment.likeImg = require('../image/comment-unlike.png');
+          // Vue.set(moment, 'likeImg', likeImg)
+          moment.liked = 1
+        } else {
+          console.log('moment.liked == 1')
+          moment.likeImg = require('../image/comment-like.png');
+          moment.liked = 0
+        }
+        console.log(moment)
         this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
             '&moment_id=' + moment.moment.ID)
           .then((response) => {
             if (response.data == 0) {
-              if (moment.liked) {
-                moment.likeImg = require('../image/comment-unlike.png');
-              } else {
-                moment.likeImg = require('../image/comment-like.png');
-              }
+
             } else {
               this.$message.error('点赞失败，请重试！');
             }
@@ -635,39 +729,39 @@
           });
       },
       collectHandler: function (moment) {
-        if(moment.collected){
-          this.axios.post('http://10.0.1.8:54468/api/',{
-            moment_id:moment.moment.ID,
-            user_id:this.$store.state.currentUserId_ID
-          })
-          .then((response) => {
-            if(response.data==0){
-              moment.collectImg=require('../image/uncollect.png');
-              moment.collected=!moment.collected;
-            }else{
-              this.$message.error('取消收藏失败，请重试！');
-            }
-          })
-          .catch((error) => {            
-            console.log(error);
-          });
-        }else{
-          this.axios.post('http://10.0.1.8:54468/api/',{
-            moment_id:moment.moment.ID,
-            founder_id:this.$store.state.currentUserId_ID,
-            name:''
-          })
-          .then((response) => {
-            if(response.data==0){
-              moment.collectImg=require('../image/collect.png');
-              moment.collected=!moment.collected;
-            }else{
-              this.$message.error('收藏失败，请重试！');
-            }
-          })
-          .catch((error) => {            
-            console.log(error);
-          });
+        if (moment.collected) {
+          this.axios.post('http://10.0.1.8:54468/api/', {
+              moment_id: moment.moment.ID,
+              user_id: this.$store.state.currentUserId_ID
+            })
+            .then((response) => {
+              if (response.data == 0) {
+                moment.collectImg = require('../image/uncollect.png');
+                moment.collected = !moment.collected;
+              } else {
+                this.$message.error('取消收藏失败，请重试！');
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          this.axios.post('http://10.0.1.8:54468/api/', {
+              moment_id: moment.moment.ID,
+              founder_id: this.$store.state.currentUserId_ID,
+              name: ''
+            })
+            .then((response) => {
+              if (response.data == 0) {
+                moment.collectImg = require('../image/collect.png');
+                moment.collected = !moment.collected;
+              } else {
+                this.$message.error('收藏失败，请重试！');
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       },
       forwardHandler: function (moment) {
@@ -676,15 +770,25 @@
             cancelButtonText: '取消',
             center: true
           }).then(() => {
-            this.axios.post('http://192.168.43.249:54468/api/Moment/ForwardMoment', {
-                User_Id: this.$store.state.currentUserId,
-                Moment_Id: moment.moment.ID
+            this.axios.post('http://10.0.1.8:54468/api/Moment/ForwardMoment', {
+                User_ID: this.$store.state.currentUserId_ID,
+                Moment_ID: moment.moment.ID
               })
               .then((response) => {
-                if (response.data == 1) {
+                if (response.data == 0) {
                   this.$message({
                     message: '转发成功！',
                     type: 'success'
+                  });
+                } else if (response.data == 1) {
+                  this.$message({
+                    message: '不可以转发自己的动态哦！',
+                    type: 'warning'
+                  });
+                } else if (response.data == 3) {
+                  this.$message({
+                    message: '已经转发过了喔，看看其他的吧！！',
+                    type: 'warning'
                   });
                 } else {
                   this.$message.error('转发失败，请稍后重试！')
@@ -712,15 +816,18 @@
             'Content-Type': 'multipart/form-data'
           }
         };
-        this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
+        this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
           .then((response) => {
-            if (response.data == 'OK') {
+            // if (response.data == 'OK') {
+            if (true) {
               this.$message({
                 message: '评论成功！',
                 type: 'success'
               });
               if (moment.comments.length == 4) {
                 moment.more_comments = true;
+                moment.newComment = '';
+
               } else {
                 moment.comments.push({
                   sender_email: '',
@@ -728,6 +835,7 @@
                   content: moment.newComment,
                   send_time: '2018/7/20 8:37:18'
                 });
+                moment.newComment = '';
               }
             } else {
               this.$message.error('评论失败，请稍后重试！');
@@ -735,6 +843,7 @@
           })
           .catch((error) => {
             console.log(error);
+            this.$message.error('评论失败，请稍后重试！');
           })
       },
       jumpToDetail: function (momentId) {
@@ -745,7 +854,7 @@
         this.$router.push('/main/tag/' + tag);
       },
       jumpToUser: function (email) {
-        this.$router.push('/main/userpage');
+        this.$router.push('/main/userpage/' + email);
       },
 
       getSrc(src) {

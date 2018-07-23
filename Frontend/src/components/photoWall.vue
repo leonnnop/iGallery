@@ -6,8 +6,8 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_1">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
+                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -26,8 +26,8 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_2">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
+                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -46,8 +46,8 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_3">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
+                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -66,8 +66,8 @@
           <el-card class="box-card" :key="item" v-for="item in items_col_4">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" alt="hex" height="40px" width="40px">
-                <span style="margin-left:-30%; font-size:18px">{{item.Username}}</span>
+                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
@@ -129,6 +129,7 @@
 </style>
 
 <script>
+  import Vue from 'vue'
   export default {
     data() {
       return {
@@ -283,6 +284,14 @@
     },
 
     methods: {
+      jumpToUser: function (ID) {
+        console.log('ge')
+        if (ID == this.$store.state.currentUserId_ID) {
+          this.$router.push('/main/personalpage/');
+        } else {
+          this.$router.push('/main/userpage/' + ID);
+        }
+      },
       handleLikeClick(item) {
         console.log(item.LikeState)
 
