@@ -89,19 +89,16 @@
                   <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
                     <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
                     <el-col :span="4">
-                      <img src="../image/arrow-left.png" alt="" @click="sendLastHandler" class="sendMomentBtn">
-                    </el-col>
-                    <el-col :span="4">
-                      <img src="../image/send-moment.png" @click="sendMomentHandler" v-if="showNextBtn" class="sendMomentBtn">
+                      <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
                     </el-col>
                   </el-row>
                   <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
                     <el-col :span="4">
-                      <img src="../image/arrow-right.png" @click="sendNextHandler" class="sendMomentBtn">
+                      <img src="../image/arrow-left.png" @click="sendLastHandler" class="sendMomentBtn">
                     </el-col>
-                    <!-- <el-col :span="4">
+                    <el-col :span="4">
                       <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
-                    </el-col> -->
+                    </el-col>
                   </el-row>
                 </div>
 
@@ -234,8 +231,7 @@
         pictureObj: {
           id: 2,
           type: 2
-        },
-        currentMomentID: '',
+        }
 
       }
     },
@@ -273,82 +269,22 @@
       sendMomentInit: function () {
         this.sendMomentVisible = true;
         this.showUpload = true;
-        // this.showTextArea = true;
-        this.sendLastHandler();
-
-        this.axios.get('http://10.0.1.8:54468/api/Moment/NextMomentID')
-          .then((response) => {
-            this.currentMomentID = response.data;
-          })
       },
       sendNextHandler: function () {
-        this.showUploadArea = true;
-        this.showTextArea = false;
-
-        this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
-            ID: this.currentMomentID,
-            SenderID: this.$store.state.currentUserId_ID,
-            Content: this.sendText,
-            LikeNum: 0,
-            ForwardNum: 0,
-            CollectNum: 0,
-            CommentNum: 0,
-            Time: '',
-          })
-          .then((response) => {
-            if (response.data == 0) {
-              // this.$message({
-              //   message: '发布成功！',
-              //   type: 'success'
-              // });
-            } else {
-              this.$message.error('本次发布失败，服务器内部错误，请重试。');
-            }
-          });
-
-        console.log(this.tags)
-
-        if (this.tags.length > 0) {
-          // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-            params: {
-              TagNames: this.tags,
-              // Moment_Id: this.$route.params.id
-            },
-            paramsSerializer: function (params) {
-              var Qs = require('qs');
-              return Qs.stringify(params, {
-                arrayFormat: 'repeat'
-              })
-            }
-          })
-        }
-      },
-      sendLastHandler: function () {
         this.showUploadArea = false;
         this.showTextArea = true;
+      },
+      sendLastHandler: function () {
+        this.showUploadArea = true;
+        this.showTextArea = false;
       },
       sendMomentHandler: function () {
         // console.log('————发布内容————');
         // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
         this.$refs.upload.submit(); //上传图片
 
-        this.uploadImgs2 = [];
-        this.tags = [];
-        this.sendText = '';
-        this.sendMomentVisible = false;
-        this.showUploadArea = true;
-        this.showNextBtn = false;
-        this.showTextArea = false;
-        this.showUpload = false;
-
-        this.$message({
-          message: '发布成功！',
-          type: 'success'
-        });
-
         // this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
-        //     ID: this.currentMomentID,
+        //     ID: '',
         //     SenderID: this.$store.state.currentUserId_ID,
         //     Content: this.sendText,
         //     LikeNum: 0,
@@ -376,37 +312,19 @@
         //     this.showTextArea = false;
         //     this.showUpload = false;
         //   });
-        // if (tags.length > 0) {
-        //   this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag', {
-        //     params: {
-        //       'TagNames[]': tags,
-        //       Moment_Id: this.$route.params.id
-        //     },
-        //     paramsSerializer: function (params) {
-        //       return Qs.stringify(params, {
-        //         arrayFormat: 'repeat'
-        //       })
-        //     }
-        //   })
-        // }
-
-        // console.log(this.tags)
-
-        // if (this.tags.length > 0) {
-        //   // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-        //   this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=4&', {
-        //     params: {
-        //       TagNames: this.tags,
-        //       // Moment_Id: this.$route.params.id
-        //     },
-        //     paramsSerializer: function (params) {
-        //       var Qs = require('qs');
-        //       return Qs.stringify(params, {
-        //         arrayFormat: 'repeat'
-        //       })
-        //     }
-        //   })
-        // }
+        if (tags.length > 0) {
+          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag', {
+            params: {
+              TagNames: tags,
+              Moment_Id: this.$route.params.id
+            },
+            paramsSerializer: function (params) {
+              return Qs.stringify(params, {
+                arrayFormat: 'repeat'
+              })
+            }
+          })
+        }
       },
       //上传组件
       handleRemove(file, fileList) {
@@ -435,10 +353,7 @@
             'Content-Type': 'multipart/form-data'
           }
         }; //添加请求头
-
-
-        this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=' + this.currentMomentID + '&type=1', formdata1,
-          config).then((response) => { //这里的/xapi/upimage为接口
+        this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);
         })
 
@@ -450,7 +365,7 @@
           this.uploadImgs2.push(file);
           //console.log("ready")
         } else if (file.status == 'fail') {
-          // this.$message.error("图片上传出错，请刷新重试！")
+          this.$message.error("图片上传出错，请刷新重试！")
         }
         if (fileList.length) {
           this.showNextBtn = true;
@@ -468,7 +383,6 @@
         // console.log("——————————error——————————");
         // console.log(e);
       },
-
       handleTagClose(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
         if (this.tags.length <= 4) {

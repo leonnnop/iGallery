@@ -28,13 +28,13 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_1">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
+                                        <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
                                         <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -48,13 +48,13 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_2">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
+                                        <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
                                         <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -68,13 +68,13 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_3">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
+                                        <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
                                         <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="300px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="300px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -88,13 +88,13 @@
                             <el-card class="box-card" :key="item" v-for="item in items_col_4">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" alt="hex" height="40px" width="40px">
+                                        <img src="../image/hex.jpeg" alt="hex" height="40px" width="40px">
                                         <span style="margin-left:-30%; font-size:18px">{{item.userName}}</span>
                                         <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc" alt="hex" width="280px;" style="margin:-20px">
+                                    <img src="../image/hex.jpeg" alt="hex" width="280px;" style="margin:-20px">
                                 </el-row>
                                 <el-row style="margin-top:10%">
                                     {{item.Content}}
@@ -177,7 +177,6 @@
 </style>
 
 <script>
-    import Vue from 'vue'
     export default {
         data() {
             return {
@@ -282,7 +281,7 @@
         },
 
         created() {
-            this.axios.get('http://10.0.1.8:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
+            this.axios.get('http://192.168.43.249:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
                     '&TagContent=' +
                     this.$route.params.id + '&Email=' + this.$store.state.currentUserId)
                 .then((response) => {
@@ -295,39 +294,10 @@
                     } else {
                         this.followword = '关注'
                     }
-                    var index = 0;
-                    totalMoments.forEach((element) => {
-                        element.likeState = response.data.m_Item5[index]
-                        if (element.likeState == 0) {
-                            element.likeIMG = require('../image/like.png');
-                        } else {
-                            element.likeIMG = require('../image/unlike.png');
-                        }
+                    totalMoments.forEach(element => {
+                        element.likeIMG = require('../image/unlike.png');
                         // 更新后删除
                         element.likeState = false;
-                        // element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
-                        // '&type=2'
-
-                        element.userName = response.data.m_Item4[index]
-                        index++;
-                        element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
-                            '&type=2'
-                        this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
-                                '&type=1')
-                            .then((response) => {
-                                // this.axios.get('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-                                //         response.data[0], {
-                                //             responseType: 'blob'
-                                //         })
-                                //     .then((response) => {
-                                //         element.contentSrc = response.data
-                                //     })
-                                Vue.set(element, 'contentSrc',
-                                    'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-                                    response.data[0]);
-                                // element.contentSrc = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-                                //     response.data[0]
-                            })
                     });
                     let momentNum = totalMoments.length;
                     this.items_col_1 = totalMoments.slice(0, Math.floor(momentNum / 3));
@@ -342,7 +312,7 @@
 
         methods: {
             followClickHandler() {
-                this.axios.put('http://10.0.1.8:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
+                this.axios.put('http://192.168.43.249:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
                         '&tag=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data) {
@@ -386,7 +356,7 @@
                 }
                 // console.log(item)
                 this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
-                    '&moment_id=' + item.ID
+                    '&moment_id=' + item.MomentID
                     // , {
                     //     email: this.$store.state.currentUserId,
                     //     moment_id: item.MomentId

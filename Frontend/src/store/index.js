@@ -11,8 +11,8 @@ export default new Vuex.Store({
         currentUserId: '277284652@qq.com',
         currentUserId_ID: '16',
         currentUsername: 'leonnnop',
-        currentUserPassword:'liangchen',
-        currentUserBio: '个人简介了解一下',
+        currentUserPassword:'liangchen_',
+        currentUserBio: '',
         currentUserPhoto: '',
         job: {
             taskId: '',

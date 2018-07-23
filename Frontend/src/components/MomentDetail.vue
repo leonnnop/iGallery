@@ -2,8 +2,8 @@
     <div style="margin-bottom:30px;">
         <el-row>
             <el-col :span="10" :offset="4">
-                <el-carousel v-if="hackReset" height="500px" :interval="0" indicator-position="outside">
-                    <el-carousel-item v-for="(img,index) in imgList" :key="index">
+                <el-carousel height="500px" :interval="0" indicator-position="outside">
+                    <el-carousel-item v-for="(img,index) in moment.imgList" :key="index">
                         <div class="pic">
                             <img :src="img.url" alt="movementImg">
                         </div>
@@ -67,7 +67,7 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img :src="userHeadImg" alt="" style="width:40px;height:40px;border-radius:40px;">
+                                <img src="../image/a.jpg" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment">
@@ -110,7 +110,7 @@
                             </el-row>
                             <el-row type="flex" justify="space-between" align="middle">
                                 <el-col :span="6">
-                                    <time class="time">{{ comment.send_time }}</time>
+                                    <time class="time">{{ comment.commentTime }}</time>
                                 </el-col>
                                 <el-col :span="1">
                                     <el-button type="text" @click="commentAComment(comment)">回复</el-button>
@@ -146,7 +146,7 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img :src="userHeadImg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.userPage)">
+                                <img src="../image/a.jpg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.userPage)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
@@ -154,13 +154,8 @@
                                         <span class="hover-cursor" @click="jumpToUser(moment.userPage)">{{moment.Username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
-                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)"
-                                            :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
-                                        <!-- <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit"></i> -->
-                                        <el-row type="flex" align="middle">
-                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-edit" circle style="margin-left:0px" @click="modifyClickHandler"></el-button>
-                                            <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-delete" circle style="margin-left:10px" @click="deleteClickHandler"></el-button>
-                                        </el-row>
+                                        <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.followState)" :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
+                                        <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit" ></i>
                                     </el-col>
                                 </el-row>
                                 <el-row>
@@ -176,80 +171,10 @@
                             <el-button type="text" v-for="(tag,index) in moment.tags" :key="index" @click="jumpToTag(tag)">#{{tag}}</el-button>
                         </div>
                     </div>
+
                 </el-card>
             </el-col>
         </el-row>
-
-        <el-row type="flex" justify="center" style="margin-top:30px">
-            <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
-
-                <router-view></router-view>
-                <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
-                    <el-row>
-                        <el-col :span="3" :offset="0">
-                            <img src="../image/a.jpg" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
-                        </el-col>
-                        <el-col :span="18" :offset="0">
-                            <div class="sendContent">
-                                <div class="edit">
-                                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">Leonnnop</div>
-                                    <el-row type="flex" justify="center" align="middle">
-                                        <el-row>
-
-                                        </el-row>
-                                        <el-col :span="6" v-show="showUploadArea"></el-col>
-                                        <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
-
-                                            <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
-                                            <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
-                                                :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
-                                                :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress"
-                                                :on-exceed="upLoadOnExceed" :show-file-list="true" :limit="9" :multiple="true"
-                                                class="upload" :data="pictureObj">
-                                                <i class="el-icon-plus"></i>
-                                            </el-upload>
-
-
-                                        </el-col>
-                                        <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
-                                            <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="moment.Content"></el-input>
-                                            <div class="editTag">
-                                                <el-tag :key="tag" color="#fff" v-for="tag in moment.tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
-                                                    {{tag}}
-                                                </el-tag>
-
-                                                <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag" v-model="tagsInputValue" ref="saveTagInput" size="small"
-                                                    @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
-                                                </el-input>
-                                                <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
-                                            </div>
-                                        </el-col>
-                                    </el-row>
-
-                                </div>
-                                <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
-                                    <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
-                                    <el-col :span="4">
-                                        <img src="../image/arrow-right.png" alt="" @click="sendNextHandler" v-if="showNextBtn" class="sendMomentBtn">
-                                    </el-col>
-                                </el-row>
-                                <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
-                                    <el-col :span="4">
-                                        <img src="../image/close-circle.png" @click="sendLastHandler" class="sendMomentBtn" style="width:50px;height:50px;margin-top:-5px">
-                                    </el-col>
-                                    <el-col :span="4">
-                                        <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
-                                    </el-col>
-                                </el-row>
-                            </div>
-
-                        </el-col>
-                    </el-row>
-
-                </el-dialog>
-            </el-col>
-        </el-row>
-
     </div>
 </template>
 
@@ -258,43 +183,7 @@
         name: 'MomentDetail',
         data() {
             return {
-                // sendText:'',
-                userHeadImg:'',
-                hackReset: false,
-                pictureURL: '',
-                navBarFixed: false,
-                searchInput: '',
-                topBarActiveIndex: '1',
-                sendMomentVisible: false,
-                dialogImageUrl: '',
-                dialogVisible: false,
-                showNextBtn: false,
-                showUpload: false,
-                showUploadArea: true,
-                showTextArea: false,
-                sendText: '',
-                uploadImgs2: [],
-                uploadImgs: [
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                ],
-                ableToUpload: true,
-                tags: [],
-                tagsInputVisible: false,
-                tagsInputValue: '',
-                ableToAddTag: true,
                 likeListVisible: false,
-                pictureObj: {
-                    id: 2,
-                    type: 2
-                },
                 likeUsers: [{
                     ID: '1',
                     headImg: require('../image/a.jpg'),
@@ -364,21 +253,20 @@
                 commentComment: {
                     comment: ''
                 },
-                imgList: [{
-                        url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
-                    },
-                    {
-                        url: require('../image/ins2.png')
-                    },
-                    {
-                        url: require('../image/ins3.png')
-                    },
-                    {
-                        url: require('../image/a.jpg')
-                    }
-                ],
                 moment: {
-
+                    imgList: [{
+                            url: require('../image/ins1.png')
+                        },
+                        {
+                            url: require('../image/ins2.png')
+                        },
+                        {
+                            url: require('../image/ins3.png')
+                        },
+                        {
+                            url: require('../image/a.jpg')
+                        }
+                    ],
                     ID: '111',
                     Username: 'Leonnnop',
                     SenderID: '16',
@@ -390,7 +278,7 @@
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...' +
                         '恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...恭喜生活喜提我狗命blablabla...',
                     tags: [
-                        'tag1', 'tag2', 'tag3'
+                        'tag1','tag2','tag3'
                     ],
                     CollectNum: 10,
                     ForwardNum: 0,
@@ -404,7 +292,7 @@
                     ID: '222',
                     Username: 'user3',
                     userPage: '',
-                    send_time: '2018-07-18 12:00',
+                    commentTime: '2018-07-18 12:00',
                     content: '第三条评论',
                     isCommentAComment: false,
                     quoteComment: {
@@ -415,7 +303,7 @@
                     ID: '333',
                     Username: 'user2',
                     userPage: '',
-                    send_time: '2018-07-17 15:00',
+                    commentTime: '2018-07-17 15:00',
                     content: '第二条评论',
                     isCommentAComment: false,
                     quoteComment: {
@@ -426,203 +314,17 @@
                     ID: '444',
                     Username: 'user1',
                     userPage: '',
-                    send_time: '2018-07-17 08:00',
+                    commentTime: '2018-07-17 08:00',
                     content: '第一条评论',
                     isCommentAComment: false,
                     quoteComment: {
 
                     }
-                }],
+                }]
 
             }
-
         },
         methods: {
-            deleteClickHandler() {
-                // this.$router.push('/main/personalpage');
-
-                this.axios.put('http://10.0.1.8:54468/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
-                        '&moment_id=' + this.$route.params.id)
-                    .then((response) => {
-                        if (response.data == 0) {
-                            this.$message({
-                                message: '删除成功！',
-                                type: 'success'
-                            });
-                            this.$router.push('/main/personalpage');
-
-                        } else {
-                            this.$message.error('删除失败，服务器内部错误，请重试。');
-                        }
-                    })
-            },
-            sendMomentInit: function () {
-                this.sendMomentVisible = true;
-                this.showUpload = true;
-            },
-            sendNextHandler: function () {
-                this.showUploadArea = false;
-                this.showTextArea = true;
-            },
-            sendLastHandler: function () {
-                // this.showUploadArea = true;
-                // this.showTextArea = false;
-                this.uploadImgs2 = [];
-                this.tags = [];
-                this.sendText = '';
-                this.sendMomentVisible = false;
-                this.showUploadArea = true;
-                this.showNextBtn = false;
-                this.showTextArea = false;
-                this.showUpload = false;
-            },
-            sendMomentHandler: function () {
-                console.log('————发布内容————');
-                // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
-                this.$refs.upload.submit(); //上传图片
-
-                this.axios.put('http://10.0.1.8:54468/api/ModifyMoment/ModifyMoment', {
-                        email: this.$store.state.currentUserId,
-                        moment_id: this.$route.params.id,
-                        content: this.moment.Content
-                    })
-                    .then((response) => {
-                        if (response.data == 0) {
-                            this.$message({
-                                message: '修改成功！',
-                                type: 'success'
-                            });
-                        } else {
-                            this.$message.error('修改失败，服务器内部错误，请重试。');
-                        }
-
-                        this.uploadImgs2 = [];
-                        this.tags = [];
-                        this.sendText = '';
-                        this.sendMomentVisible = false;
-                        this.showUploadArea = true;
-                        this.showNextBtn = false;
-                        this.showTextArea = false;
-                        this.showUpload = false;
-                    })
-                    .catch((error) => {
-                        this.uploadImgs2 = [];
-                        this.tags = [];
-                        this.sendText = '';
-                        this.sendMomentVisible = false;
-                        this.showUploadArea = true;
-                        this.showNextBtn = false;
-                        this.showTextArea = false;
-                        this.showUpload = false;
-                    })
-
-                if (this.moment.tags.length > 0) {
-                    // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-                    this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.$route.params.id + '&', {
-                        params: {
-                            TagNames: this.moment.tags,
-                            // Moment_Id: this.$route.params.id
-                        },
-                        paramsSerializer: function (params) {
-                            var Qs = require('qs');
-                            return Qs.stringify(params, {
-                                arrayFormat: 'repeat'
-                            })
-                        }
-                    })
-                }
-
-            },
-            //上传组件
-            handleRemove(file, fileList) {
-                if (!fileList.length) {
-                    this.showNextBtn = false;
-                }
-            },
-            beforeUpload: function (file) {
-                const size = file.size / 1024 / 1024 < 3;
-                if (!size) {
-                    this.$message.error('上传图片大小不能超过 3MB!');
-                }
-                return size;
-            },
-            uploadOnProgress(e, file) { //开始上传
-                // console.log('——————开始上传——————');
-                // console.log(file)
-                // var file = document.getElementById("upload_file").files[0];
-                var oneFile = file.raw;
-                var formdata1 = new FormData(); // 创建form对象
-                formdata1.append('file', oneFile); // 通
-                // formdata1.append('id', 2); // 通
-                // formdata1.append('type', 2); // 通
-                let config = {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }; //添加请求头
-                this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((response) => { //这里的/xapi/upimage为接口
-                    console.log(response.data);
-                })
-
-            },
-            uploadOnChange(file, fileList) {
-                //console.log("——————————change——————————")
-                // console.log(file)
-                if (file.status == 'ready') {
-                    this.uploadImgs2.push(file);
-                    //console.log("ready")
-                } else if (file.status == 'fail') {
-                    this.$message.error("图片上传出错，请刷新重试！")
-                }
-                if (fileList.length) {
-                    this.showNextBtn = true;
-                }
-            },
-            uploadOnSuccess(e, file, fileList) { //上传附件
-                // console.log("——————————success——————————")
-                // console.log(fileList);
-            },
-            upLoadOnExceed: function (files, fileList) {
-                this.$message.error('exceed');
-                this.$message.warning(
-                    `最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
-            },
-            uploadOnError(e, file) {
-                // console.log("——————————error——————————");
-                // console.log(e);
-            },
-
-            handleTagClose(tag) {
-                this.moment.tags.splice(this.moment.tags.indexOf(tag), 1);
-                if (this.moment.tags.length <= 4) {
-                    this.ableToAddTag = true;
-                }
-            },
-
-            showTagInput() {
-                this.tagsInputVisible = true;
-                this.$nextTick(_ => {
-                    this.$refs.saveTagInput.$refs.input.focus();
-                });
-            },
-
-            handleTagInputConfirm() {
-                let tagsInputValue = this.tagsInputValue;
-                if (tagsInputValue) {
-                    this.moment.tags.push(tagsInputValue);
-                }
-                if (this.moment.tags.length >= 4) {
-                    this.ableToAddTag = false;
-                }
-                this.tagsInputVisible = false;
-                this.tagsInputValue = '';
-            },
-            modifyClickHandler() {
-                this.sendMomentVisible = true;
-                this.showUpload = true;
-                // this.showTextArea = true;
-                this.sendNextHandler();
-            },
             likeListHandler() {
                 this.likeListVisible = true
                 this.axios.get('http://10.0.1.8:54468/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
@@ -642,7 +344,7 @@
                     }));
             },
             jumpToTag: function (tag) {
-                this.$router.push('/main/tag/' + tag);
+                this.$router.push('/main/tag/'+tag);
             },
             jumpToUser: function (url) {
                 console.log(url);
@@ -661,14 +363,12 @@
             likeHandler: function () {
                 // console.log(item)
                 this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
-                    '&moment_id=' + this.moment.ID
+                    '&moment_id=' + this.moment.MomentID
                     // , {
                     //     email: this.$store.state.currentUserId,
                     //     moment_id: item.MomentId
                     //   }
                 )
-
-                console.log(this.moment.LikeState)
                 if (!this.moment.LikeState) {
                     this.likeSrc = require('../image/comment-like.png');
                     this.moment.LikeNum++;
@@ -724,7 +424,7 @@
                         headImg: require('../image/a.jpg'),
                         Username: 'loststars',
                         userPage: '',
-                        send_time: '2018-07-18 23:00',
+                        commentTime: '2018-07-18 23:00',
                         content: this.blogComment.comment,
                         isCommentAComment: false,
                         quoteComment: {
@@ -764,7 +464,7 @@
                         headImg: require('../image/a.jpg'),
                         Username: 'loststars',
                         userPage: '',
-                        send_time: '2018-07-18 20:00',
+                        commentTime: '2018-07-18 20:00',
                         content: this.commentComment.comment,
                         isCommentAComment: false,
                         quoteComment: {
@@ -805,76 +505,18 @@
             }
         },
         created() {
-            this.hackReset = false
-            this.$nextTick(() => {
-                this.hackReset = true
-            })
-            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$route.params.id +
-                    '&type=1')
-                .then((response) => {
-                    this.imgList = [];
-                    console.log('ge')
-                    response.data.forEach(element => {
-                        console.log('gege')
-                        this.imgList.push({
-                            url: 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-                                element
-                        })
-                        console.log(this.imgList)
-                    });
-                })
             //
-            this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
-                    '&MomentID=' + this.$route.params.id)
+            this.$axios.get('/moment')
                 .then((response) => {
-
-                    this.moment = response.data.moment;
-                    this.moment.Username = response.data.user_username;
-
-                    this.userHeadImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
-                    '&type=2';
-                    // this.imgList = [{
-                    //     url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
-                    // }];
-
-                    if (response.FollowState == 'true') {
-                        this.moment.followState = '已关注'
-                    } else {
-                        this.moment.followState = '关注'
-                    }
-
-                    if (response.data.liked == 0) {
-                        this.moment.LikeState = true
-                        this.likeSrc = require('../image/comment-like.png');
-                    } else {
-                        this.moment.LikeState = false
-                    }
-
-                    if (response.data.collected == 0) {
-                        this.moment.collectState = true
-                    } else {
-                        this.moment.collectState = false
-                    }
-
+                    // this.moment = response.data.moment;
                     // this.comments = response.data.comments;
-                    this.FollowState = response.data.FollowState;
-                    // this.moment = response.data;
+                    // this.FollowState = response.data.FollowState;
+                    this.moment = response.data;
                     /////
-                    this.moment.tags = response.data.tags;
-                    // this.moment.tags = [];
-                    // response.data.tags.forEach(element => {
-                    //     this.moment.tags.push({
-                    //         name: element
-                    //     })
-                    // });
-
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-
-
-            this.axios
         }
     }
 </script>
