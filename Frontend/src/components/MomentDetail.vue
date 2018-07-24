@@ -24,7 +24,7 @@
                                             <div v-for="(likeUser,index) in likeUsers" :key="index" class="like-user-li">
                                                 <el-row type="flex" justify="center" align="middle">
                                                     <el-col :span="3" :offset="1" style="height:50px;">
-                                                        <img src="../image/a.jpg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.userPage)">
+                                                        <img :src="likeUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.userPage)">
                                                     </el-col>
                                                     <el-col :span="16">
                                                         <el-row>{{likeUser.Username}}</el-row>
@@ -194,7 +194,7 @@
                 <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
-                            <img src="../image/a.jpg" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
+                            <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
                         <el-col :span="18" :offset="0">
                             <div class="sendContent">
@@ -268,6 +268,7 @@
             return {
                 // sendText:'',
                 displayDelete: false,
+                sendMomentImgNum: 0,
                 userHeadImg: '',
                 hackReset: false,
                 pictureURL: '',
@@ -691,7 +692,12 @@
                     .then(((response) => {
                         this.likeUsers = response.data;
                         this.likeUsers.forEach(element => {
-                            element.headImg = require('../image/a.jpg');
+                            // element.headImg = require('../image/a.jpg');
+                            var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                element.ID +
+                                '&type=2';
+                            Vue.set(element, 'headImg', headImg)
+                            console.log(element)
                             // 等待修改
                             // element.FollowState = true;
                             if (element.FollowState == 'true') {
