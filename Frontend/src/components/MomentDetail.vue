@@ -31,7 +31,7 @@
                                                         <el-row style="font-size:12px;margin-top:5px;">{{likeUser.Bio}}</el-row>
                                                     </el-col>
                                                     <el-col :span="3">
-                                                        <el-button plain size="small" @click="followHandler(likeUser,likeUser.FollowState)" :class="{followed:likeUser.FollowState}"
+                                                        <el-button plain size="small" @click="likeFollowHandler(likeUser,likeUser.FollowState)" :class="{followed:likeUser.FollowState}"
                                                             v-if="likeUser.ID!=$store.state.currentUserId_ID">{{likeUser.followState}}</el-button>
                                                         <!--  -->
                                                     </el-col>
@@ -701,8 +701,10 @@
                             // 等待修改
                             // element.FollowState = true;
                             if (element.FollowState == 'true') {
+                                element.FollowState = true
                                 element.followState = '已关注'
                             } else {
+                                element.FollowState = false
                                 element.followState = '关注'
                             }
                         });
@@ -820,7 +822,7 @@
                     })
                     .catch(() => {});
             },
-            followHandler: function (user, FollowState) {
+            likeFollowHandler: function (user, FollowState) {
                 console.log(user)
                 console.log(this.$store.state.currentUserId_ID)
                 console.log(user.FollowState);
@@ -835,6 +837,32 @@
 
                 this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.ID)
+                    .then((response) => {
+                        if (response.data == 0) {
+                            // this.$message({
+                            //     message: '关注成功',
+                            //     type: 'success'
+                            // });
+                        } else {
+                            this.$message.error('关注失败，服务器内部错误，请重试。');
+                        }
+                    });
+            },
+            followHandler: function (user, FollowState) {
+                console.log(user)
+                console.log(this.$store.state.currentUserId_ID)
+                console.log(user.FollowState);
+                //////////////
+                if (!user.FollowState) {
+                    user.followState = '已关注';
+                } else {
+                    user.followState = '关注';
+                }
+                user.FollowState = !user.FollowState;
+                console.log(user.FollowState);
+
+                this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                        '&followedID=' + user.SenderID)
                     .then((response) => {
                         if (response.data == 0) {
                             // this.$message({

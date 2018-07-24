@@ -86,6 +86,49 @@ namespace ProductsApp.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public IHttpActionResult GetUser(string Sender_ID)
+        {
+            //连接数据库
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select receiver_id " +
+                              "from message " +
+                              "where sender_id =  '" + Sender_ID + "'" +
+                              "order by send_time desc";
+            OracleDataReader rd = cmd.ExecuteReader();
+            List<Users> UsersList = new List<Users>();
+            while (rd.Read())
+            {
+                string user_id = rd["RECEIVER_ID"].ToString();
+                cmd.CommandText = "select * " +
+                                  "from users " +
+                                  "where id =  '" + user_id + "'";
+                OracleDataReader rd1 = cmd.ExecuteReader();
+                Users user = new Users();
+                user.ID = rd1["ID"].ToString();
+                user.Email = rd1["EMAIL"].ToString();
+                user.Username = rd1["USERNAME"].ToString();
+                user.Bio = rd1["BIO"].ToString();
+                user.Photo = rd1["PHOTO"].ToString();
+                UsersList.Add(user);
+
+            }
+
+            return Json(UsersList);
+        }
+
 
     }
 }
