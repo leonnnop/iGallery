@@ -90,4 +90,36 @@ List<Users>
 | string | Username |
 | string | Bio      |
 | string | Photo    |
+# 获取私信对象用户（李璐）
+
+请求地址：/api/Users/Message/GetUser
+
+说明：传入发私信的用户的id，返回他曾经发过私信的用户列表
+
+请求方式：Get
+
+支持格式：json
+
+参数类型：string
+
+| 类型   | 属性     |
+| :----- | -------- |
+| string | Sender_ID   |
+
+
+返回类型：JSON结构（UsersList数组）
+
+JSON样例
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | Email      |
+|string         | Username     |
+|string         | Bio      |
+|string         | Photo     |
+|string         | Password      |
+
+
+
+------
 
