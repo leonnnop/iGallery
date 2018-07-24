@@ -1,5 +1,9 @@
 <template>
   <el-container>
+    <transition name="slide-fade">
+      <div v-if="loadingPage" class="loadingbackground" style="margin-top:-30px"></div>
+    </transition>
+
     <el-row style="width:100%" type="flex" justify="left">
       <el-col class="fixed">
         <el-row class="box-card" style="height:500px;width:280px;margin-left:64%;">
@@ -160,6 +164,39 @@
 </template>
 
 <style scoped>
+  /* 可以设置不同的进入和离开动画 */
+
+  /* 设置持续时间和动画函数 */
+
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+
+  .slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+
+  .slide-fade-enter,
+  .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */
+
+    {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+
+  .loadingbackground {
+    position: fixed;
+    z-index: 1000;
+    height: 100%;
+    width: 100%;
+    background-image: url(../image/loading3.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    /* background-size: cover */
+  }
+
   .pic {
     width: 100%;
     height: 500px;
@@ -445,52 +482,54 @@
   export default {
     data() {
       return {
-        flag:true,
+        loadingPage: true,
+
+        flag: true,
         bottomHint: '动态加载中，耐心等待啦！( •̀ .̫ •́ )✧',
         currentPage: 1,
         followings: [
           // {
-        //     ID: '',
-        //     Username: 'leonnnop',
-        //     Bio: 'self introduction self introduction self introduction self introduction',
-        //     Email: '',
-        //     Photo: require('../image/a.jpg')
-        //   },
-        //   {
-        //     ID: '',
-        //     Username: 'leonnnop',
-        //     Bio: 'self introduction',
-        //     Email: '',
-        //     Photo: require('../image/a.jpg')
-        //   },
-        //   {
-        //     ID: '',
-        //     Username: 'leonnnop',
-        //     Bio: 'self introduction',
-        //     Email: '',
-        //     Photo: require('../image/a.jpg')
-        //   },
-        //   {
-        //     ID: '',
-        //     Username: 'leonnnop',
-        //     Bio: 'self introduction',
-        //     Email: '',
-        //     Photo: require('../image/a.jpg')
-        //   },
-        //   {
-        //     ID: '',
-        //     Username: 'leonnnop',
-        //     Bio: 'self introduction',
-        //     Email: '',
-        //     Photo: require('../image/a.jpg')
-        //   },
-        //   {
-        //     ID: '',
-        //     Username: 'leonnnop',
-        //     Bio: 'self introduction',
-        //     Email: '',
-        //     Photo: require('../image/a.jpg')
-        //   },
+          //     ID: '',
+          //     Username: 'leonnnop',
+          //     Bio: 'self introduction self introduction self introduction self introduction',
+          //     Email: '',
+          //     Photo: require('../image/a.jpg')
+          //   },
+          //   {
+          //     ID: '',
+          //     Username: 'leonnnop',
+          //     Bio: 'self introduction',
+          //     Email: '',
+          //     Photo: require('../image/a.jpg')
+          //   },
+          //   {
+          //     ID: '',
+          //     Username: 'leonnnop',
+          //     Bio: 'self introduction',
+          //     Email: '',
+          //     Photo: require('../image/a.jpg')
+          //   },
+          //   {
+          //     ID: '',
+          //     Username: 'leonnnop',
+          //     Bio: 'self introduction',
+          //     Email: '',
+          //     Photo: require('../image/a.jpg')
+          //   },
+          //   {
+          //     ID: '',
+          //     Username: 'leonnnop',
+          //     Bio: 'self introduction',
+          //     Email: '',
+          //     Photo: require('../image/a.jpg')
+          //   },
+          //   {
+          //     ID: '',
+          //     Username: 'leonnnop',
+          //     Bio: 'self introduction',
+          //     Email: '',
+          //     Photo: require('../image/a.jpg')
+          //   },
         ],
 
         totalMoments: [{
@@ -632,7 +671,7 @@
           // console.log(res2)
           this.totalMoments = res1.data;
 
-          if (this.totalMoments.length<1) {
+          if (this.totalMoments.length < 1) {
             this.bottomHint = '没有东西可以看哦，多去关注点人啦！(๑•̀ㅂ•́) ✧'
           }
 
@@ -972,7 +1011,7 @@
           .then((response) => {
             var newTotalMoments = response.data;
 
-            if (newTotalMoments.length<1) {
+            if (newTotalMoments.length < 1) {
               this.bottomHint = '刷完了辣！(⑉꒦ິ^꒦ິ⑉)！我可是有底线的！'
               this.flag = false;
             }
@@ -1024,6 +1063,11 @@
             })
             this.totalMoments = this.totalMoments.concat(newTotalMoments);
           })
+      },
+      backgroundHandler() {
+        console.log('backgroundHandler');
+        // setTimeout('this.loadingPage = false', 1000);
+        this.loadingPage = false
       }
 
     },
@@ -1033,6 +1077,38 @@
       next();
     },
 
+    mounted: function () {
+      this.$nextTick(function () {
+        // Code that will run only after the
+        // entire view has been rendered
+        // console.log('mouted')
+        // setTimeout("backgroundHandler()", 1000);
+        var self = this;
+        // this.toastrVal = inVal;
+        // this.loadState = true;
+        // this.noBg = bgState;
+        setTimeout(function () {
+          self.loadingPage = false;
+        }, 3500)
+      })
+    },
+    beforeRouteEnter(from, to, next) {
+      next(vm => {
+        vm.$nextTick(function () {
+          var self = vm;
+          // this.toastrVal = inVal;
+          // this.loadState = true;
+          // this.noBg = bgState;
+          setTimeout(function () {
+            self.loadingPage = false;
+          }, 3500)
 
+          // Code that will run only after the
+          // entire view has been rendered
+          // console.log('mouted')
+          // window.setTimeout("this.backgroundHandler()", 1000);
+        })
+      })
+    }
   }
 </script>

@@ -1,5 +1,8 @@
 <template>
     <el-container>
+        <transition name="slide-fade">
+            <div v-if="loadingPage" class="loadingbackground" style="margin-top:-30px"></div>
+        </transition>
         <el-row style="width:100%;margin-top:30px;" type="flex" justify="center">
             <el-col style="width:100%;">
                 <el-row style="width:100%;margin-bottom:30px;" type="flex" justify="start" align="middle">
@@ -174,6 +177,39 @@
         width: 500px;
         height: 300px;
     }
+
+    /* 可以设置不同的进入和离开动画 */
+
+    /* 设置持续时间和动画函数 */
+
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+
+    .slide-fade-enter,
+    .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */
+
+        {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+
+    .loadingbackground {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        background-image: url(../image/loading3.gif);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: white;
+        /* background-size: cover */
+    }
 </style>
 
 <script>
@@ -278,6 +314,8 @@
                         LikeNum: 5
                     }
                 ],
+                loadingPage: true,
+
             }
         },
 
@@ -455,32 +493,65 @@
             }
         },
 
-        beforeRouteEnter(to, from, next) {
-            // 处理无法访问的情况
-            next((vm) => {
-                vm.axios.get('http://192.168.0.37:5000/feed/sss')
-                    .then((response) => {
-                        for (let index = 0; index < response.length; index++) {
-                            let responce = response[index].data;
-                            let card = {};
-                            let author = responce.author;
-                            card.index = index;
-                            card.authorName = author.name;
-                            card.authorURL = author.url;
-                            card.url = responce.url;
-                            card.title = responce.title;
-                            card.excerpt = responce.excerpt;
+        // beforeRouteEnter(to, from, next) {
+        //     // 处理无法访问的情况
+        //     next((vm) => {
+        //         vm.axios.get('http://192.168.0.37:5000/feed/sss')
+        //             .then((response) => {
+        //                 for (let index = 0; index < response.length; index++) {
+        //                     let responce = response[index].data;
+        //                     let card = {};
+        //                     let author = responce.author;
+        //                     card.index = index;
+        //                     card.authorName = author.name;
+        //                     card.authorURL = author.url;
+        //                     card.url = responce.url;
+        //                     card.title = responce.title;
+        //                     card.excerpt = responce.excerpt;
 
-                            this.cards.push(card);
-                        }
-                    })
-                    .catch();
-            });
-        },
+        //                     this.cards.push(card);
+        //                 }
+        //             })
+        //             .catch();
+        //     });
+        // },
         beforeRouteLeave(to, from, next) {
             this.cards = [];
             this.tableData = [];
             next();
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the
+                // entire view has been rendered
+                // console.log('mouted')
+                // setTimeout("backgroundHandler()", 1000);
+                var self = this;
+                // this.toastrVal = inVal;
+                // this.loadState = true;
+                // this.noBg = bgState;
+                setTimeout(function () {
+                    self.loadingPage = false;
+                }, 1000)
+            })
+        },
+        beforeRouteEnter(from, to, next) {
+            next(vm => {
+                vm.$nextTick(function () {
+                    var self = vm;
+                    // this.toastrVal = inVal;
+                    // this.loadState = true;
+                    // this.noBg = bgState;
+                    setTimeout(function () {
+                        self.loadingPage = false;
+                    }, 1000)
+
+                    // Code that will run only after the
+                    // entire view has been rendered
+                    // console.log('mouted')
+                    // window.setTimeout("this.backgroundHandler()", 1000);
+                })
+            })
         }
     }
 </script>

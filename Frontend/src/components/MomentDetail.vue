@@ -1,5 +1,8 @@
 <template>
     <div style="margin-bottom:30px;">
+        <transition name="slide-fade">
+            <div v-if="loadingPage" class="loadingbackground" style="margin-top:-30px"></div>
+        </transition>
         <el-row>
             <el-col :span="10" :offset="4">
                 <el-carousel v-if="hackReset" height="500px" :interval="0" indicator-position="outside">
@@ -194,7 +197,8 @@
                 <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
-                            <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
+                            <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
+                                style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
                         <el-col :span="18" :offset="0">
                             <div class="sendContent">
@@ -268,6 +272,8 @@
             return {
                 // sendText:'',
                 displayDelete: false,
+                loadingPage: true,
+
                 sendMomentImgNum: 0,
                 userHeadImg: '',
                 hackReset: false,
@@ -1160,11 +1166,77 @@
 
 
             // this.axios
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the
+                // entire view has been rendered
+                // console.log('mouted')
+                // setTimeout("backgroundHandler()", 1000);
+                var self = this;
+                // this.toastrVal = inVal;
+                // this.loadState = true;
+                // this.noBg = bgState;
+                setTimeout(function () {
+                    self.loadingPage = false;
+                }, 1000)
+            })
+        },
+        beforeRouteEnter(from, to, next) {
+            next(vm => {
+                vm.$nextTick(function () {
+                    var self = vm;
+                    // this.toastrVal = inVal;
+                    // this.loadState = true;
+                    // this.noBg = bgState;
+                    setTimeout(function () {
+                        self.loadingPage = false;
+                    }, 1000)
+
+                    // Code that will run only after the
+                    // entire view has been rendered
+                    // console.log('mouted')
+                    // window.setTimeout("this.backgroundHandler()", 1000);
+                })
+            })
         }
     }
 </script>
 
 <style scoped>
+    /* 可以设置不同的进入和离开动画 */
+
+    /* 设置持续时间和动画函数 */
+
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+
+    .slide-fade-enter,
+    .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */
+
+        {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+
+    .loadingbackground {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        background-image: url(../image/loading3.gif);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: white;
+        /* background-size: cover */
+    }
+
     .pic {
         width: 100%;
         height: 500px;

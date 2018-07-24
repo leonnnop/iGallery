@@ -551,6 +551,10 @@
       searchHandler: function () {
         this.$router.push('/main/searchResult/' + this.searchInput);
         this.searchInput = '';
+      },
+      backgroundHandler() {
+        console.log('backgroundHandler');
+        this.loadingPage = false
       }
     },
 
@@ -559,9 +563,19 @@
         // Code that will run only after the
         // entire view has been rendered
         console.log('mouted')
-        setTimeout('this.loadingPage = false', 1000);
+        setTimeout(this.backgroundHandler(), 1000);
       })
-    }
+    },
+    // beforeRouteEnter(from, to, next) {
+    //   next(vm => {
+    //     vm.$nextTick(function () {
+    //       // Code that will run only after the
+    //       // entire view has been rendered
+    //       console.log('mouted')
+    //       setTimeout(vm.backgroundHandler(), 1000);
+    //     })
+    //   })
+    // }
 
   };
 </script>

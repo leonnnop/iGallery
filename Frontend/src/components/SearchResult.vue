@@ -1,5 +1,8 @@
 <template>
     <el-container>
+        <transition name="slide-fade">
+            <div v-if="loadingPage" class="loadingbackground" style="margin-top:-30px"></div>
+        </transition>
         <el-row style="width:100%">
             <el-row class="box user-container">
                 <el-row style="margin:20px">
@@ -23,7 +26,7 @@
                                     </el-row>
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">{{user.Username}}</el-row>
                                     <el-row style="margin-top:5%;color:#777;font-size:13px" class="self-intro">{{user.Bio}}</el-row>
-                                    <el-row  v-show="user.showFollowBtn">
+                                    <el-row v-show="user.showFollowBtn">
                                         <el-button plain type="primary" size="medium" style="width:80%;margin-top:15%" @click="followUserHandler(user)">{{user.followWord}}</el-button>
                                     </el-row>
                                 </el-row>
@@ -74,21 +77,21 @@
                 <div v-if="!hasMoment" class="message">没有找到相关动态</div>
                 <div style="width:902px" class="moment-container">
                     <div v-for="(moment,index) in moments" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
-                            <div class="moment-inner">
-                                <div class="icon">
-                                    <el-row type="flex" justify="space-between">
-                                        <el-col :span="8">
-                                            <img src="../image/like-white.png" alt="">
-                                            <div>{{moment.LikeNum}}</div>
-                                        </el-col>
-                                        <el-col :span="8">
-                                            <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
-                                            <span>查看</span>
-                                        </el-col>
-                                    </el-row>
-                                </div>
+                        <div class="moment-inner">
+                            <div class="icon">
+                                <el-row type="flex" justify="space-between">
+                                    <el-col :span="8">
+                                        <img src="../image/like-white.png" alt="">
+                                        <div>{{moment.LikeNum}}</div>
+                                    </el-col>
+                                    <el-col :span="8">
+                                        <img src="../image/look.png" alt="look" class="look hover-cursor" @click="jumpToDetail(moment.ID)">
+                                        <span>查看</span>
+                                    </el-col>
+                                </el-row>
                             </div>
                         </div>
+                    </div>
                 </div>
             </el-row>
 
@@ -229,14 +232,15 @@
         width: 260px;
         height: 0;
         padding-bottom: 260px;
-        margin:0 60px 30px 0;
+        margin: 0 60px 30px 0;
         background-position: center;
         background-size: cover;
         display: inline-block;
         box-sizing: border-box;
     }
-    .moment-container div:nth-child(3n){
-        margin:0 0 30px 0;
+
+    .moment-container div:nth-child(3n) {
+        margin: 0 0 30px 0;
     }
 
     .moment-inner {
@@ -268,6 +272,39 @@
         top: 0;
         left: 0;
     }
+
+    /* 可以设置不同的进入和离开动画 */
+
+    /* 设置持续时间和动画函数 */
+
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+
+    .slide-fade-enter,
+    .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */
+
+        {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+
+    .loadingbackground {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        background-image: url(../image/loading3.gif);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: white;
+        /* background-size: cover */
+    }
 </style>
 
 <script>
@@ -288,6 +325,8 @@
         data() {
             return {
                 keyword: '',
+                loadingPage: true,
+
                 showUsersLeftArrow: false,
                 showUsersRightArrow: false,
                 showTagsLeftArrow: false,
@@ -356,7 +395,7 @@
                     Content: 'tag5',
                     src: require('../image/hex.jpeg')
                 }],
-                moments:[{
+                moments: [{
                     ID: '1',
                     src: require('../image/photo1.jpg')
                 }, {
@@ -365,7 +404,7 @@
                 }, {
                     ID: '3',
                     src: require('../image/photo3.jpg')
-                },{
+                }, {
                     ID: '4',
                     src: require('../image/photo1.jpg')
                 }, {
@@ -375,7 +414,7 @@
                 }, {
                     ID: '3',
                     src: require('../image/photo3.jpg')
-                },{
+                }, {
                     ID: '4',
                     src: require('../image/photo1.jpg')
                 }, {
@@ -540,11 +579,11 @@
 
                     if (res2.data.m_Item2.length != 0) {
                         this.moments = res2.data.m_Item2;
-                        this.hasMoment=true;
+                        this.hasMoment = true;
                         // Vue.set()
-                        
+
                         this.moments.forEach(element => {
-                            Vue.set(element,'LikeNum',element.LikeNum)
+                            Vue.set(element, 'LikeNum', element.LikeNum)
                             this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
                                     '&type=1')
                                 .then((response) => {
@@ -571,7 +610,7 @@
                                 Vue.set(element, 'followWord', '关注');
                             }
                             var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + element.Pic;
-                            Vue.set(element,'Pic',Pic)
+                            Vue.set(element, 'Pic', Pic)
                         })
                     } else {
                         this.hasTag = false;
@@ -589,7 +628,7 @@
                 .catch((error) => {
                     console.log(error);
                 });
-            
+
 
         },
         methods: {
@@ -695,6 +734,39 @@
                 }
             },
 
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the
+                // entire view has been rendered
+                // console.log('mouted')
+                // setTimeout("backgroundHandler()", 1000);
+                var self = this;
+                // this.toastrVal = inVal;
+                // this.loadState = true;
+                // this.noBg = bgState;
+                setTimeout(function () {
+                    self.loadingPage = false;
+                }, 1000)
+            })
+        },
+        beforeRouteEnter(from, to, next) {
+            next(vm => {
+                vm.$nextTick(function () {
+                    var self = vm;
+                    // this.toastrVal = inVal;
+                    // this.loadState = true;
+                    // this.noBg = bgState;
+                    setTimeout(function () {
+                        self.loadingPage = false;
+                    }, 1000)
+
+                    // Code that will run only after the
+                    // entire view has been rendered
+                    // console.log('mouted')
+                    // window.setTimeout("this.backgroundHandler()", 1000);
+                })
+            })
         }
     }
 </script>

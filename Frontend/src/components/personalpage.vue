@@ -1,142 +1,147 @@
 <template>
-  <el-col>
-    <el-card style="width:70%" :body-style="{padding:'0px'}" :class="navBarFixed == true ? 'navBarWrap1' :''" shadow="never">
-      <el-row style="background-color:#ffffff;padding-bottom:10px" class="clearfix">
-        <!--el-row>
+  <el-container>
+    <transition name="slide-fade">
+      <div v-if="loadingPage" class="loadingbackground" style="margin-top:-30px"></div>
+    </transition>
+    <el-col>
+
+      <el-card style="width:70%" :body-style="{padding:'0px'}" :class="navBarFixed == true ? 'navBarWrap1' :''" shadow="never">
+        <el-row style="background-color:#ffffff;padding-bottom:10px" class="clearfix">
+          <!--el-row>
            <el-button style="background-color:#c1c4c9" @click="handleSettingClick" size="small">设置<i class="el-icon-setting el-icon--right"></i></el-button>
          </el-col>
       </el-row-->
-        <el-row>
-          <el-col :span="6" :offset="1" style="margin:20px;padding-left:30px">
-            <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">
-              <!-- <img :src="headUrl" class="headImg" alt="头像"> -->
-              <!-- <div class="headImg">点我换头</div> -->
-              <div class="moment" :style="{backgroundImage: 'url(' + (headUrl) + ')'}">
-                <div class="moment-inner">
-                  <div class="icon">
-                    <el-row type="flex" justify="center" align="middle">
-                      <!-- <el-col>点我换头</el-col> -->
-                      <img src="../image/upload-icon.png" alt="" height="60px">
+          <el-row>
+            <el-col :span="6" :offset="1" style="margin:20px;padding-left:30px">
+              <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">
+                <!-- <img :src="headUrl" class="headImg" alt="头像"> -->
+                <!-- <div class="headImg">点我换头</div> -->
+                <div class="moment" :style="{backgroundImage: 'url(' + (headUrl) + ')'}">
+                  <div class="moment-inner">
+                    <div class="icon">
+                      <el-row type="flex" justify="center" align="middle">
+                        <!-- <el-col>点我换头</el-col> -->
+                        <img src="../image/upload-icon.png" alt="" height="60px">
 
-                    </el-row>
+                      </el-row>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </el-upload>
-          </el-col>
-          <el-col :span="17" style="padding-top:20px">
-            <el-row>
-              <el-button style="font-size:26px" type="text" id="username">{{username}}</el-button>
-            </el-row>
-            <el-row>
-              <el-button type="text" class="num" @click="showFollow">关注: {{followNum}}</el-button>
-              <el-dialog title="" :visible.sync="followListVisible" width="40%">
-                <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">关注</span>
-                <div style="height:400px;overflow:hidden;overflow-y:auto;">
-                  <div style="border-bottom:1px solid rgb(235,238,245);"></div>
-                  <div v-for="(followUser,index) in followUsers" :key="index" class="like-user-li">
-                    <el-row type="flex" justify="center" align="middle">
-                      <el-col :span="3" :offset="1" style="height:50px;">
-                        <img :src="followUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(followUser.userPage)">
-                      </el-col>
-                      <el-col :span="16">
-                        <el-row>{{followUser.Username}}</el-row>
-                        <el-row style="font-size:12px;margin-top:5px;">{{followUser.Bio}}</el-row>
-                      </el-col>
-                      <el-col :span="3">
-                        <el-button plain size="small" @click="followHandler(followUser,followUser.FollowState)" :class="{followed:followUser.FollowState}"
-                          v-if="followUser.ID!=$store.state.currentUserId_ID">{{followUser.followState}}</el-button>
-                        <!--  -->
-                      </el-col>
-                    </el-row>
+              </el-upload>
+            </el-col>
+            <el-col :span="17" style="padding-top:20px">
+              <el-row>
+                <el-button style="font-size:26px" type="text" id="username">{{username}}</el-button>
+              </el-row>
+              <el-row>
+                <el-button type="text" class="num" @click="showFollow">关注: {{followNum}}</el-button>
+                <el-dialog title="" :visible.sync="followListVisible" width="40%">
+                  <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">关注</span>
+                  <div style="height:400px;overflow:hidden;overflow-y:auto;">
+                    <div style="border-bottom:1px solid rgb(235,238,245);"></div>
+                    <div v-for="(followUser,index) in followUsers" :key="index" class="like-user-li">
+                      <el-row type="flex" justify="center" align="middle">
+                        <el-col :span="3" :offset="1" style="height:50px;">
+                          <img :src="followUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(followUser.userPage)">
+                        </el-col>
+                        <el-col :span="16">
+                          <el-row>{{followUser.Username}}</el-row>
+                          <el-row style="font-size:12px;margin-top:5px;">{{followUser.Bio}}</el-row>
+                        </el-col>
+                        <el-col :span="3">
+                          <el-button plain size="small" @click="followHandler(followUser,followUser.FollowState)" :class="{followed:followUser.FollowState}"
+                            v-if="followUser.ID!=$store.state.currentUserId_ID">{{followUser.followState}}</el-button>
+                          <!--  -->
+                        </el-col>
+                      </el-row>
+                    </div>
                   </div>
-                </div>
-              </el-dialog>
-              <el-button type="text" class="num" @click="showFans">粉丝: {{fansNum}}</el-button>
-              <el-dialog title="" :visible.sync="fanListVisible" width="40%">
-                <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">粉丝</span>
-                <div style="height:400px;overflow:hidden;overflow-y:auto;">
-                  <div style="border-bottom:1px solid rgb(235,238,245);"></div>
-                  <div v-for="(fanUser,index) in fanUsers" :key="index" class="like-user-li">
-                    <el-row type="flex" justify="center" align="middle">
-                      <el-col :span="3" :offset="1" style="height:50px;">
-                        <img :src="fanUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(fanUser.userPage)">
-                      </el-col>
-                      <el-col :span="16">
-                        <el-row>{{fanUser.Username}}</el-row>
-                        <el-row style="font-size:12px;margin-top:5px;">{{fanUser.Bio}}</el-row>
-                      </el-col>
-                      <el-col :span="3">
-                        <el-button plain size="small" @click="followHandler(fanUser,fanUser.FollowState)" :class="{followed:fanUser.FollowState}"
-                          v-if="fanUser.ID!=$store.state.currentUserId_ID">{{fanUser.followState}}</el-button>
-                        <!--  -->
-                      </el-col>
-                    </el-row>
+                </el-dialog>
+                <el-button type="text" class="num" @click="showFans">粉丝: {{fansNum}}</el-button>
+                <el-dialog title="" :visible.sync="fanListVisible" width="40%">
+                  <span slot="title" style="color:#555;font-size:20px;letter-spacing:5px;">粉丝</span>
+                  <div style="height:400px;overflow:hidden;overflow-y:auto;">
+                    <div style="border-bottom:1px solid rgb(235,238,245);"></div>
+                    <div v-for="(fanUser,index) in fanUsers" :key="index" class="like-user-li">
+                      <el-row type="flex" justify="center" align="middle">
+                        <el-col :span="3" :offset="1" style="height:50px;">
+                          <img :src="fanUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(fanUser.userPage)">
+                        </el-col>
+                        <el-col :span="16">
+                          <el-row>{{fanUser.Username}}</el-row>
+                          <el-row style="font-size:12px;margin-top:5px;">{{fanUser.Bio}}</el-row>
+                        </el-col>
+                        <el-col :span="3">
+                          <el-button plain size="small" @click="followHandler(fanUser,fanUser.FollowState)" :class="{followed:fanUser.FollowState}"
+                            v-if="fanUser.ID!=$store.state.currentUserId_ID">{{fanUser.followState}}</el-button>
+                          <!--  -->
+                        </el-col>
+                      </el-row>
+                    </div>
                   </div>
-                </div>
-              </el-dialog>
-            </el-row>
-            <el-row>
-              <p style="font-size:13px;color:#6c6b6e">个人简介：{{desc}}</p>
-            </el-row>
+                </el-dialog>
+              </el-row>
+              <el-row>
+                <p style="font-size:13px;color:#6c6b6e">个人简介：{{desc}}</p>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-row>
+        <!-- </el-row> -->
+        <el-row style="padding:0 10px">
+          <el-menu default-active="dynamic" class="el-menu-demo" mode="horizontal" @select="handleSelectTop" active-text-color="#409eff">
+            <el-menu-item index="dynamic">我的动态
+              <span style="font-size:12px;color:#000009">{{moments.length}}</span>
+            </el-menu-item>
+            <el-menu-item index="favors">收藏夹
+              <span style="font-size:12px;color:#000009">{{favors.length+1}}</span>
+            </el-menu-item>
+            <el-menu-item index="set">设置</el-menu-item>
+          </el-menu>
+        </el-row>
+        <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
+          <div v-if="moments.length<1" class="message">还没有已发表的动态呢！</div>
+
+          <el-col v-for="moment in moments" :key="moment.name" :span="6">
+            <el-col>
+              <!--el-card shadow="always" :body-style="{ padding: '0px' }"-->
+              <div class="moments" :style="{backgroundImage:'url('+moment.url+')'}" @click="toMoment(moment.momentID)"></div>
+              <!--/el-card-->
+            </el-col>
           </el-col>
         </el-row>
-      </el-row>
-      <!-- </el-row> -->
-      <el-row style="padding:0 10px">
-        <el-menu default-active="dynamic" class="el-menu-demo" mode="horizontal" @select="handleSelectTop" active-text-color="#409eff">
-          <el-menu-item index="dynamic">我的动态
-            <span style="font-size:12px;color:#000009">{{moments.length}}</span>
-          </el-menu-item>
-          <el-menu-item index="favors">收藏夹
-            <span style="font-size:12px;color:#000009">{{favors.length+1}}</span>
-          </el-menu-item>
-          <el-menu-item index="set">设置</el-menu-item>
-        </el-menu>
-      </el-row>
-      <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
-        <div v-if="moments.length<1" class="message">还没有已发表的动态呢！</div>
-
-        <el-col v-for="moment in moments" :key="moment.name" :span="6">
-          <el-col>
-            <!--el-card shadow="always" :body-style="{ padding: '0px' }"-->
-            <div class="moments" :style="{backgroundImage:'url('+moment.url+')'}" @click="toMoment(moment.momentID)"></div>
-            <!--/el-card-->
-          </el-col>
-        </el-col>
-      </el-row>
-      <el-row v-if="isFavors">
-        <el-col :span="5">
-          <el-row>
-            <!-- <div slot="title"> -->
-            <el-row style="margin:10px">
-              <el-col :span="20" :offset="1">
-                <span style="font-size:18px;color:#bbbbbb">动态收藏</span>
-              </el-col>
-              <el-col :span="3">
-                <i class="el-icon-circle-plus-outline" @click="dialogFormVisible=true"></i>
-              </el-col>
-              <el-dialog title="" :visible.sync="dialogFormVisible" class="dialog">
-                <div slot="title">新建收藏夹</div>
-                <el-form ref="form" :model="ruleform" :rules="rules">
-                  <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname">
-                    <el-input v-model="ruleform.fname" auto-complete="off" style="width:200px" placeholder="最大长度为15个字符"></el-input>
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button type="primary" @click="finishHandler()" size="middle">确定</el-button>
-                  <el-button @click="dialogFormVisible=false;ruleform.fname=''" size="middle">取消</el-button>
-                </div>
-              </el-dialog>
+        <el-row v-if="isFavors">
+          <el-col :span="5">
+            <el-row>
+              <!-- <div slot="title"> -->
+              <el-row style="margin:10px">
+                <el-col :span="20" :offset="1">
+                  <span style="font-size:18px;color:#bbbbbb">动态收藏</span>
+                </el-col>
+                <el-col :span="3">
+                  <i class="el-icon-circle-plus-outline" @click="dialogFormVisible=true"></i>
+                </el-col>
+                <el-dialog title="" :visible.sync="dialogFormVisible" class="dialog">
+                  <div slot="title">新建收藏夹</div>
+                  <el-form ref="form" :model="ruleform" :rules="rules">
+                    <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname">
+                      <el-input v-model="ruleform.fname" auto-complete="off" style="width:200px" placeholder="最大长度为15个字符"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="finishHandler()" size="middle">确定</el-button>
+                    <el-button @click="dialogFormVisible=false;ruleform.fname=''" size="middle">取消</el-button>
+                  </div>
+                </el-dialog>
+              </el-row>
+              <!-- </div> -->
             </el-row>
-            <!-- </div> -->
-          </el-row>
-          <!-- <el-menu default-active="默认收藏夹" class="el-menu-vertical-demo" @select="handleSelectLeft" collapse-transition="false"> -->
-          <el-menu default-active="默认收藏夹" class="el-menu-vertical-demo" @select="handleSelectLeft">
+            <!-- <el-menu default-active="默认收藏夹" class="el-menu-vertical-demo" @select="handleSelectLeft" collapse-transition="false"> -->
+            <el-menu default-active="默认收藏夹" class="el-menu-vertical-demo" @select="handleSelectLeft">
 
-            <!--el-submenu index="1"-->
-            <!-- <el-menu-item index="title">
+              <!--el-submenu index="1"-->
+              <!-- <el-menu-item index="title">
               <div slot="title">
                 <el-row>
                   <el-col :span="21" :offset="0">
@@ -160,110 +165,110 @@
                 </el-row>
               </div>
             </el-menu-item> -->
-            <el-menu-item index="默认收藏夹">
-              <el-col :span="18">
-                <el-row>
-                  <el-col :span="7">
-                    <img style="width:60%" src="../image/heart.png" />
-                  </el-col>
-                  <el-col :span="17">{{'默认收藏夹'+'('+defaultCollectNum+')'}}</el-col>
-                </el-row>
-              </el-col>
-            </el-menu-item>
-            <el-row v-for="(favor,index) in favors" :key="index">
-              <el-menu-item :index="favor.favorName">
-                <el-row>
-                  <el-col :span="18">
-                    <el-row>
-                      <el-col :span="7">
-                        <img style="width:60%" src="../image/folder.png" />
-                      </el-col>
-                      <el-col :span="17">{{favor.favorName+'('+favor.collectNum+')'}}</el-col>
-                    </el-row>
-                  </el-col>
-                  <el-col :span="1">
-                    <el-dropdown @command="handleCommand">
-                      <span class="el-dropdown-link">
-                        <i class="el-icon-more el-icon--right"></i>
-                      </span>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="deleteFavor(favor.favorName)">删除</el-dropdown-item>
-                        <el-dropdown-item @click.native="editClick()" divided>编辑名称</el-dropdown-item>
-                        <!-- <el-dropdown-item command="deleteFavor(favor.favorName)">删除</el-dropdown-item>
-                        <el-dropdown-item command="edit" divided>编辑名称</el-dropdown-item> -->
-                        <el-dialog title="" :visible.sync="dialogFormVisible2" class="dialog" :modal-append-to-body="false">
-                          <div slot="title">重命名收藏夹</div>
-                          <el-form ref="form2" :model="ruleform2" :rules="rules2">
-                            <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname2">
-                              <el-input v-model="ruleform2.fname2" auto-complete="off" style="width:200px" :value="favor.favorName"></el-input>
-                            </el-form-item>
-                          </el-form>
-                          <div slot="footer" class="dialog-footer">
-                            <el-button type="primary" @click="finishHandler2(index,favor.favorName)" size="middle">确 定</el-button>
-                            <el-button @click="dialogFormVisible2=false;ruleform2.fname2=''" size="middle">取 消</el-button>
-                          </div>
-                        </el-dialog>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </el-col>
-                </el-row>
+              <el-menu-item index="默认收藏夹">
+                <el-col :span="18">
+                  <el-row>
+                    <el-col :span="7">
+                      <img style="width:60%" src="../image/heart.png" />
+                    </el-col>
+                    <el-col :span="17">{{'默认收藏夹'+'('+defaultCollectNum+')'}}</el-col>
+                  </el-row>
+                </el-col>
               </el-menu-item>
-            </el-row>
-            <!-- <el-menu-item index="set">设置</el-menu-item> -->
+              <el-row v-for="(favor,index) in favors" :key="index">
+                <el-menu-item :index="favor.favorName">
+                  <el-row>
+                    <el-col :span="18">
+                      <el-row>
+                        <el-col :span="7">
+                          <img style="width:60%" src="../image/folder.png" />
+                        </el-col>
+                        <el-col :span="17">{{favor.favorName+'('+favor.collectNum+')'}}</el-col>
+                      </el-row>
+                    </el-col>
+                    <el-col :span="1">
+                      <el-dropdown @command="handleCommand">
+                        <span class="el-dropdown-link">
+                          <i class="el-icon-more el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item @click.native="deleteFavor(favor.favorName)">删除</el-dropdown-item>
+                          <el-dropdown-item @click.native="editClick()" divided>编辑名称</el-dropdown-item>
+                          <!-- <el-dropdown-item command="deleteFavor(favor.favorName)">删除</el-dropdown-item>
+                        <el-dropdown-item command="edit" divided>编辑名称</el-dropdown-item> -->
+                          <el-dialog title="" :visible.sync="dialogFormVisible2" class="dialog" :modal-append-to-body="false">
+                            <div slot="title">重命名收藏夹</div>
+                            <el-form ref="form2" :model="ruleform2" :rules="rules2">
+                              <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname2">
+                                <el-input v-model="ruleform2.fname2" auto-complete="off" style="width:200px" :value="favor.favorName"></el-input>
+                              </el-form-item>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer">
+                              <el-button type="primary" @click="finishHandler2(index,favor.favorName)" size="middle">确 定</el-button>
+                              <el-button @click="dialogFormVisible2=false;ruleform2.fname2=''" size="middle">取 消</el-button>
+                            </div>
+                          </el-dialog>
+                        </el-dropdown-menu>
+                      </el-dropdown>
+                    </el-col>
+                  </el-row>
+                </el-menu-item>
+              </el-row>
+              <!-- <el-menu-item index="set">设置</el-menu-item> -->
 
-          </el-menu>
-        </el-col>
-        <el-col :span="19" style="padding-left:30px;padding-top:15px">
-          <div v-if="collects.length<1" class="message">还没有动态在该收藏夹哦，快去收藏吧！</div>
+            </el-menu>
+          </el-col>
+          <el-col :span="19" style="padding-left:30px;padding-top:15px">
+            <div v-if="collects.length<1" class="message">还没有动态在该收藏夹哦，快去收藏吧！</div>
 
-          <el-col v-for="(collect,index) in collects" :key="index" :span="8">
-            <el-col>
-              <div class="moments" :style="{backgroundImage:'url('+collect.url+')'}" @click="toMoment(collect.momentID)"></div>
-              <el-col :span="2">
-                <el-dropdown>
-                  <span class="el-dropdown-link">
-                    <i class="el-icon-more"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="deleteCollect(index,collect)">取消收藏</el-dropdown-item>
-                    <el-dropdown-item @click.native="dialogFormVisible3=true">移动</el-dropdown-item>
-                    <el-dialog title="" :visible.sync="dialogFormVisible3" class="checkForm" :modal-append-to-body="false">
-                      <div slot="title">移动</div>
-                      <el-checkbox-group v-model="checkedFavor" :min="1" :max="2">
-                        <div style="padding:10px,10px">
-                          <el-checkbox chcecked="false" key="默认" label="默认">
-                            <span style="font-size:15px">默认收藏夹</span>
-                          </el-checkbox>
+            <el-col v-for="(collect,index) in collects" :key="index" :span="8">
+              <el-col>
+                <div class="moments" :style="{backgroundImage:'url('+collect.url+')'}" @click="toMoment(collect.momentID)"></div>
+                <el-col :span="2">
+                  <el-dropdown>
+                    <span class="el-dropdown-link">
+                      <i class="el-icon-more"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item @click.native="deleteCollect(index,collect)">取消收藏</el-dropdown-item>
+                      <el-dropdown-item @click.native="dialogFormVisible3=true">移动</el-dropdown-item>
+                      <el-dialog title="" :visible.sync="dialogFormVisible3" class="checkForm" :modal-append-to-body="false">
+                        <div slot="title">移动</div>
+                        <el-checkbox-group v-model="checkedFavor" :min="1" :max="2">
+                          <div style="padding:10px,10px">
+                            <el-checkbox chcecked="false" key="默认" label="默认">
+                              <span style="font-size:15px">默认收藏夹</span>
+                            </el-checkbox>
+                          </div>
+                          <div v-for="favor in favors" :key="favor.favorName" :label="favor.favorName" style="padding:10px,10px">
+                            <el-checkbox chcecked="false" :label="favor.favorName">
+                              <span style="font-size:15px">{{favor.favorName}}</span>
+                            </el-checkbox>
+                          </div>
+                        </el-checkbox-group>
+                        <div slot="footer" class="dialog-footer">
+                          <el-button type="primary" @click="moveHandler('key')" size="middle">确认</el-button>
+                          <el-button @click="dialogFormVisible3=false" size="middle">取消</el-button>
                         </div>
-                        <div v-for="favor in favors" :key="favor.favorName" :label="favor.favorName" style="padding:10px,10px">
-                          <el-checkbox chcecked="false" :label="favor.favorName">
-                            <span style="font-size:15px">{{favor.favorName}}</span>
-                          </el-checkbox>
-                        </div>
-                      </el-checkbox-group>
-                      <div slot="footer" class="dialog-footer">
-                        <el-button type="primary" @click="moveHandler('key')" size="middle">确认</el-button>
-                        <el-button @click="dialogFormVisible3=false" size="middle">取消</el-button>
-                      </div>
-                    </el-dialog>
-                  </el-dropdown-menu>
-                </el-dropdown>
+                      </el-dialog>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </el-col>
               </el-col>
             </el-col>
-          </el-col>
 
-        </el-col>
-      </el-row>
-      <!-- <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
+          </el-col>
+        </el-row>
+        <!-- <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
         <el-col v-for="moment in moments" :key="moment.name" :span="6">
           <el-col>
             <div class="moments" :style="{backgroundImage:'url('+moment.url+')'}" @click="toMoment(moment.momentID)"></div>
           </el-col>
         </el-col>
       </el-row> -->
-      <!-- </el-menu> -->
+        <!-- </el-menu> -->
 
-      <!-- <el-col :span="19" style="padding-left:30px;padding-top:15px">
+        <!-- <el-col :span="19" style="padding-left:30px;padding-top:15px">
         <el-col v-for="(collect,index) in collects" :key="index" :span="8">
           <el-col>
             <div class="moments" :style="{backgroundImage:'url('+collect.url+')'}" @click="toMoment(collect.momentID)"></div>
@@ -301,11 +306,45 @@
         </el-col>
 
       </el-col> -->
-    </el-card>
-  </el-col>
+      </el-card>
+    </el-col>
+  </el-container>
 </template>
 
 <style>
+  /* 可以设置不同的进入和离开动画 */
+
+  /* 设置持续时间和动画函数 */
+
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+
+  .slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+
+  .slide-fade-enter,
+  .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */
+
+    {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+
+  .loadingbackground {
+    position: fixed;
+    z-index: 1000;
+    height: 100%;
+    width: 100%;
+    background-image: url(../image/loading3.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    /* background-size: cover */
+  }
+
   .icon {
     position: absolute;
     left: 50%;
@@ -728,6 +767,8 @@
         dialogFormVisible: false,
         dialogFormVisible2: false,
         dialogFormVisible3: false,
+        loadingPage: true,
+
       }
     },
     methods: {
@@ -1260,6 +1301,39 @@
                     .catch((error) => {
                        console.log(error);
                     });*/
+    },
+    mounted: function () {
+      this.$nextTick(function () {
+        // Code that will run only after the
+        // entire view has been rendered
+        // console.log('mouted')
+        // setTimeout("backgroundHandler()", 1000);
+        var self = this;
+        // this.toastrVal = inVal;
+        // this.loadState = true;
+        // this.noBg = bgState;
+        setTimeout(function () {
+          self.loadingPage = false;
+        }, 1000)
+      })
+    },
+    beforeRouteEnter(from, to, next) {
+      next(vm => {
+        vm.$nextTick(function () {
+          var self = vm;
+          // this.toastrVal = inVal;
+          // this.loadState = true;
+          // this.noBg = bgState;
+          setTimeout(function () {
+            self.loadingPage = false;
+          }, 1000)
+
+          // Code that will run only after the
+          // entire view has been rendered
+          // console.log('mouted')
+          // window.setTimeout("this.backgroundHandler()", 1000);
+        })
+      })
     }
   }
 </script>
