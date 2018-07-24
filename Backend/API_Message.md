@@ -50,7 +50,7 @@
 JSON样例
 | 类型| 属性          |
 | ------ | ---------------- |
-|List<int>         | IndentityList        |
+|List<int>         | IndentityList  （0表示自己发的消息、1表示对方发的消息）      |
 |LIst<string>    | ContentList        |
 
 ------
