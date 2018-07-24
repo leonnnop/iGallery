@@ -26,14 +26,6 @@ namespace ProductsApp.Controllers
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
             OracleCommand CMD = new OracleCommand();
             CMD.Connection = conn;
             List<DisplayedMoment> moments=new List<DisplayedMoment>();
@@ -50,7 +42,15 @@ namespace ProductsApp.Controllers
                 "from follow_user " +
                 "where follow_user.user_id = '" + UserID + "')) " +
                 "order by moment.time desc";
-            
+
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
             DataSet ds = new DataSet();
             OracleDataAdapter OraDA = new OracleDataAdapter(CommandText, conn);
             OraDA.Fill(ds, 5 * (Page - 1), 5, "ds");
