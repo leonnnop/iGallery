@@ -549,8 +549,7 @@
       this.axios.all([this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
             params: {
               Email: this.$store.state.currentUserId,
-              Begin: 1 + 10 * this.askNum,
-              End: 10 + 10 * this.askNum
+              Page: 1,
             }
           }),
           this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)

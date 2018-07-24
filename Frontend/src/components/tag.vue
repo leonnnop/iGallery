@@ -5,7 +5,7 @@
                 <el-row style="width:100%;margin-bottom:30px;" type="flex" justify="start" align="middle">
                     <el-col style="width:100%">
                         <div class="user-img border" style="margin-left:55%;width:150px;height:150px;">
-                            <img class="user-img img-border" src="../image/a.jpg" alt="头像" style="width:150px;height:150px;" />
+                            <img class="user-img img-border" :src="tagImg" alt="头像" style="width:150px;height:150px;" />
                         </div>
                     </el-col>
                     <el-col style="font-size:32px;color:#262626;margin-left:-2%">
@@ -322,6 +322,8 @@
                                 //     .then((response) => {
                                 //         element.contentSrc = response.data
                                 //     })
+                                this.tagImg = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                    response.data[0];
                                 Vue.set(element, 'contentSrc',
                                     'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
                                     response.data[0]);

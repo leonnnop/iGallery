@@ -23,8 +23,8 @@
                                     </el-row>
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">{{user.Username}}</el-row>
                                     <el-row style="margin-top:5%;color:#777;font-size:13px" class="self-intro">{{user.Bio}}</el-row>
-                                    <el-row>
-                                        <el-button plain type="primary" size="medium" style="width:80%;margin-top:15%" @click="followUserHandler(user)" v-if="user.showFollowBtn">{{user.followWord}}</el-button>
+                                    <el-row  v-show="user.showFollowBtn">
+                                        <el-button plain type="primary" size="medium" style="width:80%;margin-top:15%" @click="followUserHandler(user)">{{user.followWord}}</el-button>
                                     </el-row>
                                 </el-row>
                             </div>
@@ -386,6 +386,113 @@
 
             }
         },
+        beforeRouterEnter(to, from, next) {
+            //用户
+            next(vm => {
+                vm.axios.all([vm.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + vm.$route
+                            .params
+                            .keyword + '&user_id=' + vm.$store.state.currentUserId_ID),
+                        vm.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword=' + vm.$route
+                            .params.keyword +
+                            '&user_id=' + vm.$store.state.currentUserId_ID)
+                    ])
+                    .then(vm.axios.spread((res1, res2) => {
+                        //用户
+                        if (res1.data != 'Not found') {
+                            vm.users = res1.data;
+                            //关注状态
+                            vm.users.forEach(element => {
+                                if (element.ID == vm.$store.state.currentUserId_ID) {
+                                    Vue.set(element, 'showFollowBtn', false);
+                                } else {
+                                    Vue.set(element, 'showFollowBtn', true);
+                                    if (element.FollowState == 'True') {
+                                        Vue.set(element, 'followWord', '已关注');
+                                    } else {
+                                        Vue.set(element, 'followWord', '关注');
+                                    }
+                                }
+
+                                var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                    element.ID +
+                                    '&type=2';
+                                Vue.set(element, 'Photo', photo)
+                            });
+                            vm.hasUser = true;
+                        } else {
+                            vm.hasUser = false;
+                            vm.users = []
+                        }
+
+                        vm.userListLength = length(vm.users);
+                        console.log(vm.userListLength);
+
+                        //tag和动态
+                        if (res2.data.m_Item1.length != 0) {
+                            vm.tags = res2.data.m_Item1;
+                        } else {
+                            vm.hasTag = false;
+                            vm.tags = []
+                        }
+
+                        if (res2.data.m_Item2.length != 0) {
+                            vm.moments = res2.data.m_Item2;
+                            vm.hasMoment = true;
+                            // Vue.set()
+
+                            moments.forEach(element => {
+                                Vue.set(element, 'LikeNum', element.LikeNum)
+                                vm.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                        element.ID +
+                                        '&type=1')
+                                    .then((response) => {
+                                        Vue.set(element, 'src',
+                                            'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                            response.data[0]);
+                                    })
+                            })
+                            console.log('moments----------');
+                            console.log(vm.moments);
+                        } else {
+                            vm.hasMoment = false;
+                            vm.moments = []
+                        }
+
+                        if (vm.tags.length) {
+                            vm.hasTag = true;
+                            //tag的关注状态
+                            vm.tags.forEach(element => {
+
+                                if (element.FollowState == 'True') {
+                                    Vue.set(element, 'followWord', '已关注');
+                                } else {
+                                    Vue.set(element, 'followWord', '关注');
+                                }
+                                var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                    element.Pic;
+                                Vue.set(element, 'Pic', Pic)
+                            })
+                        } else {
+                            vm.hasTag = false;
+                        }
+
+                        vm.tagListLength = length(vm.tags);
+
+                        if (vm.userListLength > 902) {
+                            vm.showUsersRightArrow = true;
+                        }
+                        if (vm.tagListLength > 902) {
+                            vm.showTagsRightArrow = true;
+                        }
+                    }))
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+
+
+
+        },
         created() {
             //用户
             this.axios.all([this.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + this.$route.params
@@ -400,9 +507,9 @@
                         //关注状态
                         this.users.forEach(element => {
                             if (element.ID == this.$store.state.currentUserId_ID) {
-                                Vue.set(element, 'showFollowBtn', 'false');
+                                Vue.set(element, 'showFollowBtn', false);
                             } else {
-                                Vue.set(element, 'showFollowBtn', 'true');
+                                Vue.set(element, 'showFollowBtn', true);
                                 if (element.FollowState == 'True') {
                                     Vue.set(element, 'followWord', '已关注');
                                 } else {
@@ -424,19 +531,19 @@
                     console.log(this.userListLength);
 
                     //tag和动态
-                    if (res2.data.m_Item1 != null) {
+                    if (res2.data.m_Item1.length != 0) {
                         this.tags = res2.data.m_Item1;
                     } else {
                         this.hasTag = false;
                         this.tags = []
                     }
 
-                    if (res2.data.m_Item2 != null) {
+                    if (res2.data.m_Item2.length != 0) {
                         this.moments = res2.data.m_Item2;
                         this.hasMoment=true;
                         // Vue.set()
                         
-                        moments.forEach(element => {
+                        this.moments.forEach(element => {
                             Vue.set(element,'LikeNum',element.LikeNum)
                             this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
                                     '&type=1')
@@ -450,6 +557,7 @@
                         console.log(this.moments);
                     } else {
                         this.hasMoment = false;
+                        this.moments = []
                     }
 
                     if (this.tags.length) {
