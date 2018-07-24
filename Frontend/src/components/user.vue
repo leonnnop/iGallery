@@ -448,48 +448,49 @@
         flag:true,
         bottomHint: '动态加载中，耐心等待啦！( •̀ .̫ •́ )✧',
         currentPage: 1,
-        followings: [{
-            ID: '',
-            Username: 'leonnnop',
-            Bio: 'self introduction self introduction self introduction self introduction',
-            Email: '',
-            Photo: require('../image/a.jpg')
-          },
-          {
-            ID: '',
-            Username: 'leonnnop',
-            Bio: 'self introduction',
-            Email: '',
-            Photo: require('../image/a.jpg')
-          },
-          {
-            ID: '',
-            Username: 'leonnnop',
-            Bio: 'self introduction',
-            Email: '',
-            Photo: require('../image/a.jpg')
-          },
-          {
-            ID: '',
-            Username: 'leonnnop',
-            Bio: 'self introduction',
-            Email: '',
-            Photo: require('../image/a.jpg')
-          },
-          {
-            ID: '',
-            Username: 'leonnnop',
-            Bio: 'self introduction',
-            Email: '',
-            Photo: require('../image/a.jpg')
-          },
-          {
-            ID: '',
-            Username: 'leonnnop',
-            Bio: 'self introduction',
-            Email: '',
-            Photo: require('../image/a.jpg')
-          },
+        followings: [
+          // {
+        //     ID: '',
+        //     Username: 'leonnnop',
+        //     Bio: 'self introduction self introduction self introduction self introduction',
+        //     Email: '',
+        //     Photo: require('../image/a.jpg')
+        //   },
+        //   {
+        //     ID: '',
+        //     Username: 'leonnnop',
+        //     Bio: 'self introduction',
+        //     Email: '',
+        //     Photo: require('../image/a.jpg')
+        //   },
+        //   {
+        //     ID: '',
+        //     Username: 'leonnnop',
+        //     Bio: 'self introduction',
+        //     Email: '',
+        //     Photo: require('../image/a.jpg')
+        //   },
+        //   {
+        //     ID: '',
+        //     Username: 'leonnnop',
+        //     Bio: 'self introduction',
+        //     Email: '',
+        //     Photo: require('../image/a.jpg')
+        //   },
+        //   {
+        //     ID: '',
+        //     Username: 'leonnnop',
+        //     Bio: 'self introduction',
+        //     Email: '',
+        //     Photo: require('../image/a.jpg')
+        //   },
+        //   {
+        //     ID: '',
+        //     Username: 'leonnnop',
+        //     Bio: 'self introduction',
+        //     Email: '',
+        //     Photo: require('../image/a.jpg')
+        //   },
         ],
 
         totalMoments: [{
@@ -630,6 +631,10 @@
           // console.log(res1)
           // console.log(res2)
           this.totalMoments = res1.data;
+
+          if (this.totalMoments.length<1) {
+            this.bottomHint = '没有东西可以看哦，多去关注点人啦！(๑•̀ㅂ•́) ✧'
+          }
 
           this.totalMoments.forEach(element => {
             //点赞状态

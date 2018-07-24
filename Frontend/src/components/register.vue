@@ -1,13 +1,13 @@
 <template>
-    <el-container id="background">
+    <el-container id="background" class="imageCon">
         <el-row :gutter="40" type="flex" :align="'middle'" style="height:100%;width:100%;">
-            <el-col :span="7" :offset="6" id="imageCon">
-                <img src="../image/example.png" alt="example pic" height="600">
+            <el-col :span="7" :offset="10">
+                <!-- <img src="../image/1 2.jpg" alt="example pic" height="600"> -->
             </el-col>
             <el-col :span="6" id="boxCon" style="width:375px">
-                <el-row class="box-color-grey" style="height:500px;padding: 20px;">
+                <el-row class="box-color-grey transparent" style="height:500px;padding: 20px;">
                     <el-row type="flex" :justify="'center'" style="width:100%;">
-                        <img src="../image/iga_exa.png" alt="example pic" height="50">
+                        <img src="../image/iga_exa.png" alt="example pic" height="60">
                     </el-row>
                     <el-row type="flex" :justify="'center'" style="margin-bottom:20px;">
                         <p>注册 iGallery，分享精彩视界</p>
@@ -16,11 +16,21 @@
                         <el-input placeholder="邮箱" v-model="email" clearable>
                         </el-input>
                     </el-row>
-                    <el-row type="flex" :justify="'center'">
+                    <el-row type="flex" :justify="'center'" v-if="(!emailValid)&&(!emailCodeSent)" style="margin-top:20px">
+                        <el-button type="primary" plain size="medium" style="width:60%" @click="sendCodeButtonClick">发送验证码</el-button>
+                    </el-row>
+                    <el-row type="flex" :justify="'center'" v-if="emailCodeSent">
+                        <el-input placeholder="验证码" v-model="userValidCode" clearable>
+                        </el-input>
+                    </el-row>
+                    <el-row type="flex" :justify="'center'" v-if="emailCodeSent" style="margin-top:20px">
+                        <el-button type="primary" plain size="medium" style="width:60%" @click="CodeValideButtonClick">验证</el-button>
+                    </el-row>
+                    <el-row type="flex" :justify="'center'" v-if="emailValid">
                         <el-input placeholder="用户名" v-model="username" clearable>
                         </el-input>
                     </el-row>
-                    <el-row type="flex" :justify="'center'">
+                    <el-row type="flex" :justify="'center'" v-if="emailValid">
                         <el-form :model="ruleForm" ref="ruleForm" class="form">
                             <el-form-item label="" prop="password">
                                 <el-input type="password" v-model="ruleForm.password" placeholder="密码"></el-input>
@@ -31,16 +41,18 @@
                         <el-input placeholder="密码" v-model="keyword" clearable>
                         </el-input>
                     </el-row> -->
-                    <el-row type="flex" :justify="'center'" style="margin-top:20px;">
+                    <!-- <el-row type="flex" :justify="'center'" style="margin-top:20px;" class="manuallyDown"> -->
+                    <el-row type="flex" :justify="'center'" v-if="emailValid" style="margin-top:40px">
+
                         <el-button type="primary" plain size="medium" style="width:60%" @click="registerButtonClick">注册</el-button>
                     </el-row>
-                    <el-row type="flex" :justify="'center'" style="margin-top:20px;color:#9b9b9b;font-size:12px;">
+                    <!-- <el-row type="flex" :justify="'center'" :class="{manuallyDown:(!emailValid)&&(!emailCodeSent),manuallyUp:emailValid&&(!emailCodeSent),manuallyMiddle:emailCodeSent}">
                         - 或 -
                     </el-row>
                     <el-row type="flex" :justify="'center'" style="margin-top:10px;color:#9b9b9b;font-size:12px;">
-                        <el-button size="small" type="text">游客登陆</el-button>
-                    </el-row>
-                    <el-row type="flex" :justify="'center'" style="margin-top:5px;">
+                        <el-button size="small" type="text">随便看看</el-button>
+                    </el-row> -->
+                    <el-row type="flex" :justify="'center'" :class="{manuallyDown:(!emailValid)&&(!emailCodeSent),manuallyUp:emailValid&&(!emailCodeSent),manuallyMiddle:emailCodeSent}">
                         <p style="font-size:14px; margin:18px 20px 20px 20px;">
                             注册即表示你同意接受我们的条款、数据使用政策和 Cookie 政策 。
                         </p>
@@ -48,7 +60,7 @@
 
 
                 </el-row>
-                <el-row type="flex" :align="'middle'" :justify="'center'" class="box-color-grey" style="height:80px;font-size:14px;">
+                <el-row type="flex" :align="'middle'" :justify="'center'" class="box-color-grey transparent" style="height:80px;font-size:14px;">
                     有帐户了？
                     <el-button type="text" @click="jumpLogIn">点我登陆</el-button>
 
@@ -59,24 +71,56 @@
 </template>
 
 <style scoped>
+    .transparent {
+        background: hsla(0, 0%, 100%, 0.75);
+    }
+
+    .imageCon {
+        background-image: url('../image/1 2.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .manuallyDown {
+        margin-top: 20px;
+        /* color: #9b9b9b; */
+        font-size: 12px;
+        margin-top: 136px
+    }
+
+    .manuallyUp {
+        margin-top: 20px;
+        /* color: #9b9b9b; */
+        font-size: 12px;
+        margin-top: 40px;
+    }
+
+    .manuallyMiddle {
+        /* margin-top: 20px; */
+        /* color: #9b9b9b; */
+        font-size: 12px;
+        margin-top: 89px;
+    }
+
     .el-input {
         width: 250px;
         margin-top: 5px;
     }
 
     .box-color-grey {
-        border-color: #e6e6e6;
+        /* border-color: #e6e6e6;
         border-style: solid;
-        border-width: thin;
+        border-width: thin; */
         margin-bottom: 10px;
-        background-color: white;
+        /* background-color: white; */
         /* padding: 20px; */
     }
 
     #background {
-        background-color: #fafafa;
+        /* background-color: #fafafa; */
         height: 800px;
         width: 100%;
+
     }
 
     .text {
@@ -123,6 +167,10 @@
     export default {
         data() {
             return {
+                validCode: '',
+                userValidCode: '',
+                emailValid: false,
+                emailCodeSent: false,
                 tableData: [],
                 email: '',
                 username: '',
@@ -148,6 +196,37 @@
         },
 
         methods: {
+            sendCodeButtonClick() {
+                this.axios.get('http://10.0.1.8:54468/api/Users/VerifyRegister?Email=' + this.email)
+                    .then((response) => {
+                        if (response.data == 1) {
+                            this.$message({
+                                message: '该邮箱已经被注册过了！想想密码吧旁友！',
+                                type: 'warning'
+                            });
+                        } else {
+                            this.$message('验证码已发送，请检查邮箱。');
+                            this.emailCodeSent = true;
+                            this.validCode = response.data;
+                        }
+                    })
+            },
+            CodeValideButtonClick() {
+                if (this.userValidCode == this.validCode) {
+                    this.emailValid = true;
+                    this.emailCodeSent = false;
+                    this.$message({
+                        message: '验证成功，感谢您使用本站！！',
+                        type: 'success'
+                    });
+                } else {
+                    this.$message({
+                        message: '不对喔，看看有没有手滑。',
+                        type: 'warning'
+                    });
+                }
+
+            },
             isEmail(str) {
                 var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
                 return reg.test(str);
@@ -180,15 +259,15 @@
             registerButtonClick() {
                 if (this.isEmail(this.email)) {
                     // this.axios.get('http://10.0.1.61:50192/api/values/5')
-                    this.axios.post('http://10.0.1.8:54468/api/Users/Register',{
-                        Email:this.email,
-                        Username:this.username,
-                        Password:this.ruleForm.password,
-                        ID:'',
-                        Bio: '',
-                        Photo:'',
-                    })
-                    // this.axios.get('http://10.0.1.94:53101/api/Products?email=1225248841@qq.com&password=123456789')
+                    this.axios.post('http://10.0.1.8:54468/api/Users/Register', {
+                            Email: this.email,
+                            Username: this.username,
+                            Password: this.ruleForm.password,
+                            ID: '',
+                            Bio: '',
+                            Photo: '',
+                        })
+                        // this.axios.get('http://10.0.1.94:53101/api/Products?email=1225248841@qq.com&password=123456789')
                         .then((response) => {
                             let result = response.data
                             console.log(result)
@@ -226,7 +305,6 @@
                         message: '已取消删除'
                     });
                 });
-
             }
         },
 
