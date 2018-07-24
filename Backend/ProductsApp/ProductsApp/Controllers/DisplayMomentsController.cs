@@ -34,7 +34,7 @@ namespace ProductsApp.Controllers
             string UserID = api.EmailToUserID(Email);
             
             //获取朋友圈中所有Moment
-            string CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, time, quote_mid " +
+            CMD.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, time, quote_mid " +
                 "from users,moment " +
                 "where moment.sender_id = users.id and " +
                 "(users.id = '" + UserID + "' or " +
@@ -52,7 +52,7 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             DataSet ds = new DataSet();
-            OracleDataAdapter OraDA = new OracleDataAdapter(CommandText, conn);
+            OracleDataAdapter OraDA = new OracleDataAdapter(CMD.CommandText, conn);
             OraDA.Fill(ds, 5 * (Page - 1), 5, "ds");
 
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -84,9 +84,8 @@ namespace ProductsApp.Controllers
                 DM.user_bio = user.Bio;
 
                 //原始动态的用户信息
-                DBAccess access = new DBAccess();
                 //OracleDataReader R = access.GetDataReader(access.Select("sender_ID", "moment", "ID='" + DM.moment.QuoteMID + "'"));
-                CMD.CommandText= access.Select("sender_ID", "moment", "ID='" + DM.moment.QuoteMID + "'");
+                CMD.CommandText= "select sender_ID from moment where ID='" + DM.moment.QuoteMID + "'";
                 OracleDataReader R = CMD.ExecuteReader();
                 if (R.Read())
                 {
@@ -102,9 +101,8 @@ namespace ProductsApp.Controllers
 
                 //获取标签信息
                 DM.tags = new List<string>();
-                string cmd = "select tag from moment_tag where moment_id = '" + DM.moment.ID + "'";
+                CMD.CommandText = "select tag from moment_tag where moment_id = '" + DM.moment.ID + "'";
                 //R = access.GetDataReader(cmd);
-                CMD.CommandText = cmd;
                 R = CMD.ExecuteReader();
                 while (R.Read())
                 {
@@ -112,7 +110,7 @@ namespace ProductsApp.Controllers
                 }
 
                 //获取评论信息
-                GetComments(DM.moment.ID, 4, access);
+                GetComments(DM.moment.ID, 4);
 
                 //获知是否点赞过
                 DM.liked = api.CheckLikeState(Email, DM.moment.ID);
@@ -137,7 +135,7 @@ namespace ProductsApp.Controllers
         {
             DisplayedMoment dm = new DisplayedMoment();
             string Email = api.UserIDToEmail(UserID);
-            //更换成DBAccess的版本
+            //连接数据库
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
             try
@@ -230,15 +228,8 @@ namespace ProductsApp.Controllers
             }
 
             //获取评论信息
-            if (comment_limit == 4)
-            {
-                GetComments(mmt.ID, comment_limit, access);
-            }
-            else
-            {
-                dm.comments = null;
-            }
-            
+            dm.comments = null;
+
 
             //获知是否点赞过
             dm.liked = api.CheckLikeState(email, mmt.ID);
@@ -256,7 +247,7 @@ namespace ProductsApp.Controllers
         /// <param name="limit">评论数的限制（若是所有评论，则赋一个很大的值）</param>
         /// <param name="dm">用于展示的动态</param>
         /// <returns></returns>
-        private List<DisplayedComment> GetComments(string id, int limit, DBAccess dbAccess)
+        private List<DisplayedComment> GetComments(string id, int limit)
         {
             //创建返回对象
             List<DisplayedComment> comments = new List<DisplayedComment>();
@@ -265,7 +256,7 @@ namespace ProductsApp.Controllers
                 "publish_comment.user_ID = users.ID and " +
                 "publish_comment.moment_ID = '" + id + "' " +
                 "order by send_time desc";
-            OracleDataReader rd = dbAccess.GetDataReader(sql);
+            OracleDataReader rd = Access.GetDataReader(sql);
             int count = 0;
             while (++count <= limit && rd.Read())
             {
