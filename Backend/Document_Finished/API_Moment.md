@@ -127,37 +127,4 @@
 | 3 | 动态修改失败 |
 
 -------------
-# 转发动态的消息 #（陈阳）
-请求地址：/api/Moment/ForwardList
-
-请求方式：Put  
-
-> 参数： string user_id
-
-
-> 返回类型：Tuple<List<Moment>, List<Users>> 
-
-| 状态码 | 说明 |    
-| -- | -- |  
-List<Moment>
-| 类型     | 属性       |
-| :------- | ---------- |
-| string   | ID         |
-| string   | SenderID   |
-| string   | Content    |
-| int      | LikeNum    |
-| int      | ForwardNum |
-| int      | CollectNum |
-| int      | CommentNum |
-| string   | Time       |
-List<Users>
-| 类型     | 属性       |
-| :------- | ---------- |
-| string   | ID         |
-| string   | Email      |
-| string   | Password   |
-| string   | Username   |
-| string   | Bio        |
-| string   | Photo      |
-
 

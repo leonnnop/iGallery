@@ -29,7 +29,7 @@
 | 1      | 注册失败         |
 
 ------
-# 注册验证邮箱（李璐）
+# 注册验证邮箱（李璐）Finished
 
 请求地址：/api/Users/VerifyRegister
 
