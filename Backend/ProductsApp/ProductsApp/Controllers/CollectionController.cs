@@ -13,13 +13,13 @@ namespace ProductsApp.Controllers
     public class CollectionController : ApiController
     {
         //创建收藏夹
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult InsertCollection(string founder_id, string name)
         {
             //创建返回信息，先假设插入成功
             int status = 0;
 
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {
@@ -67,7 +67,7 @@ namespace ProductsApp.Controllers
         }
 
         //删除收藏夹
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult DeleteCollection(string founder_id, string name)
         {
             //创建返回信息，先假设删除成功
@@ -80,7 +80,7 @@ namespace ProductsApp.Controllers
 
             if(status != 1)
             {
-                string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+                string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
                 OracleConnection conn = new OracleConnection(connStr);
                 try
                 {
@@ -108,7 +108,7 @@ namespace ProductsApp.Controllers
         }
 
         //重命名收藏夹
-        [HttpPut]
+        [HttpGet]
         public IHttpActionResult RenameCollection(string founder_id, string original_name, string new_name)
         {
             //创建返回信息，先假设更新成功
@@ -121,7 +121,7 @@ namespace ProductsApp.Controllers
 
             if(status != 1)
             {
-                string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+                string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
                 OracleConnection conn = new OracleConnection(connStr);
                 try
                 {
@@ -167,13 +167,13 @@ namespace ProductsApp.Controllers
             //返回信息
             return Ok(status);
         }
-
+        [HttpGet]
         //统计某一收藏夹下的动态总数
         public int ReturnMomentNumInACollection(string founder_id, string name)
         {
             int momentNum = 0;
 
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {
@@ -199,11 +199,11 @@ namespace ProductsApp.Controllers
 
             return momentNum;
         }
-
+        [HttpGet]
         //根据动态ID获取该动态第一张图片的ID
         public string GetFirstPicIDbyMomentID(string moment_id)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {
@@ -231,11 +231,11 @@ namespace ProductsApp.Controllers
 
             return pic_id;
         }
-
+        [HttpGet]
         //获取收藏夹中最新加入的一条动态里的第一张图片的ID作为收藏夹封面
         public string ReturnCollectionCoverPicID(string FounderID, string Name)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {
@@ -270,7 +270,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult ReturnUserCollections(string user_id)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {
@@ -305,11 +305,11 @@ namespace ProductsApp.Controllers
 
             return Json<List<Collection>>(resultList);
         }
-
+        [HttpGet]
         //从数据库中获取某一收藏夹下全部动态的ID(按动态收藏时间由新到旧排序)并以string列表形式返回给前端
         public List<string> ReturnCollectionContentID(string FounderID, string Name)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {
@@ -341,13 +341,13 @@ namespace ProductsApp.Controllers
         }
 
         //移动收藏的动态到其他收藏夹
-        [HttpPut]
+        [HttpGet]
         public IHttpActionResult MoveMomentToAnotherCollection(string moment_id, string founder_id, string original_collection_name, string new_collection_name)
         {
             //创建返回信息，先假设更新成功
             int status = 0;
 
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {

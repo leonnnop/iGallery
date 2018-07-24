@@ -24,7 +24,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult Followings(string Email, int Page)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             OracleCommand CMD = new OracleCommand();
             CMD.Connection = conn;
@@ -110,7 +110,7 @@ namespace ProductsApp.Controllers
                 }
 
                 //获取评论信息
-                GetComments(DM.moment.ID, 4);
+                DM.comments = GetComments(DM.moment.ID, 4);
 
                 //获知是否点赞过
                 DM.liked = api.CheckLikeState(Email, DM.moment.ID);
@@ -136,7 +136,7 @@ namespace ProductsApp.Controllers
             DisplayedMoment dm = new DisplayedMoment();
             string Email = api.UserIDToEmail(UserID);
             //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
             OracleConnection conn = new OracleConnection(connStr);
             try
             {

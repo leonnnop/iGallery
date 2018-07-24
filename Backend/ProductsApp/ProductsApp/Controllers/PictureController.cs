@@ -29,6 +29,11 @@ namespace ProductsApp.Controllers
             {
                 result.StatusCode = HttpStatusCode.OK;
                 Tuple<ByteArrayContent, string> res = Util.Get(id, 2);
+                if (res == null)
+                {
+                    result.StatusCode = HttpStatusCode.NotFound;
+                    return result;
+                }
                 result.Content=res.Item1; //头图返图
                 string ext = res.Item2;   //格式解析
                 result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/"+ext.Substring(1,ext.Length-1));
@@ -36,6 +41,11 @@ namespace ProductsApp.Controllers
             else
             {
                 List<string> list = Util.GetPid(id);
+                if (list.Count==0)
+                {
+                    result.StatusCode = HttpStatusCode.NotFound;
+                    return result;
+                }
                 result.Content = new StringContent(JsonConvert.SerializeObject(list), Encoding.GetEncoding("UTF-8"), "application/json"); //非头图返文件号
                 
             }
