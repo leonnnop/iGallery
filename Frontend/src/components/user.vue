@@ -8,8 +8,7 @@
             <el-col>
               <div class="user-img border">
                 <img class="user-img img-border hover-cursor" :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
-              '&type=2'" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)"
-                />
+              '&type=2'" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)" />
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
@@ -140,6 +139,9 @@
                 <input placeholder="添加评论..." v-model="moment.newComment" style="border:0;padding:5px;width:100%" @keyup.enter="commentHandler(moment)">
               </el-row>
             </el-col>
+          </el-row>
+          <el-row type="flex" justify="center" align="middle" style="margin-top:-20px">
+            <span>{{this.bottomHint}}</span>
           </el-row>
         </el-col>
       </el-row>
@@ -330,6 +332,59 @@
 
 <script>
   import Vue from 'vue'
+  // window.onscroll = ()=> {
+  //   //监听事件内容
+  //   // console.log(getDocumentTop())
+  //   // console.log(getWindowHeight())
+  //   // console.log(getScrollHeight())
+  //   if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
+  //     //当滚动条到底时,这里是触发内容
+  //     //异步请求数据,局部刷新dom
+  //     // ajax_function()
+  //     console.log('请求')
+  //     this.currentPage++;
+  //     this.requestHandler(this.currentPage);
+  //   }
+  // }
+  //文档高度
+  function getDocumentTop() {
+    var scrollTop = 0,
+      bodyScrollTop = 0,
+      documentScrollTop = 0;
+    if (document.body) {
+      bodyScrollTop = document.body.scrollTop;
+    }
+    if (document.documentElement) {
+      documentScrollTop = document.documentElement.scrollTop;
+    }
+    scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
+    return scrollTop;
+  }
+  //可视窗口高度
+  function getWindowHeight() {
+    var windowHeight = 0;
+    if (document.compatMode == "CSS1Compat") {
+      windowHeight = document.documentElement.clientHeight;
+    } else {
+      windowHeight = document.body.clientHeight;
+    }
+    return windowHeight;
+  }
+  //滚动条滚动高度
+  function getScrollHeight() {
+    var scrollHeight = 0,
+      bodyScrollHeight = 0,
+      documentScrollHeight = 0;
+    if (document.body) {
+      bodyScrollHeight = document.body.scrollHeight;
+    }
+    if (document.documentElement) {
+      documentScrollHeight = document.documentElement.scrollHeight;
+    }
+    scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
+    return scrollHeight;
+  }
+
   var Dictionary = (function () {
     const items = {};
     class Dictionary {
@@ -390,6 +445,9 @@
   export default {
     data() {
       return {
+        flag:true,
+        bottomHint: '动态加载中，耐心等待啦！( •̀ .̫ •́ )✧',
+        currentPage: 1,
         followings: [{
             ID: '',
             Username: 'leonnnop',
@@ -545,6 +603,20 @@
     },
     created() {
       //请求动态
+      window.onscroll = () => {
+        //监听事件内容
+        // console.log(getDocumentTop())
+        // console.log(getWindowHeight())
+        // console.log(getScrollHeight())
+        if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
+          //当滚动条到底时,这里是触发内容
+          //异步请求数据,局部刷新dom
+          // ajax_function()
+          console.log('请求')
+          this.currentPage++;
+          this.requestHandler(this.currentPage);
+        }
+      }
       //监听滚动条，到底时请求动态...
       this.axios.all([this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
             params: {
@@ -728,7 +800,8 @@
       },
       collectHandler: function (moment) {
         if (moment.collected == 0) {
-          this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id='+moment.moment.ID+'&user_id='+this.$store.state.currentUserId_ID
+          this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id=' + moment.moment.ID +
+              '&user_id=' + this.$store.state.currentUserId_ID
             )
             .then((response) => {
               if (response.data == 0) {
@@ -741,11 +814,11 @@
             .catch((error) => {
               console.log(error);
             });
-            // moment.collected = 1
+          // moment.collected = 1
         } else {
-          this.axios.get('http://10.0.1.8:54468/api/Collect/InsertCollect?moment_id='+moment.moment.ID+
-              '&founder_id='+this.$store.state.currentUserId_ID+
-              '&name='+'默认收藏夹'
+          this.axios.get('http://10.0.1.8:54468/api/Collect/InsertCollect?moment_id=' + moment.moment.ID +
+              '&founder_id=' + this.$store.state.currentUserId_ID +
+              '&name=' + '默认收藏夹'
             )
             .then((response) => {
               if (response.data == 0) {
@@ -881,12 +954,81 @@
           });
         });
 
+      },
+      requestHandler(page) {
+        if (!this.flag) {
+          return;
+        }
+        this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
+            params: {
+              Email: this.$store.state.currentUserId,
+              Page: page,
+            }
+          })
+          .then((response) => {
+            var newTotalMoments = response.data;
+
+            if (newTotalMoments.length<1) {
+              this.bottomHint = '刷完了辣！(⑉꒦ິ^꒦ິ⑉)'
+              this.flag = false;
+            }
+
+            newTotalMoments.forEach(element => {
+              //点赞状态
+              if (element.liked == 0) {
+                var likeImg = require('../image/comment-like.png');
+                Vue.set(element, 'likeImg', likeImg)
+              } else {
+                var unlikeImg = require('../image/comment-unlike.png');
+                Vue.set(element, 'likeImg', unlikeImg)
+              }
+              //收藏状态
+              if (element.collected == 0) {
+                var collectImg = require('../image/collect.png');
+                Vue.set(element, 'collectImg', collectImg)
+
+              } else {
+                var uncollectImg = require('../image/uncollect.png');
+                Vue.set(element, 'collectImg', uncollectImg)
+              }
+
+              //请求图片
+              this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
+                .then((response) => {
+                  let list = response.data;
+                  //将id数组变为url数组
+                  // element.moment.imgList = [];
+                  var imgList = []
+                  list.forEach(ele => {
+                    // element.moment.imgList.push({
+                    imgList.push('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                      ele
+                    )
+                    // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
+                  });
+                  Vue.set(element.moment, 'imgList', imgList);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              element.newComment = '';
+
+              var Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
+                '&type=2';
+              Vue.set(element, 'Photo', Photo)
+              console.log(newTotalMoments)
+            })
+            this.totalMoments = this.totalMoments.concat(newTotalMoments);
+          })
       }
+
     },
     beforeRouteLeave(to, from, next) {
       this.totalMoments = [];
       this.tableData = [];
       next();
-    }
+    },
+
+
   }
 </script>
