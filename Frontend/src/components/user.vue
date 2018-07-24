@@ -901,7 +901,6 @@
               if (moment.comments.length == 4) {
                 moment.more_comments = true;
                 moment.newComment = '';
-
               } else {
                 moment.comments.push({
                   sender_email: '',
@@ -974,7 +973,7 @@
             var newTotalMoments = response.data;
 
             if (newTotalMoments.length<1) {
-              this.bottomHint = '刷完了辣！(⑉꒦ິ^꒦ິ⑉)'
+              this.bottomHint = '刷完了辣！(⑉꒦ິ^꒦ິ⑉)！我可是有底线的！'
               this.flag = false;
             }
 

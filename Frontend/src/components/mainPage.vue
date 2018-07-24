@@ -1,6 +1,7 @@
 <template>
   <el-container style="" class="container-back">
     <div class="container-background"></div>
+    <div :class="{loadingbackground:loadingPage}"></div>
     <el-col>
       <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
@@ -48,7 +49,8 @@
           <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
             <el-row>
               <el-col :span="3" :offset="0">
-                <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
+                <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
+                  style="width:80px;height:80px;border-radius:80px;">
               </el-col>
               <el-col :span="18" :offset="0">
                 <div class="sendContent">
@@ -118,6 +120,15 @@
 </template>
 
 <style>
+  .loadingbackground {
+    position: fixed;
+    z-index: 1000;
+    height: 100%;
+    width: 100%;
+    background-image: url(../image/slash.png);
+    background-repeat: repeat;
+  }
+
   .container-back {
     /* background-color: #fafafa; */
     background-image: url(../image/slash.png);
@@ -220,6 +231,7 @@
     data() {
       return {
         pictureURL: '',
+        loadingPage: true,
         navBarFixed: false,
         searchInput: '',
         topBarActiveIndex: '1',
@@ -327,7 +339,7 @@
 
         if (this.tags.length > 0) {
           // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
+          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
             params: {
               TagNames: this.tags,
               // Moment_Id: this.$route.params.id
@@ -536,11 +548,20 @@
       // uploadOnProgress(event, file, fileList) {
       //   console.log(fileList)
       // }
-      searchHandler:function(){
-        this.$router.push('/main/searchResult/'+this.searchInput);
-        this.searchInput='';
+      searchHandler: function () {
+        this.$router.push('/main/searchResult/' + this.searchInput);
+        this.searchInput = '';
       }
     },
+
+    mounted: function () {
+      this.$nextTick(function () {
+        // Code that will run only after the
+        // entire view has been rendered
+        console.log('mouted')
+        setTimeout('this.loadingPage = false', 1000);
+      })
+    }
 
   };
 </script>
