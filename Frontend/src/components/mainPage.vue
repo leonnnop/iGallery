@@ -48,7 +48,7 @@
           <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
             <el-row>
               <el-col :span="3" :offset="0">
-                <img src="../image/a.jpg" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
+                <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg" style="width:80px;height:80px;border-radius:80px;">
               </el-col>
               <el-col :span="18" :offset="0">
                 <div class="sendContent">
@@ -371,7 +371,7 @@
           type: 'success'
         })
 
-        setTimeout(this.refresh(), 4000)
+        // setTimeout(this.refresh(), 4000)
 
         // location.reload();
 

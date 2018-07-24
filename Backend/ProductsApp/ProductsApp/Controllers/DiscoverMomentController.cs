@@ -101,13 +101,20 @@ namespace ProductsApp.Controllers
                 if (quote_mid != "")//该条动态来自转发，同时修改源动态点赞数
                 {
                     rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + quote_mid + "'");
+                    int likeState2 = api.CheckLikeState(email, quote_mid);
                     if (rd.Read())
                     {
-                        if (likeState == 0)//取消点赞，赞数减一
+                        if (likeState == 0 && likeState2 == 0)//取消点赞，赞数减一
                         {
                             new_like_num = int.Parse(rd["LIKE_NUM"].ToString()) - 1;
                         }
-                        else if (likeState == 1)//点赞，赞数加一
+                        else if ((likeState == 0 && likeState2 == 1) || (likeState == 1 && likeState2 == 0))//当前动态点赞，源动态已点赞过，或当前动态取消点赞，源动态未点赞，源动态赞数不变
+                        {
+                            new_like_num = int.Parse(rd["LIKE_NUM"].ToString());
+                            status = 0;
+                            return Ok(status);
+                        }
+                        else if (likeState == 1 && likeState2 == 1)//点赞，赞数加一
                         {
                             new_like_num = int.Parse(rd["LIKE_NUM"].ToString()) + 1;
                         }
@@ -115,7 +122,7 @@ namespace ProductsApp.Controllers
                         //更新数据库中源动态的点赞数
                         if (dBAccess.ExecuteSql("update MOMENT set like_num= ' " + new_like_num + " 'where  ID='" + quote_mid + "' "))
                         {
-                            if (likeState == 1)//点赞
+                            if (likeState2 == 1)//点赞
                             {
                                 if (dBAccess.ExecuteSql("insert into FAVORITE(USER_ID,MOMENT_ID) values('" + user_id + "','" + quote_mid + "')"))
                                 {
@@ -126,7 +133,7 @@ namespace ProductsApp.Controllers
                                     status = 6;//源动态moment表修改成功，favorite表修改失败
                                 }
                             }
-                            else if (likeState == 0)//取消点赞
+                            else if (likeState2 == 0)//取消点赞
                             {
                                 if (dBAccess.ExecuteSql("delete from FAVORITE where user_id = '" + user_id + "' and moment_id = '" + quote_mid + "'"))
                                 {

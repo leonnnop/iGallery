@@ -46,7 +46,7 @@ namespace ProductsApp.Controllers
             while (rd.Read())//当数据库能读出一条符合条件的元组，执行循环
             {
                 Moment m = new Moment();
-                m.ID = rd["M_ID"].ToString();
+                m.ID = rd["ID"].ToString();
                 m.Content = rd["CONTENT"].ToString();
                 m.LikeNum = int.Parse(rd["LIKE_NUM"].ToString());
                 m.ForwardNum = int.Parse(rd["FORWARD_NUM"].ToString());

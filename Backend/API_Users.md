@@ -1,4 +1,4 @@
-﻿------
+------
 
 # 注册用户（吴桐欣）Finished
 
@@ -240,10 +240,9 @@
 未找到
 | string   | Not found|
 
-
 -------
 
-# 查看粉丝列表 （陈阳）
+# 查看粉丝列表 （陈阳）Finished
 请求地址：/api/Users/FanList
 请求方式：Get   
 参数类型：string
@@ -259,6 +258,7 @@
 | string   | Username |
 | string   | Bio      |
 | string   | Photo    |
+| string   | FollowState（True为已关注，False为未关注）|
 未找到
 | string   | Not found|
 

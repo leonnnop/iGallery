@@ -152,16 +152,8 @@ namespace ProductsApp.Controllers
                 moments.Add(new Moment(Id, sender_id, content, likenum, forwardnum, collectnum, commentnum, time));
             }
 
-            Tuple<List<Follow_Tag> ,List<Moment>> result = new Tuple<List<Follow_Tag> ,List<Moment>>(null,null);
-            if (moments.Count == 0&&tags.Count==0)
-            {
-                return result;
-            }
-           else
-            {
-                result = new Tuple<List<Follow_Tag>, List<Moment>>(tags,moments);
-                return result;
-            }
+            Tuple<List<Follow_Tag> ,List<Moment>> result = new Tuple<List<Follow_Tag> ,List<Moment>>(tags, moments);
+            return result;
         }
     }
 }
