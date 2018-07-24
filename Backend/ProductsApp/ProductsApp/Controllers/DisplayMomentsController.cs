@@ -19,10 +19,15 @@ namespace ProductsApp.Controllers
         /// 展示用户的朋友圈，包含用户自己的动态和他所关注用户的动态
         /// </summary>
         /// <param name="Email">用户邮箱</param>
+        /// <param name="Page">当前页号</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Followings(string Email, int Begin, int End)
+        public IHttpActionResult Followings(string Email, int Page)
         {
+            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
+            OracleConnection conn = new OracleConnection(connStr);
+            OracleCommand CMD = new OracleCommand();
+            CMD.Connection = conn;
             List<DisplayedMoment> moments=new List<DisplayedMoment>();
 
             //获取用户ID
@@ -37,50 +42,88 @@ namespace ProductsApp.Controllers
                 "from follow_user " +
                 "where follow_user.user_id = '" + UserID + "')) " +
                 "order by moment.time desc";
-            OracleDataReader rd = Access.GetDataReader(CommandText);
 
-            for(int i = 1; i < Begin; i++)
+            try
             {
-                if (!rd.Read()) { return Ok(false); }
+                conn.Open();
             }
-            int count = Begin - 1;
-            while (rd.Read())
+            catch (Exception ex)
             {
-                Moment mmt = new Moment();
+                throw (ex);
+            }
+            DataSet ds = new DataSet();
+            OracleDataAdapter OraDA = new OracleDataAdapter(CommandText, conn);
+            OraDA.Fill(ds, 5 * (Page - 1), 5, "ds");
 
-                mmt.ID = rd[0].ToString();
-                mmt.SenderID = rd[1].ToString();
-                if (rd[2] is DBNull)
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DisplayedMoment DM = new DisplayedMoment();
+
+                //动态内容
+                DM.moment = new Moment();
+                DM.moment.ID = row[0].ToString();
+                DM.moment.SenderID = row[1].ToString();
+                DM.moment.Content = row[2].ToString();
+                DM.moment.LikeNum = Convert.ToInt32(row[3]);
+                DM.moment.ForwardNum = Convert.ToInt32(row[4]);
+                DM.moment.CollectNum = Convert.ToInt32(row[5]);
+                DM.moment.CommentNum = Convert.ToInt32(row[6]);
+                DM.moment.Time = row[7].ToString();
+                DM.moment.QuoteMID = row[8].ToString();
+
+                //是否有更多评论
+                if (DM.moment.CommentNum > 4)
                 {
-                    mmt.Content = null;
+                    DM.more_comments = true;
+                }
+
+                //发送动态的用户信息
+                Users user = api.GetUserInfoByID(DM.moment.SenderID);
+                DM.user_email = user.Email;
+                DM.user_username = user.Username;
+                DM.user_bio = user.Bio;
+
+                //原始动态的用户信息
+                DBAccess access = new DBAccess();
+                //OracleDataReader R = access.GetDataReader(access.Select("sender_ID", "moment", "ID='" + DM.moment.QuoteMID + "'"));
+                CMD.CommandText= access.Select("sender_ID", "moment", "ID='" + DM.moment.QuoteMID + "'");
+                OracleDataReader R = CMD.ExecuteReader();
+                if (R.Read())
+                {
+                    Users forwarded = api.GetUserInfoByID(R[0].ToString());
+                    DM.forwarded_email = forwarded.Email;
+                    DM.forwarded_username = forwarded.Username;
                 }
                 else
                 {
-                   mmt.Content = rd[2].ToString();
-                }
-                mmt.LikeNum = Convert.ToInt32(rd[3]);
-                mmt.ForwardNum = Convert.ToInt32(rd[4]);
-                mmt.CollectNum = Convert.ToInt32(rd[5]);
-                mmt.CommentNum = Convert.ToInt32(rd[6]);
-                mmt.Time = rd[7].ToString();
-                if (rd[8] is DBNull)
-                {
-                    mmt.QuoteMID = null;
-                }
-                else
-                {
-                    mmt.QuoteMID = rd[8].ToString();
+                    DM.forwarded_email = null;
+                    DM.forwarded_username = null;
                 }
 
-                //通过Moment取得每一条动态的相关信息，并加入list
-                moments.Add(All_Info_Of(mmt, Email, 4));
-
-                count++;
-                if (count >= End)
+                //获取标签信息
+                DM.tags = new List<string>();
+                string cmd = "select tag from moment_tag where moment_id = '" + DM.moment.ID + "'";
+                //R = access.GetDataReader(cmd);
+                CMD.CommandText = cmd;
+                R = CMD.ExecuteReader();
+                while (R.Read())
                 {
-                    return Json(moments);
+                    DM.tags.Add(R[0].ToString());
                 }
+
+                //获取评论信息
+                GetComments(DM.moment.ID, 4, access);
+
+                //获知是否点赞过
+                DM.liked = api.CheckLikeState(Email, DM.moment.ID);
+
+                //获知是否收藏过
+                DM.collected = api.CheckCollectState(Email, DM.moment.ID);
+
+                moments.Add(DM);
             }
+
+            conn.Close();
             return Json(moments);
         }
         /// <summary>
@@ -151,6 +194,7 @@ namespace ProductsApp.Controllers
         /// <returns>用于展示的DisplayedMoment类型</returns>
         private DisplayedMoment All_Info_Of(Moment mmt, string email, int comment_limit)
         {
+            DBAccess access = new DBAccess();
             DisplayedMoment dm = new DisplayedMoment();
 
             //获取动态内容
@@ -163,7 +207,7 @@ namespace ProductsApp.Controllers
             dm.user_bio = user.Bio;
 
             //获取原始动态的用户信息
-            OracleDataReader rd = Access.GetDataReader(Access.Select("sender_ID", "moment", "ID='"+mmt.QuoteMID+"'"));
+            OracleDataReader rd = access.GetDataReader(access.Select("sender_ID", "moment", "ID='"+mmt.QuoteMID+"'"));
             if (rd.Read())
             {
                 Users forwarded = api.GetUserInfoByID(rd[0].ToString());
@@ -179,7 +223,7 @@ namespace ProductsApp.Controllers
             //获取标签信息
             dm.tags = new List<string>();
             string CommandText = "select tag from moment_tag where moment_id = '"+mmt.ID+"'";
-            rd = Access.GetDataReader(CommandText);
+            rd = access.GetDataReader(CommandText);
             while (rd.Read())
             {
                 dm.tags.Add(rd[0].ToString());
@@ -188,7 +232,7 @@ namespace ProductsApp.Controllers
             //获取评论信息
             if (comment_limit == 4)
             {
-                GetComments(mmt.ID, comment_limit, dm);
+                GetComments(mmt.ID, comment_limit, access);
             }
             else
             {
@@ -212,17 +256,16 @@ namespace ProductsApp.Controllers
         /// <param name="limit">评论数的限制（若是所有评论，则赋一个很大的值）</param>
         /// <param name="dm">用于展示的动态</param>
         /// <returns></returns>
-        private List<DisplayedComment> GetComments(string id, int limit, DisplayedMoment dm)
+        private List<DisplayedComment> GetComments(string id, int limit, DBAccess dbAccess)
         {
-            dm.more_comments = false; //先假设没有更多评论
             //创建返回对象
             List<DisplayedComment> comments = new List<DisplayedComment>();
             string sql = "select * from coment, users, publish_comment " +
                 "where coment.ID = publish_comment.comment_ID and " +
                 "publish_comment.user_ID = users.ID and " +
                 "publish_comment.moment_ID = '" + id + "' " +
-                "order by send_time asc";
-            OracleDataReader rd = Access.GetDataReader(sql);
+                "order by send_time desc";
+            OracleDataReader rd = dbAccess.GetDataReader(sql);
             int count = 0;
             while (++count <= limit && rd.Read())
             {
@@ -239,8 +282,7 @@ namespace ProductsApp.Controllers
 
                 comments.Add(dc);
             }
-            if (rd.Read()) { dm.more_comments = true; } 
-            dm.comments = comments;
+            
             return comments;
         }
         

@@ -140,7 +140,6 @@
                 <input placeholder="添加评论..." v-model="moment.newComment" style="border:0;padding:5px;width:100%" @keyup.enter="commentHandler(moment)">
               </el-row>
             </el-col>
-
           </el-row>
         </el-col>
       </el-row>
@@ -729,15 +728,13 @@
           });
       },
       collectHandler: function (moment) {
-        if (moment.collected) {
-          this.axios.post('http://10.0.1.8:54468/api/', {
-              moment_id: moment.moment.ID,
-              user_id: this.$store.state.currentUserId_ID
-            })
+        if (moment.collected == 0) {
+          this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id='+moment.moment.ID+'&user_id='+this.$store.state.currentUserId_ID
+            )
             .then((response) => {
               if (response.data == 0) {
                 moment.collectImg = require('../image/uncollect.png');
-                moment.collected = !moment.collected;
+                moment.collected = 1;
               } else {
                 this.$message.error('取消收藏失败，请重试！');
               }
@@ -745,16 +742,16 @@
             .catch((error) => {
               console.log(error);
             });
+            // moment.collected = 1
         } else {
-          this.axios.post('http://10.0.1.8:54468/api/', {
-              moment_id: moment.moment.ID,
-              founder_id: this.$store.state.currentUserId_ID,
-              name: ''
-            })
+          this.axios.get('http://10.0.1.8:54468/api/Collect/InsertCollect?moment_id='+moment.moment.ID+
+              '&founder_id='+this.$store.state.currentUserId_ID+
+              '&name='+'默认收藏夹'
+            )
             .then((response) => {
               if (response.data == 0) {
                 moment.collectImg = require('../image/collect.png');
-                moment.collected = !moment.collected;
+                moment.collected = 0;
               } else {
                 this.$message.error('收藏失败，请重试！');
               }

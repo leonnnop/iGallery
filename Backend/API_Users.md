@@ -259,6 +259,7 @@
 | string   | Username |
 | string   | Bio      |
 | string   | Photo    |
+| string   | FollowState（True为已关注，False为未关注）|
 未找到
 | string   | Not found|
 

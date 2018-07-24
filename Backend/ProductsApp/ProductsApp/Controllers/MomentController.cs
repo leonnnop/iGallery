@@ -165,12 +165,12 @@ namespace ProductsApp.Controllers
             rd = cmd.ExecuteReader();
             //建立图片的联系
             cmd.CommandText = "select * from picture " +
-                              "where moment_id='"+forward.MOMENT_ID+"'";
+                              "where moment_id='"+forward.Moment_ID+"'";
             rd = cmd.ExecuteReader();
             while(rd.Read())
             {
                 string p_url = rd["URL"].ToString();
-                GeneralAPI api = new GeneralAPI();
+                string p_id;
                 p_id=api.NewIDOf("picture");
                 cmd.CommandText = "insert into PICTURE(ID,URL,MOMENT_ID) " +
                     "values('" + p_id + "','" + p_url + "','" + moment.ID + "')";

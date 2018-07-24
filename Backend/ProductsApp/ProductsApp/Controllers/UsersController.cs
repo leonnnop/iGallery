@@ -530,7 +530,7 @@ namespace ProductsApp.Controllers
         /// <param name="user_id">Users</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult FanList(string user_id)       //返回关注列表
+        public IHttpActionResult FanList(string user_id)       //返回粉丝列表
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
@@ -546,7 +546,7 @@ namespace ProductsApp.Controllers
             cmd.CommandText = "select USER_ID from Follow_User where FOLLOWING_ID='" + user_id + "'";//找到所有关注此用户的ID
             cmd.Connection = conn;
             OracleDataReader rd = cmd.ExecuteReader();
-            List<Users> followed_list = new List<Users>();
+            List<User_Follow> followed_list = new List<User_Follow>();
             if (!rd.HasRows)
             {
                 conn.Close();
@@ -561,20 +561,23 @@ namespace ProductsApp.Controllers
                 OracleDataReader rd1 = cmd1.ExecuteReader();
                 if (rd1.Read())
                 {
-                    Users temp = new Users();
+                    User_Follow temp = new User_Follow();
                     temp.ID = rd1["ID"].ToString();
                     temp.Email = rd1["EMAIL"].ToString();
-                    temp.Password = rd1["PASSWORD"].ToString();
                     temp.Username = rd1["USERNAME"].ToString();
                     temp.Bio = rd1["BIO"].ToString();
                     temp.Photo = rd1["PHOTO"].ToString();
+                    cmd1.CommandText = "select * from Follow_User where USER_ID='" + user_id + "'and FOLLOWING_ID='"+followed_id+"'";
+                    rd1=cmd1.ExecuteReader();
+                    if (rd1.HasRows) temp.FollowState = "True";
+                    else temp.FollowState = "False";
                     followed_list.Add(temp);
                 }
                 rd1.Close();
             }
             rd.Close();
             conn.Close();
-            return Json<List<Users>>(followed_list);
+            return Json<List<User_Follow>>(followed_list);
         }
     }
 }
