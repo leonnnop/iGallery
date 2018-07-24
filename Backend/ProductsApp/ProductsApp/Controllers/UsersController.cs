@@ -561,10 +561,9 @@ namespace ProductsApp.Controllers
                 OracleDataReader rd1 = cmd1.ExecuteReader();
                 if (rd1.Read())
                 {
-                    Users temp = new Users();
+                    User_Follow temp = new User_Follow();
                     temp.ID = rd1["ID"].ToString();
                     temp.Email = rd1["EMAIL"].ToString();
-                    temp.Password = rd1["PASSWORD"].ToString();
                     temp.Username = rd1["USERNAME"].ToString();
                     temp.Bio = rd1["BIO"].ToString();
                     temp.Photo = rd1["PHOTO"].ToString();
