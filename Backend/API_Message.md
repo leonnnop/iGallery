@@ -190,7 +190,7 @@ List<Users>users
 
 #返回评论信息（陈阳）
 
-请求地址：/api/Users/Message/ForwardState
+请求地址：/api/Users/Message/CommentState
 
 请求方式：Get
 

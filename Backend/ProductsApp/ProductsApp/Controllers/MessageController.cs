@@ -133,7 +133,7 @@ namespace ProductsApp.Controllers
 
         //返回评论信息
         [HttpGet]
-        public Tuple<List<Moment>, List<Users>, List<Coment>> LikeState(string user_id)
+        public Tuple<List<Moment>, List<Users>, List<Coment>> CommentState(string user_id)
         {
             string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
             OracleConnection conn = new OracleConnection(connStr);
