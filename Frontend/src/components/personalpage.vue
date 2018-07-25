@@ -32,7 +32,7 @@
               <img v-if="$route.params.id!=$store.state.currentUserId_ID" :src="headUrl" class="headImg" alt="头像">
 
             </el-col>
-            <el-col :span="17" style="padding-top:20px">
+            <el-col :span="12" style="padding-top:20px">
               <el-row>
                 <el-button style="font-size:26px" type="text" id="username">{{username}}</el-button>
               </el-row>
@@ -45,7 +45,7 @@
                     <div v-for="(followUser,index) in followUsers" :key="index" class="like-user-li">
                       <el-row type="flex" justify="center" align="middle">
                         <el-col :span="3" :offset="1" style="height:50px;">
-                          <img :src="followUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(followUser.userPage)">
+                          <img :src="followUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(followUser.ID)">
                         </el-col>
                         <el-col :span="16">
                           <el-row>{{followUser.Username}}</el-row>
@@ -68,7 +68,7 @@
                     <div v-for="(fanUser,index) in fanUsers" :key="index" class="like-user-li">
                       <el-row type="flex" justify="center" align="middle">
                         <el-col :span="3" :offset="1" style="height:50px;">
-                          <img :src="fanUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(fanUser.userPage)">
+                          <img :src="fanUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(fanUser.ID)">
                         </el-col>
                         <el-col :span="16">
                           <el-row>{{fanUser.Username}}</el-row>
@@ -86,6 +86,16 @@
               </el-row>
               <el-row>
                 <p style="font-size:13px;color:#6c6b6e">个人简介：{{desc}}</p>
+              </el-row>
+            </el-col>
+            <el-col :span="4" style="height:100%">
+              <el-row type="flex" align="middle" justify="center" style="height:100%;margin-top:25%">
+                <!-- <el-button round style="width:80px;border-color:#db3579" @click="followClickHandler" v-if="$route.params.id==$store.state.currentUserId_ID">{{this.followword}}</el-button>
+                <el-button round style="width:80px;border-color:#db3579" @click="messageClickHandler" v-if="$route.params.id==$store.state.currentUserId_ID">私信</el-button> -->
+                <el-button v-if="$route.params.id!=$store.state.currentUserId_ID" icon="el-icon-message" style="width:50px;height:50px" @click="messageClickHandler"
+                  plain type="primary" circle></el-button>
+                <el-button v-if="$route.params.id!=$store.state.currentUserId_ID" icon="el-icon-view" style="margin-left:15px;width:50px;height:50px;"
+                  :class="{background_white: !FollowState}" @click="followClickHandler" plain type="primary" circle></el-button>
               </el-row>
             </el-col>
           </el-row>
@@ -384,6 +394,10 @@
 </template>
 
 <style scoped>
+  .background_white {
+    background-color: rgba(255, 255, 255, 1)
+  }
+
   /* 可以设置不同的进入和离开动画 */
 
   /* 设置持续时间和动画函数 */
@@ -621,7 +635,8 @@
         }
       };
       return {
-
+        FollowState: true,
+        followword: '关注',
         followUsers: [{
           ID: '1',
           headImg: require('../image/a.jpg'),
@@ -739,7 +754,7 @@
           followState: '关注'
         }],
         followListVisible: false,
-        currentSelectLeft: '',
+        currentSelectLeft: '默认收藏夹',
         fanListVisible: false,
         defaultCollectNum: 0,
         activeIndex: '1',
@@ -859,6 +874,52 @@
       }
     },
     methods: {
+      messageClickHandler() {
+        this.$router.push('/main/message/' + this.$route.params.id)
+      },
+      jumpToUser: function (url) {
+        console.log(url);
+        this.$router.push('/main/personalpage/' + url)
+      },
+      messageWebsocketHandler(path, state) {
+        // 0 关注 1 点赞 2 评论 3 转发 4 私信
+        window.ws.send('/' + path + ' ' + state);
+      },
+      followClickHandler() {
+
+        // console.log(this.FollowState);
+
+        this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+            '&followedID=' + this.$route.params.id)
+          .then((response) => {
+            if (response.data == 0) {
+              // this.$message({
+              //     message: '关注成功',
+              //     type: 'success'
+              // });
+              // if (!this.FollowState) {
+              //   this.followword = '已关注';
+              //   // this.FollowState = 0;
+
+              // } else {
+              //   this.followword = '关注';
+              //   // this.FollowState = 1;
+
+              //   // console.log(this.followState)
+              // }
+              if (!this.FollowState) {
+                this.fansNum++;
+                this.messageClickHandler(this.$route.params.id, 0)
+              } else {
+                this.fansNum--;
+              }
+              this.FollowState = !this.FollowState;
+            } else {
+              this.$message.error('关注失败，服务器内部错误，请重试。');
+            }
+          });
+
+      },
       myfresh() {
         this.$router.push('/main/leaderboard');
         // this.$router.push('/main/personalpage/' + email);
@@ -877,7 +938,19 @@
                 type: 'success'
               });
               this.collects.splice(index - 1, 1); // this.deleteCollect(index, collect);
-              this.myfresh();
+              // this.myfresh();
+              this.dialogFormVisible3 = false;
+              (this.favors).foreach((element) => {
+                if (element.favorName == currentSelectLeft) {
+                  element.collectNum--;
+                } else if (currentSelectLeft == '默认收藏夹')
+                  this.defaultCollectNum--;
+
+                if (element.favorName == favorName)
+                  element.collectNum++;
+                else if (favorName == '默认收藏夹')
+                  this.defaultCollectNum++;
+              })
 
             } else if (response.data == 1) {
               this.$message({
@@ -909,12 +982,13 @@
           }
         }; //添加请求头
 
-
+        this.headUrl = file.raw;
         this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=' + this.$store.state.currentUserId_ID + '&type=2',
           formdata1,
           config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);
-          this.myfresh();
+          // this.headUrl = 
+          // this.myfresh();
         })
 
       },
@@ -935,6 +1009,7 @@
           user.followState = '已关注';
         } else {
           user.followState = '关注';
+          console.log(user.followState)
         }
         user.FollowState = !user.FollowState;
         console.log(user.FollowState);
@@ -1071,6 +1146,7 @@
                 type: 'success'
               });
               this.favors.splice(index, 1);
+              this.collects = []
             } else if (response.data == 2) {
               this.$message.error('删除失败，请重试！');
             } else {
@@ -1108,6 +1184,12 @@
               // this.moment.CollectNum--;
               // this.moment.collectState = !this.moment.collectState;
               this.collects.splice(index - 1, 1);
+              (this.favors).foreach((element) => {
+                if (element.favorName == currentSelectLeft) {
+                  element.collectNum--;
+                } else if (currentSelectLeft == '默认收藏夹')
+                  this.defaultCollectNum--;
+              })
             } else {
               this.$message.error('取消收藏失败，请重试！');
             }
@@ -1142,6 +1224,8 @@
                 favorName: this.ruleform.fname,
                 collectNum: 0,
               });
+              this.ruleform.fname = '';
+
             } else if (response.data == 2) {
               this.$message({
                 message: '新建收藏夹失败，请重试！',
@@ -1152,7 +1236,6 @@
               this.$message.error('该名称已被使用，请重试！')
             }
           })
-        this.ruleform.fname = '';
 
       },
       //重命名收藏夹
@@ -1236,6 +1319,16 @@
       }
     },
     created() {
+      this.axios.get('http://10.0.1.8:54468/api/Users/FollowState?from_id=' + this.$store.state.currentUserId_ID +
+          '&to_id=' + this.$route.params.id)
+        .then((response) => {
+          if (response.data == 0) {
+            this.FollowState = true;
+          } else {
+            this.FollowState = false;
+          }
+
+        })
       this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID?id=' + this.$route.params.id)
         .then((response) => {
           this.username = response.data.Username;
@@ -1268,7 +1361,7 @@
           } else {
             this.followUsers = response.data;
           }
-          this.followUsers = response.data;
+          // this.followUsers = response.data;
           this.followNum = this.followUsers.length
           this.followUsers.forEach(element => {
             element.headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
@@ -1276,7 +1369,8 @@
               '&type=2';
             // 等待修改
             element.FollowState = true;
-            element.followState = '已关注'
+            // element.followState = '已关注'
+            Vue.set(element, 'followState', '已关注')
             // if (element.FollowState == 'true') {
             //   element.FollowState = true
             //   element.followState = '已关注'
@@ -1353,10 +1447,10 @@
           console.log(error);
         });
 
-      this.headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+      var headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
         this.$route.params.id +
         '&type=2';
-      // Vue.set(this, 'headUrl', headUrl)
+      Vue.set(this, 'headUrl', headUrl)
 
       ///////请求个人信息
       // this.username = this.$store.state.currentUsername;
@@ -1480,7 +1574,179 @@
           // console.log('mouted')
           // window.setTimeout("this.backgroundHandler()", 1000);
         })
+
       })
-    }
+    },
+    beforeRouteUpdate(to, from, next) {
+      this.followListVisible = false;
+      this.fanListVisible = false;
+      this.axios.get('http://10.0.1.8:54468/api/Users/FollowState?from_id=' + this.$store.state.currentUserId_ID +
+          '&to_id=' + to.params.id)
+        .then((response) => {
+          if (response.data = 0) {
+            this.FollowState = true;
+          } else {
+            this.FollowState = false;
+          }
+
+        })
+      this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID?id=' + to.params.id)
+        .then((response) => {
+          this.username = response.data.Username;
+          this.desc = response.data.Bio;
+        })
+      this.axios.get('http://10.0.1.8:54468/api/HomePage/GetMyMoments?Sender_id=' + to.params.id)
+        .then((response) => {
+          this.moments = response.data;
+          console.log(this.moments);
+
+          (this.moments).forEach(element => {
+            // element.ID = response.data.ID[index]
+            // index++;
+            console.log(this.moments)
+            element.momentID = element.ID
+            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
+              .then((response) => {
+                var url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data[0];
+                Vue.set(element, 'url', url);
+              })
+          })
+        })
+      this.followUsers = [];
+      this.followNum = this.followUsers.length
+
+      this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + to.params.id)
+        .then((response) => {
+          if (response.data == 'Not found') {
+            this.followUsers = [];
+          } else {
+            this.followUsers = response.data;
+          }
+          // this.followUsers = response.data;
+          this.followNum = this.followUsers.length
+          this.followUsers.forEach(element => {
+            element.headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+              element.ID +
+              '&type=2';
+            // 等待修改
+            element.FollowState = true;
+            // element.followState = '已关注'
+            Vue.set(element, 'followState', '已关注')
+            // if (element.FollowState == 'true') {
+            //   element.FollowState = true
+            //   element.followState = '已关注'
+            // } else {
+            //   element.FollowState = false
+            //   element.followState = '关注'
+            // }
+          });
+        })
+
+      this.fanUsers = [];
+      this.fansNum = this.fanUsers.length;
+      this.axios.get('http://10.0.1.8:54468/api/Users/FanList?user_id=' + to.params.id)
+        .then((response) => {
+          if (response.data == 'Not found') {
+            this.fanUsers = [];
+          } else {
+            this.fanUsers = response.data;
+          }
+
+          this.fansNum = this.fanUsers.length;
+          this.fanUsers.forEach(element => {
+            var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+              element.ID +
+              '&type=2';
+            Vue.set(element, 'headImg', headImg)
+            // 等待修改
+            // element.FollowState = 'true';
+            if (element.FollowState == 'True') {
+              element.FollowState = true
+              element.followState = '已关注'
+            } else {
+              element.FollowState = false
+              element.followState = '关注'
+            }
+          });
+        })
+      this.favors = []
+      this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId_ID)
+        .then((response) => {
+          // this.favors.favorName = response.data.NAME;
+          let totalFavorName = response.data;
+          var index = 0;
+
+
+
+          this.favors = []
+
+          // if (totalFavorName.length < 1) {
+          //   this.favors = []
+          // }
+
+          totalFavorName.forEach((element) => {
+            var temp = {}
+            temp.favorName = element.Name;
+
+            this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
+                .$store.state.currentUserId_ID + '&name=' + element.Name)
+              .then((response) => {
+                temp.collectNum = response.data
+              })
+            this.favors.push(temp);
+            // index++;
+          })
+
+          this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this.$store
+              .state.currentUserId_ID +
+              '&name=' + '默认收藏夹')
+            .then((response) => {
+              this.defaultCollectNum = response.data
+            })
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      this.headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+        to.params.id +
+        '&type=2';
+      // Vue.set(this, 'headUrl', headUrl)
+
+      ///////请求个人信息
+      // this.username = this.$store.state.currentUsername;
+      // this.desc = this.$store.state.currentUserBio;
+
+
+      this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state.currentUserId_ID +
+          '&Name=' + '默认收藏夹')
+        .then((response) => {
+          var momentIDList = response.data;
+          var index = 0;
+
+
+          this.collects = []
+          // if (momentIDList < 1) {
+          //   this.collects = []
+          // }
+
+          momentIDList.forEach(element => {
+            var temp = {}
+            // this.collects[index].momentID = element;
+            temp.momentID = element;
+            this.axios.get('http://10.0.1.8:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' + element)
+              .then((response) => {
+                //////////////////////////////
+                // this.collects[index].url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
+                var url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
+                // Vue.set(this.collects[index], 'url', url)
+                Vue.set(temp, 'url', url)
+                this.collects.push(temp)
+              })
+          });
+          // index++;
+        })
+      next()
+    },
   }
 </script>

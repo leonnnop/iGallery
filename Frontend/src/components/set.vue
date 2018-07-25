@@ -2,7 +2,8 @@
   <el-tabs type="border-card" class="tabs" style="box-shadow:0 0 0;margin-top:40px">
     <el-tab-pane label="修改个人信息">
       <div style="margin-left:15%;margin-top:5%">
-        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" :label-position="right" label-width="90px">
+        <!-- <el-form ref="ruleForm" :model="ruleForm" :rules="rules" :label-position="right" label-width="90px"> -->
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-position="right" label-width="90px">
           <el-form-item label="昵称：">
             <el-input type="text" v-model="ruleForm.name" auto-complete="off" style="width:50%" clearable></el-input>
           </el-form-item>
@@ -46,7 +47,7 @@
 
   .tabs {
     width: 50%;
-    height: 60%;
+    height: 400px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0px;
@@ -197,13 +198,13 @@
             message: '信息修改成功！',
             type: 'success'
           });
-          setTimeout(this.onCancel, 3000);
+          setTimeout(this.onCancel, 1000);
         } else {
           this.$message.error('信息修改失败！请重试。');
         }
       },
       onCancel: function () {
-        this.$router.push('personalpage');
+        this.$router.push('personalpage/'+this.$store.state.currentUserId_ID);
       },
       finishHandler: function (formName) {
         this.$refs[formName].validate((valid) => {

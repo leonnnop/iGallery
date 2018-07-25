@@ -28,7 +28,7 @@
                 <el-row style="width:100%" type="flex" justify="center">
                     <el-row :gutter="40" style="width:70%;margin:30px;">
                         <el-col :span="8">
-                            <el-card class="box-card" :key="item" v-for="item in items_col_1">
+                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_1">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src" alt="hex" height="40px" width="40px" @click="jumpToUser(item.SenderID)">
@@ -48,7 +48,7 @@
                             </el-card>
                         </el-col>
                         <el-col :span="8">
-                            <el-card class="box-card" :key="item" v-for="item in items_col_2">
+                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_2">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
@@ -68,7 +68,7 @@
                             </el-card>
                         </el-col>
                         <el-col :span="8">
-                            <el-card class="box-card" :key="item" v-for="item in items_col_3">
+                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_3">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
@@ -88,7 +88,7 @@
                             </el-card>
                         </el-col>
                         <!-- <el-col :span="6">
-                            <el-card class="box-card" :key="item" v-for="item in items_col_4">
+                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_4">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
@@ -315,7 +315,7 @@
                     }
                 ],
                 loadingPage: true,
-
+                tagImg: ''
             }
         },
 
@@ -408,6 +408,10 @@
                     })
 
             },
+            messageWebsocketHandler(path, state) {
+                // 0 关注 1 点赞 2 评论 3 转发 4 私信
+                window.ws.send('/' + path + ' ' + state);
+            },
             addCommas(val) {
                 var aIntNum = val.toString().split(".");
                 if (aIntNum[0].length >= 5) {
@@ -419,18 +423,7 @@
                 return aIntNum.join(".");
             },
             handleLikeClick(item) {
-                console.log(item.LikeState)
 
-                item.LikeState = !item.LikeState
-                console.log(item.LikeState)
-
-                if (item.LikeState == true) {
-                    item.likeIMG = require('../image/like.png');
-                    item.LikeNum++;
-                } else {
-                    item.likeIMG = require('../image/unlike.png');
-                    item.LikeNum--;
-                }
                 // console.log(item)
                 this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
                     '&moment_id=' + item.ID
@@ -438,7 +431,21 @@
                     //     email: this.$store.state.currentUserId,
                     //     moment_id: item.MomentId
                     //   }
-                )
+                ).then((response) => {
+                    console.log(item.LikeState);
+
+                    item.LikeState = !item.LikeState;
+                    console.log(item.LikeState);
+
+                    if (item.LikeState == true) {
+                        item.likeIMG = require('../image/like.png');
+                        item.LikeNum++;
+                        this.messageWebsocketHandler(item.SenderID, 1);
+                    } else {
+                        item.likeIMG = require('../image/unlike.png');
+                        item.LikeNum--;
+                    }
+                })
             },
             jumpToUser: function (ID) {
                 console.log('ge')

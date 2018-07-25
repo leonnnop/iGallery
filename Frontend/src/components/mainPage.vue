@@ -33,7 +33,10 @@
           <el-button round @click="searchHandler">搜索</el-button>
         </el-col>
         <el-col :span="1">
-          <i class="el-icon-bell"></i>
+          <el-badge :is-dot="bellDot" class="item_bell" style="margin-top:-4px">
+            <!-- <el-button class="share-button" icon="el-icon-share" type="primary"></el-button> -->
+            <i class="el-icon-bell" @click="bellClickHandler"></i>
+          </el-badge>
         </el-col>
         <el-col :span="1">
           <img src="../image/send.png" alt="sendMoment" @click="sendMomentInit">
@@ -43,7 +46,7 @@
 
 
       <el-row type="flex" justify="center" style="margin-top:30px">
-        <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScrolls' :''">
+        <el-col style="width:100%;" :class="navBarFixed == true ? 'mainContentScrolls' :''">
 
           <router-view></router-view>
 
@@ -130,6 +133,11 @@
     background-image: url(../image/slash.png);
     background-repeat: repeat;
   } */
+
+  .item_bell {
+    margin-top: 10px;
+    margin-right: 40px;
+  }
 
   .container-back {
     /* background-color: #fafafa; */
@@ -234,6 +242,8 @@
   export default {
     data() {
       return {
+        fileListLength: 0,
+        bellDot: false,
         pictureURL: '',
         loadingPage: true,
         navBarFixed: false,
@@ -284,6 +294,10 @@
       window.removeEventListener('scroll', this.handleScroll)
     },
     methods: {
+      bellClickHandler() {
+        // this.$router.push('/main/message/self');
+        this.$router.push('/main/leaderboard');
+      },
       handleTopBarSelect(key, keyPath) {
         console.log('/' + key);
 
@@ -479,10 +493,17 @@
         }
         return size;
       },
-      uploadOnProgress(e, file) { //开始上传
+      myfresh() {
+        this.$router.push('/main/leaderboard');
+        // this.$router.push('/main/personalpage/' + email);
+      },
+      uploadOnProgress(e, file, fileList) { //开始上传
         // console.log('——————开始上传——————');
         // console.log(file)
         // var file = document.getElementById("upload_file").files[0];
+
+        // console.log(fileList)
+
         var oneFile = file.raw;
         var formdata1 = new FormData(); // 创建form对象
         formdata1.append('file', oneFile); // 通
@@ -498,7 +519,16 @@
         this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=' + this.currentMomentID + '&type=1', formdata1,
           config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);
+          console.log('啊哈哈',this.fileListLength)
+          this.fileListLength--;
+          if (this.fileListLength == 0) {
+            this.myfresh()
+          }
         })
+        // if (this.fileListLength == 1) {
+        //   this.myfresh()
+        // }
+
 
       },
       uploadOnChange(file, fileList) {
@@ -513,6 +543,9 @@
         if (fileList.length) {
           this.showNextBtn = true;
         }
+        this.fileListLength = Math.max(fileList.length, this.fileListLength);
+        console.log(this.fileListLength)
+
       },
       uploadOnSuccess(e, file, fileList) { //上传附件
         // console.log("——————————success——————————")
@@ -565,6 +598,127 @@
         this.loadingPage = false
       }
     },
+    created() {
+      // window.addEventListener('onload', start)
+      // window.addEventListener('onload', myHollowClick)
+      var that = this;
+      var start = () => {
+        var wsImpl = window.WebSocket || window.MozWebSocket;
+        console.log('websocket', that.$store.state.currentUserId_ID)
+
+        // 创建新的websocket新连接端口为7181
+        window.ws = new wsImpl('ws://10.0.1.84:8181/' + that.$store.state.currentUserId_ID)
+
+        // 当数据从服务器服务中心发送后，继续向下运行过程
+        ws.onmessage = function (evt) {
+          // console.log('..我收到了')
+          that.$notify({
+            title: '您有新的消息',
+            message: h('i', {
+              style: 'color: teal'
+            }, '' + evt.data)
+          });
+          that.bellDot = true;
+        };
+
+        // 当链接对象找到服务端成功对接后，提示正常打开
+        ws.onopen = function () {
+          console.log('.. connection open<br/>');
+          // ws.send(that.$store.state.currentUserId_ID)
+        };
+
+        // 当链接对象未找找到服务端成功对接后，提示打开失败，别切单项关闭
+        ws.onclose = function () {
+          console.log('.. connection closed<br/>')
+          // ws.send('/' + that.$store.state.currentUserId_ID)
+        }
+      }
+      // window.onload = start;
+      var myHollowClick = function () {
+        var click_cnt = 0;
+        var $html = document.getElementsByTagName("html")[0];
+        var $body = document.getElementsByTagName("body")[0];
+        var texts = ['富强', '民主', '文明', '和谐', '自由', '平等', '公正', '法治', '爱国', '敬业', '诚信', '友善', '❤'];
+        var colors = ['#FF0000', '#9F5F9F', ' #B5A642', '#5F9F9F', '#238E23'];
+        $html.onclick = function (e) {
+          var $elem = document.createElement("b");
+          $elem.style.color = "#E94F06";
+          $elem.style.zIndex = 9999;
+          $elem.style.position = "absolute";
+          $elem.style.select = "none";
+          var x = e.pageX;
+          var y = e.pageY;
+          $elem.style.left = (x - 10) + "px";
+          $elem.style.top = (y - 20) + "px";
+          clearInterval(anim);
+          let click_cnt_text = click_cnt % texts.length;
+          let click_cnt_color = click_cnt % colors.length;
+          $elem.innerText = texts[click_cnt_text];
+          // $elem.style.color = colors[click_cnt_color];
+          click_cnt++;
+          // switch (++click_cnt) {
+          //   case 10:
+          //     $elem.innerText = "OωO";
+          //     break;
+          //   case 20:
+          //     $elem.innerText = "(๑•́ ∀ •̀๑)";
+          //     break;
+          //   case 30:
+          //     $elem.innerText = "(๑•́ ₃ •̀๑)";
+          //     break;
+          //   case 40:
+          //     $elem.innerText = "(๑•̀_•́๑)";
+          //     break;
+          //   case 50:
+          //     $elem.innerText = "（￣へ￣）";
+          //     break;
+          //   case 60:
+          //     $elem.innerText = "(╯°口°)╯(┴—┴";
+          //     break;
+          //   case 70:
+          //     $elem.innerText = "૮( ᵒ̌皿ᵒ̌ )ა";
+          //     break;
+          //   case 80:
+          //     $elem.innerText = "╮(｡>口<｡)╭";
+          //     break;
+          //   case 90:
+          //     $elem.innerText = "( ง ᵒ̌皿ᵒ̌)ง⁼³₌₃";
+          //     break;
+          //   case 100:
+          //   case 101:
+          //   case 102:
+          //   case 103:
+          //   case 104:
+          //   case 105:
+          //     $elem.innerText = "(ꐦ°᷄д°᷅)";
+          //     break;
+          //   default:
+          //     // 手动更换下面这行双引号里面的内容 如"😀"
+          //     $elem.innerText = "❤";
+          //     break;
+          // }
+          // $elem.style.fontSize = Math.random() * 10 + 8 + "px";
+          $elem.style.fontSize = '16px'
+          var increase = 0;
+          var anim;
+          setTimeout(function () {
+            anim = setInterval(function () {
+              if (++increase == 150) {
+                clearInterval(anim);
+                $body.removeChild($elem);
+              }
+              $elem.style.top = y - 20 - increase + "px";
+              $elem.style.opacity = (150 - increase) / 120;
+            }, 8);
+          }, 70);
+          $body.appendChild($elem);
+        };
+      };
+      // window.addEventListener('load', start)
+      // window.addEventListener('load', myHollowClick)
+      start();
+      myHollowClick();
+    }
 
     // mounted: function () {
     //   this.$nextTick(function () {
