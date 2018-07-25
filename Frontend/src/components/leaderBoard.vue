@@ -42,6 +42,7 @@
   export default {
     data() {
       return {
+        to_Route: '',
         tableData: [],
         cards: [{
             id: 1,
@@ -56,16 +57,20 @@
     },
 
     methods: {
-      myrefresh() {
-        this.$router.push('/main/user/' + this.$store.state.currentUserId);
+      myrefresh(path) {
+        console.log('假刷新',path)
+        this.$router.push(''+path);
       }
     },
     created() {
-      this.myrefresh();
+      // this.myrefresh(this.to_Route);
     },
     beforeRouteEnter(to, from, next) {
       // 处理无法访问的情况
       next((vm) => {
+        // vm.to_Route = from.path;
+        console.log(from)
+        vm.myrefresh(from.path)
         // vm.axios.get('http://192.168.0.37:5000/feed/sss')
         //   .then((response) => {
         //     for (let index = 0; index < response.length; index++) {

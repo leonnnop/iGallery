@@ -71,7 +71,7 @@
         </el-row>
       </el-col>
 
-      <el-row style="width:600px;margin-left:18%;" type="flex" justify="center">
+      <el-row style="width:41%;margin-left:18%;" type="flex" justify="center">
         <el-col>
           <el-row v-for="moment in totalMoments" :key="moment.moment.ID" class="box-color-grey">
             <el-row>
@@ -93,7 +93,7 @@
                 </el-col>
               </el-row>
             </el-row>
-            <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_email!=null">
+            <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_id!=null">
               <span>
                 <img src="../image/forwarded-icon.png" alt="forwarded-icon"> 转发自
                 <span @click="jumpToUser(moment.forwarded_id)" style="color:#6191d5;display:inline-block;margin:5px 0" class="hover-cursor">
@@ -537,7 +537,7 @@
             user_email: '',
             user_username: 'leonnnop',
             user_bio: 'leonnnop',
-            forwarded_email: 'dzq@qq.com',
+            forwarded_id: 'dzq@qq.com',
             forwarded_username: 'dzq',
             moment: {
               ID: '1',
@@ -580,7 +580,7 @@
             user_email: '',
             user_username: 'leonnnop',
             user_bio: 'leonnnop',
-            forwarded_email: '',
+            forwarded_id: '',
             forwarded_username: '',
             moment: {
               ID: '2',
@@ -611,7 +611,7 @@
             user_email: '',
             user_username: 'leonnnop',
             user_bio: 'leonnnop',
-            forwarded_email: '',
+            forwarded_id: '',
             forwarded_username: '',
             moment: {
               ID: '3',
@@ -641,9 +641,7 @@
         askNum: 0 //再次请求动态的次数
       }
     },
-    // mounted() {
-    //   window.addEventListener('scroll', this.handleScroll)
-    // },
+
     destroyed() {
       window.removeEventListener('scroll', this.handleScroll)
     },
@@ -730,7 +728,8 @@
 
             if (res2.data != 'Not found') {
               res2.data.forEach(element => {
-                element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
+                let Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
+                Vue.set(element, 'Photo', Photo)
               });
               this.followings = res2.data;
               console.log(this.followings)
@@ -834,7 +833,12 @@
         // return dic.get(moment.moment.imgList[0].url) + 'px';
         return '800px'
       },
+      messageWebsocketHandler(path, state, content = "") {
+        // 0 关注 1 点赞 2 评论 3 转发 4 私信
+        window.ws.send('/' + path + ' ' + state + content);
+      },
       likeHandler(moment) {
+        console.log('websocket', moment.moment.SenderID)
         if (moment.liked == 0) {
           console.log('moment.liked == 0')
           moment.likeImg = require('../image/comment-unlike.png');
@@ -850,7 +854,9 @@
             '&moment_id=' + moment.moment.ID)
           .then((response) => {
             if (response.data == 0) {
-
+              if (moment.liked == 0) {
+                this.messageWebsocketHandler(moment.moment.SenderID, 1);
+              }
             } else {
               this.$message.error('点赞失败，请重试！');
             }
@@ -885,6 +891,7 @@
               if (response.data == 0) {
                 moment.collectImg = require('../image/collect.png');
                 moment.collected = 0;
+                // this.messageWebsocketHandler(moment.moment.SenderID, 0);
               } else {
                 this.$message.error('收藏失败，请重试！');
               }
@@ -910,6 +917,8 @@
                     message: '转发成功！',
                     type: 'success'
                   });
+                  this.messageWebsocketHandler(moment.moment.SenderID, 3);
+                  this.myfresh();
                 } else if (response.data == 1) {
                   this.$message({
                     message: '不可以转发自己的动态哦！',
@@ -954,6 +963,7 @@
                 message: '评论成功！',
                 type: 'success'
               });
+              this.messageWebsocketHandler(moment.moment.SenderID, 2, ' ' + moment.newComment)
               if (moment.comments.length == 4) {
                 moment.more_comments = true;
                 moment.newComment = '';
@@ -1105,9 +1115,9 @@
       this.$nextTick(function () {
         window.addEventListener('scroll', this.handleScroll)
 
-        // Code that will run only after the
-        // entire view has been rendered
-        // console.log('mouted')
+        //   // Code that will run only after the
+        //   // entire view has been rendered
+        //   // console.log('mouted')
         // setTimeout("backgroundHandler()", 1000);
         var self = this;
         // this.toastrVal = inVal;
@@ -1115,19 +1125,20 @@
         // this.noBg = bgState;
         setTimeout(function () {
           self.loadingPage = false;
-        }, 3500)
+        }, 2500)
       })
     },
     beforeRouteEnter(from, to, next) {
       next(vm => {
-        vm.$nextTick(function () {
-          var self = vm;
+        var self = vm;
+
+        vm.$nextTick(()=>{
           // this.toastrVal = inVal;
           // this.loadState = true;
           // this.noBg = bgState;
-          setTimeout(function () {
+          setTimeout(()=> {
             self.loadingPage = false;
-          }, 3500)
+          }, 2500)
 
           // Code that will run only after the
           // entire view has been rendered

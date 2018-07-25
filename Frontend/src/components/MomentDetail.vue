@@ -465,7 +465,7 @@
                                 message: '删除成功！',
                                 type: 'success'
                             });
-                            this.$router.push('/main/user/'+this.$store.state.currentUserId_ID);
+                            this.$router.push('/main/user/' + this.$store.state.currentUserId_ID);
 
                         } else {
                             this.$message.error('删除失败，服务器内部错误，请重试。');
@@ -721,7 +721,11 @@
             },
             jumpToUser: function (url) {
                 console.log(url);
-                this.$router.push('/mian/personalpage/' + url)
+                this.$router.push('/main/personalpage/' + url)
+            },
+            messageWebsocketHandler(path, state, content = "") {
+                // 0 关注 1 点赞 2 评论 3 转发 4 私信
+                window.ws.send('/' + path + ' ' + state + content);
             },
             collectHandler: function () {
                 if (!this.moment.collectState) {
@@ -779,6 +783,7 @@
                 console.log(this.moment.LikeState)
                 if (!this.moment.LikeState) {
                     this.likeSrc = require('../image/comment-like.png');
+                    this.messageWebsocketHandler(this.moment.SenderID, 1)
                     this.moment.LikeNum++;
                     //加入喜欢列表
                     this.likeUsers.push({
@@ -797,6 +802,10 @@
                 }
                 this.moment.LikeState = !this.moment.LikeState;
             },
+            myfresh() {
+                this.$router.push('/main/leaderboard');
+                // this.$router.push('/main/personalpage/' + email);
+            },
             forwardHandler: function () {
                 this.$confirm('', '确定转发？', {
                         confirmButtonText: '确定',
@@ -813,6 +822,8 @@
                                         message: '转发成功！',
                                         type: 'success'
                                     });
+                                    this.messageWebsocketHandler(this.moment.SenderID, 3);
+                                    this.myfresh();
                                 } else if (response.data == 1) {
                                     this.$message({
                                         message: '不可以转发自己的动态哦！',
@@ -829,17 +840,6 @@
                     .catch(() => {});
             },
             likeFollowHandler: function (user, FollowState) {
-                console.log(user)
-                console.log(this.$store.state.currentUserId_ID)
-                console.log(user.FollowState);
-                //////////////
-                if (!user.FollowState) {
-                    user.followState = '已关注';
-                } else {
-                    user.followState = '关注';
-                }
-                user.FollowState = !user.FollowState;
-                console.log(user.FollowState);
 
                 this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.ID)
@@ -849,6 +849,19 @@
                             //     message: '关注成功',
                             //     type: 'success'
                             // });
+                            console.log(user)
+                            console.log(this.$store.state.currentUserId_ID)
+                            console.log(user.FollowState);
+                            //////////////
+                            if (!user.FollowState) {
+                                user.followState = '已关注';
+                                this.messageWebsocketHandler(user.ID, 0)
+                            } else {
+                                user.followState = '关注';
+                            }
+                            user.FollowState = !user.FollowState;
+                            console.log(user.FollowState);
+
                         } else {
                             this.$message.error('关注失败，服务器内部错误，请重试。');
                         }
@@ -967,6 +980,7 @@
                                     type: 'success'
                                 });
                                 this.blogComment.comment = '';
+                                this.messageWebsocketHandler(this.moment.SenderID, 2, this.blogComment.comment)
                             } else {
                                 this.$message.error('评论失败，请稍后重试！');
                             }
@@ -1038,6 +1052,7 @@
                                     message: '评论成功！',
                                     type: 'success'
                                 });
+                                this.messageWebsocketHandler(this.moment.SenderID, 2, this.commentComment.comment)
                                 this.commentComment.comment = '';
                             } else {
                                 this.$message.error('评论失败，请稍后重试！');

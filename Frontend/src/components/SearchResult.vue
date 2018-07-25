@@ -640,11 +640,10 @@
                             if (user.FollowState == 'False') {
                                 user.followWord = '已关注';
                                 user.FollowState = 'True';
-
+                                this.messageWebsocketHandler(user.ID, 0)
                             } else {
                                 user.followWord = '关注';
                                 user.FollowState = 'False';
-
                             }
                             // user.FollowState = !user.FollowState;
                         } else {
@@ -737,6 +736,10 @@
                     this.showTagsLeftArrow = true;
                 }
             },
+            messageWebsocketHandler(path, state) {
+                // 0 关注 1 点赞 2 评论 3 转发 4 私信
+                window.ws.send('/' + path + ' ' + state);
+            },
 
         },
         mounted: function () {
@@ -756,10 +759,12 @@
 
             })
         },
+
         beforeRouteEnter(from, to, next) {
             next(vm => {
+                var self = vm;
                 vm.$nextTick(function () {
-                    var self = vm;
+
                     // this.toastrVal = inVal;
                     // this.loadState = true;
                     // this.noBg = bgState;
@@ -773,6 +778,109 @@
                     // window.setTimeout("this.backgroundHandler()", 1000);
                 })
             })
+        },
+        beforeRouteUpdate(to, from, next) {
+            this.loadingPage = true
+            var self = this;
+            setTimeout(function () {
+                self.loadingPage = false;
+            }, 1500)
+            this.axios.all([this.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + to.params
+                        .keyword + '&user_id=' + this.$store.state.currentUserId_ID),
+                    this.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword=' + to.params.keyword +
+                        '&user_id=' + this.$store.state.currentUserId_ID)
+                ])
+                .then(this.axios.spread((res1, res2) => {
+                    //用户
+                    if (res1.data != 'Not found') {
+                        this.users = res1.data;
+                        //关注状态
+                        this.users.forEach(element => {
+                            if (element.ID == this.$store.state.currentUserId_ID) {
+                                Vue.set(element, 'showFollowBtn', false);
+                            } else {
+                                Vue.set(element, 'showFollowBtn', true);
+                                if (element.FollowState == 'True') {
+                                    Vue.set(element, 'followWord', '已关注');
+                                } else {
+                                    Vue.set(element, 'followWord', '关注');
+                                }
+                            }
+
+                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                                '&type=2';
+                            Vue.set(element, 'Photo', photo)
+                        });
+                        this.hasUser = true;
+                    } else {
+                        this.hasUser = false;
+                        this.users = []
+                    }
+
+                    this.userListLength = length(this.users);
+                    console.log(this.userListLength);
+
+                    //tag和动态
+                    if (res2.data.m_Item1.length != 0) {
+                        this.tags = res2.data.m_Item1;
+                    } else {
+                        this.hasTag = false;
+                        this.tags = []
+                    }
+
+                    if (res2.data.m_Item2.length != 0) {
+                        this.moments = res2.data.m_Item2;
+                        this.hasMoment = true;
+                        // Vue.set()
+
+                        this.moments.forEach(element => {
+                            Vue.set(element, 'LikeNum', element.LikeNum)
+                            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                                    '&type=1')
+                                .then((response) => {
+                                    Vue.set(element, 'src',
+                                        'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                        response.data[0]);
+                                })
+                        })
+                        console.log('moments----------');
+                        console.log(this.moments);
+                    } else {
+                        this.hasMoment = false;
+                        this.moments = []
+                    }
+
+                    if (this.tags.length) {
+                        this.hasTag = true;
+                        //tag的关注状态
+                        this.tags.forEach(element => {
+
+                            if (element.FollowState == 'True') {
+                                Vue.set(element, 'followWord', '已关注');
+                            } else {
+                                Vue.set(element, 'followWord', '关注');
+                            }
+                            var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + element.Pic;
+                            Vue.set(element, 'Pic', Pic)
+                        })
+                    } else {
+                        this.hasTag = false;
+                    }
+
+                    this.tagListLength = length(this.tags);
+
+                    if (this.userListLength > 902) {
+                        this.showUsersRightArrow = true;
+                    }
+                    if (this.tagListLength > 902) {
+                        this.showTagsRightArrow = true;
+                    }
+
+                }))
+                .catch((error) => {
+                    console.log(error);
+                });
+            next()
         }
     }
 </script>
