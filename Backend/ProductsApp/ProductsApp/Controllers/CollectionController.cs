@@ -342,7 +342,7 @@ namespace ProductsApp.Controllers
 
         //移动收藏的动态到其他收藏夹
         [HttpGet]
-        public IHttpActionResult MoveMomentToAnotherCollection(string moment_id, string founder_id, string original_collection_name, string new_collection_name)
+        public IHttpActionResult MoveMomentToAnotherCollection(string moment_id, string founder_id, string new_collection_name)
         {
             //创建返回信息，先假设更新成功
             int status = 0;
@@ -358,7 +358,7 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "update COLLECT set NAME='" + new_collection_name + "' where MOMENT_ID='" + moment_id + "' and FOUNDER_ID='" + founder_id + "' and NAME='" + original_collection_name + "'";
+            cmd.CommandText = "update COLLECT set NAME='" + new_collection_name + "' where MOMENT_ID='" + moment_id + "' and FOUNDER_ID='" + founder_id + "'";
             cmd.Connection = conn;
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//更新出现错误

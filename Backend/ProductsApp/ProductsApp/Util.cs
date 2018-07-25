@@ -81,6 +81,7 @@ namespace Utility
 
             //从格式图像转成字节流
             img.Save(ms, format);
+            img.Dispose();
             rd.Close();
             conn.Close();
 
@@ -166,6 +167,10 @@ namespace Utility
                 }
 
                 //存本地
+                if (File.Exists(filepath))
+                {
+                    File.Delete(filepath);
+                }
                 file.SaveAs(filepath);
             }
             return flag;
