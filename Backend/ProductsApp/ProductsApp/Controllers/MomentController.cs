@@ -35,9 +35,7 @@ namespace ProductsApp.Controllers
         {
             //创建返回信息，先假设插入成功
             int status = 0;
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -51,7 +49,7 @@ namespace ProductsApp.Controllers
             
             string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME) " +
-                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff'))";
+                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_DATE ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss'))";
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {
@@ -84,10 +82,7 @@ namespace ProductsApp.Controllers
         {
             //创建返回信息，先假设转发成功
             int status = 0;
-
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -148,7 +143,7 @@ namespace ProductsApp.Controllers
             
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTE_MID) " +
                               "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "'," +
-                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss.ff'),'" + moment.QuoteMID + "')";
+                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_DATE('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss'),'" + moment.QuoteMID + "')";
             int result1 = cmd.ExecuteNonQuery();
             if (result1 != 1)//插入出现错误
             {
@@ -197,9 +192,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public Tuple<List<Moment>, List<Users>> ForawardList(string user_id)
         {
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
