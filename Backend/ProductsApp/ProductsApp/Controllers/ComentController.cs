@@ -146,7 +146,7 @@ namespace ProductsApp.Controllers
             comment.Sender_id = coment["Sender_id"];
             comment.Content = coment["Content"];
             //comment.Send_time = coment["Send_time"];
-            comment.Send_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            comment.Send_time = DateTime.Now.ToString("yyyyMMddhhmmss");
             comment.Quote_id = coment["Quote_id"];
 
 
@@ -175,7 +175,7 @@ namespace ProductsApp.Controllers
             {
                 comment.Type = "1";
             }
-            cmd.CommandText = "insert into COMENT(ID,CONTENT,SEND_TIME,QUOTE_ID,TYPE) values('" + comment.Cid + "','" + comment.Content + "',TO_TIMESTAMP('"+comment.Send_time+"', 'yyyy-mm-dd hh24:mi:ss.ff am'),'" + comment.Quote_id + "','"+ comment.Type + "')";
+            cmd.CommandText = "insert into COMENT(ID,CONTENT,SEND_TIME,QUOTE_ID,TYPE) values('" + comment.Cid + "','" + comment.Content + "',TO_TIMESTAMP('"+comment.Send_time+"', 'yyyy-mm-dd hh24:mi:ss.ff'),'" + comment.Quote_id + "','"+ comment.Type + "')";
             int executeResult = cmd.ExecuteNonQuery();
             if (executeResult != 1)
             {

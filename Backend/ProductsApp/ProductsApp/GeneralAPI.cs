@@ -5,6 +5,7 @@ using System.Web;
 using Oracle.ManagedDataAccess.Client;
 using ProductsApp.Models;
 using ProductsApp;
+using System.Threading;
 
 /*API
     EmailToUserID   给用户邮箱，返回用户ID
@@ -25,7 +26,7 @@ namespace ProductsApp
     public class GeneralAPI
     {
         DBAccess dBAccess = new DBAccess();
-
+        static string last_id = "";
         /// <summary>
         /// 通过邮箱获取用户ID
         /// </summary>
@@ -286,12 +287,18 @@ namespace ProductsApp
         /// <returns></returns>
         public string NewIDOf(string table)
         {
+           
             string time = DateTime.Now.ToString("MMddHHmmssffff");
-            TimestampID creator = new TimestampID();
-            string ts = creator.GetID();
-            string id = time + ts.Substring(ts.Length - 6);
-
-            return id;
+            if (time == last_id)
+            {
+                Thread.Sleep(1);
+                time = DateTime.Now.ToString("MMddHHmmssffff");
+            }
+            //TimestampID creator = new TimestampID();
+            //string ts = creator.GetID();
+            //string id = time + ts.Substring(ts.Length - 6);
+            last_id = time;
+            return time;
         }
     }
 }
