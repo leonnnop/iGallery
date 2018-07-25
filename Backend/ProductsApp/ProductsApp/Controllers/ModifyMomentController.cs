@@ -204,7 +204,7 @@ namespace ProductsApp.Controllers
             if (rd.Read())
             {
                 string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
-                if (dBAccess.ExecuteSql("update MOMENT set content = '" + modifyMoment.content + "',time = TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff am') where sender_id = '" + user_id + "'and id = '" + modifyMoment.moment_id + "'"))
+                if (dBAccess.ExecuteSql("update MOMENT set content = '" + modifyMoment.content + "',time = TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff') where sender_id = '" + user_id + "'and id = '" + modifyMoment.moment_id + "'"))
                 {
                     status = 0;//修改成功
                 }

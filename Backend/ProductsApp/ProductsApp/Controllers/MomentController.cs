@@ -49,9 +49,9 @@ namespace ProductsApp.Controllers
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
             
-            string currentTime = DateTime.Now.ToString();
+            string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME) " +
-                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh:mi:ss.ff am'))";
+                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff'))";
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {
@@ -143,12 +143,12 @@ namespace ProductsApp.Controllers
             moment.ForwardNum = 0;
             moment.CollectNum = 0;
             moment.CommentNum= 0;
-            moment.Time = DateTime.Now.ToString();
+            moment.Time = DateTime.Now.ToString("yyyyMMddhhmmss");
             moment.QuoteMID = forward.Moment_ID;
             
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTE_MID) " +
                               "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "'," +
-                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss.ff am'),'" + moment.QuoteMID + "')";
+                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss.ff'),'" + moment.QuoteMID + "')";
             int result1 = cmd.ExecuteNonQuery();
             if (result1 != 1)//插入出现错误
             {
@@ -187,74 +187,6 @@ namespace ProductsApp.Controllers
 
             //返回信息
             return Ok(status);
-        }
-
-        /// <summary>
-        /// 转发动态的消息
-        /// </summary>
-        /// <param name="user_id">String</param>
-        /// <returns></returns>
-        [HttpGet]
-        public Tuple<List<Moment>, List<Users>> ForawardList(string user_id)
-        {
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
-            try
-            {
-                conn.Open();
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select * from MOMENT where SENDER_ID ='" + user_id + "' order by TIME desc";//查找用户三天内的动态，按时间排序
-            cmd.Connection = conn;
-            OracleDataReader rd = cmd.ExecuteReader();
-            DateTime CutTime = DateTime.Now.AddDays(-3);
-            List<Moment> moments = new List<Moment>();
-            List<Users> users = new List<Users>();
-            Tuple<List<Moment>, List<Users>> result = new Tuple<List<Moment>, List<Users>>(null, null);
-            if (!rd.Read()) return result;
-            while (rd.Read())
-            {
-                string time = rd["TIME"].ToString();
-                DateTime send = Convert.ToDateTime(time);
-                if (send > CutTime)//若是三天内的动态
-                {
-                    string id = rd["ID"].ToString();
-                    string sender_id = rd["SENDER_ID"].ToString();
-                    string content = rd["CONTENT"].ToString();
-                    int like_num = Convert.ToInt32(rd["LIKE_NUM"]);
-                    int forward_num = Convert.ToInt32(rd["FORWARD_NUM"]);
-                    int collect_num = Convert.ToInt32(rd["COLLECT_NUM"]);
-                    int comment_num = Convert.ToInt32(rd["COMMENT_NUM"]);
-                    moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
-                    OracleCommand cmd1 = new OracleCommand();
-                    cmd1.CommandText = "select USER_ID from Forward where MOMENT_ID ='" + id + "'";//找出转发者
-                    cmd1.Connection = conn;
-                    OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (!rd1.Read()) users = null;
-                    while (rd1.Read())
-                    {
-                        Users temp = new Users();
-                        temp.ID = rd1["ID"].ToString();
-                        temp.Email = rd1["EMAIL"].ToString();
-                        temp.Password = rd1["PASSWORD"].ToString();
-                        temp.Username = rd1["USERNAME"].ToString();
-                        temp.Bio = rd1["BIO"].ToString();
-                        temp.Photo = rd1["PHOTO"].ToString();
-                        users.Add(temp);
-
-                    }
-                    rd1.Close();
-                }
-            }
-            result = new Tuple<List<Moment>, List<Users>>(moments, users);
-            rd.Close();
-            conn.Close();
-            return result;
         }
     }
 }

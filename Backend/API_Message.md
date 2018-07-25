@@ -1,4 +1,4 @@
-
+﻿
 # 发送私信（李璐）
 
 请求地址：/api/Users/Message/SendMessage
@@ -55,41 +55,6 @@ JSON样例
 
 ------
 
-# 转发动态的消息 #（陈阳）
-
-请求地址：/api/Moment/ForwardList
-
-请求方式：Put  
-
-> 参数： string user_id
-
-> 返回类型：Tuple<List<Moment>, List<Users>> 
-
-| 状态码 | 说明 |    
-| -- | -- |  
-List<Moment>
-
-| 类型   | 属性       |
-| :----- | ---------- |
-| string | ID         |
-| string | SenderID   |
-| string | Content    |
-| int    | LikeNum    |
-| int    | ForwardNum |
-| int    | CollectNum |
-| int    | CommentNum |
-| string | Time       |
-
-List<Users>
-
-| 类型   | 属性     |
-| :----- | -------- |
-| string | ID       |
-| string | Email    |
-| string | Password |
-| string | Username |
-| string | Bio      |
-| string | Photo    |
 # 获取私信对象用户（李璐）
 
 请求地址：/api/Users/Message/GetUser
@@ -120,6 +85,111 @@ JSON样例
 |string         | Password      |
 
 
+
+------
+# 返回点赞信息（陈阳）
+
+请求地址：/api/Users/Message/LikeState
+
+请求方式：Get
+
+参数类型：string user_id
+
+返回类型：
+List<Moment> moments
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | SenderID      |
+|string         | Content    |
+|int            | LikeNum      |
+|int            | ForwardNum     |
+|int            | CollectNum      |
+|int            | CommentNum      |
+|string         | Time      |
+
+List<Users>users
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | Email      |
+|string         | Username     |
+|string         | Bio      |
+|string         | Photo     |
+|string         | Password      |
+
+------
+#返回转发信息（陈阳）
+
+请求地址：/api/Users/Message/ForwardState
+
+请求方式：Get
+
+参数类型：string user_id
+
+返回类型：
+List<Moment> moments
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | SenderID      |
+|string         | Content    |
+|int            | LikeNum      |
+|int            | ForwardNum     |
+|int            | CollectNum      |
+|int            | CommentNum      |
+|string         | Time      |
+
+List<Users>users
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | Email      |
+|string         | Username     |
+|string         | Bio      |
+|string         | Photo     |
+|string         | Password      |
+
+------
+
+
+#返回评论信息（陈阳）
+
+请求地址：/api/Users/Message/CommentState
+
+请求方式：Get
+
+参数类型：string user_id
+
+返回类型：
+List<Moment> moments
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | SenderID      |
+|string         | Content    |
+|int            | LikeNum      |
+|int            | ForwardNum     |
+|int            | CollectNum      |
+|int            | CommentNum      |
+|string         | Time      |
+
+List<Users>users
+| 类型| 属性          |
+| ------ | ---------------- |
+|string         | ID      |
+|string         | Email      |
+|string         | Username     |
+|string         | Bio      |
+|string         | Photo     |
+|string         | Password      |
+
+List<Coment>comments
+|string         | ID      |
+|string         | Content      |
+|string         | SendTime     |
+|string         | QuoteID     |
+|string         | Type(可忽略）     |
 
 ------
 
