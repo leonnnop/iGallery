@@ -27,7 +27,7 @@
                                             <div v-for="(likeUser,index) in likeUsers" :key="index" class="like-user-li">
                                                 <el-row type="flex" justify="center" align="middle">
                                                     <el-col :span="3" :offset="1" style="height:50px;">
-                                                        <img :src="likeUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.userPage)">
+                                                        <img :src="likeUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.ID)">
                                                     </el-col>
                                                     <el-col :span="16">
                                                         <el-row>{{likeUser.Username}}</el-row>
@@ -194,16 +194,16 @@
             <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
 
                 <router-view></router-view>
-                <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
+                <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
                             <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
                                 style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
                         <el-col :span="18" :offset="0">
-                            <div class="sendContent">
+                            <div class="sendsContent">
                                 <div class="edit">
-                                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">Leonnnop</div>
+                                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">{{this.$store.state.currentUsername}}</div>
                                     <el-row type="flex" justify="center" align="middle">
                                         <el-row>
 
@@ -465,7 +465,7 @@
                                 message: '删除成功！',
                                 type: 'success'
                             });
-                            this.$router.push('/main/personalpage');
+                            this.$router.push('/main/user/'+this.$store.state.currentUserId_ID);
 
                         } else {
                             this.$message.error('删除失败，服务器内部错误，请重试。');
@@ -721,7 +721,7 @@
             },
             jumpToUser: function (url) {
                 console.log(url);
-                this.$router.push('/mian/personalpage/'+url)
+                this.$router.push('/mian/personalpage/' + url)
             },
             collectHandler: function () {
                 if (!this.moment.collectState) {
@@ -1179,7 +1179,8 @@
                 // this.noBg = bgState;
                 setTimeout(function () {
                     self.loadingPage = false;
-                }, 1000)
+                }, 1000);
+                window.scroll(0, 0);
             })
         },
         beforeRouteEnter(from, to, next) {
@@ -1204,6 +1205,20 @@
 </script>
 
 <style scoped>
+    .sends {
+        background: transparent;
+        height: 0;
+        padding-bottom: 38%;
+        position: relative;
+        -webkit-box-shadow: 0 0;
+        box-shadow: 0 0;
+    }
+
+    .sendsContent {
+        height: 500px;
+        background: url('../image/send-dialog.png');
+    }
+
     /* 可以设置不同的进入和离开动画 */
 
     /* 设置持续时间和动画函数 */

@@ -1,9 +1,9 @@
 <template>
-  <el-container style="" class="container-back">
+  <el-container class="container-back">
     <div class="container-background"></div>
-    <div :class="{loadingbackground:loadingPage}"></div>
+    <!-- <div :class="{loadingbackground:loadingPage}"></div> -->
     <el-col>
-      <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWrap' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
+      <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWraps' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
           <img src="../image/logo.png" alt="logo" height="30">
         </el-col>
@@ -43,91 +43,93 @@
 
 
       <el-row type="flex" justify="center" style="margin-top:30px">
-        <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScroll' :''">
+        <el-col style="width:100%;height:800px;" :class="navBarFixed == true ? 'mainContentScrolls' :''">
 
           <router-view></router-view>
-          <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="send" :show-close="false" top="10px">
-            <el-row>
-              <el-col :span="3" :offset="0">
-                <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
-                  style="width:80px;height:80px;border-radius:80px;">
-              </el-col>
-              <el-col :span="18" :offset="0">
-                <div class="sendContent">
-                  <div class="edit">
-                    <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">Leonnnop</div>
-                    <el-row type="flex" justify="center" align="middle">
-                      <el-row>
 
-                      </el-row>
-                      <el-col :span="6" v-show="showUploadArea"></el-col>
-                      <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
-
-                        <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
-                        <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
-                          :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange" :on-success="uploadOnSuccess"
-                          :on-error="uploadOnError" :on-progress="uploadOnProgress" :on-exceed="upLoadOnExceed" :show-file-list="true"
-                          :limit="9" :multiple="true" class="upload" :data="pictureObj">
-                          <i class="el-icon-plus"></i>
-                        </el-upload>
-
-
-                      </el-col>
-                      <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
-                        <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="sendText"></el-input>
-                        <div class="editTag">
-                          <el-tag :key="tag" color="#fff" v-for="tag in tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
-                            {{tag}}
-                          </el-tag>
-
-                          <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag" v-model="tagsInputValue" ref="saveTagInput" size="small"
-                            @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
-                          </el-input>
-                          <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
-                        </div>
-                      </el-col>
-                    </el-row>
-
-                  </div>
-                  <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
-                    <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
-                    <el-col :span="4">
-                      <img src="../image/arrow-left.png" alt="" @click="sendLastHandler" class="sendMomentBtn">
-                    </el-col>
-                    <el-col :span="4">
-                      <img src="../image/send-moment.png" @click="sendMomentHandler" v-if="showNextBtn" class="sendMomentBtn">
-                    </el-col>
-                  </el-row>
-                  <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
-                    <el-col :span="4">
-                      <img src="../image/arrow-right.png" @click="sendNextHandler" class="sendMomentBtn">
-                    </el-col>
-                    <!-- <el-col :span="4">
-                      <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
-                    </el-col> -->
-                  </el-row>
-                </div>
-
-              </el-col>
-            </el-row>
-
-          </el-dialog>
         </el-col>
       </el-row>
     </el-col>
+
+    <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
+      <el-row>
+        <el-col :span="3" :offset="0">
+          <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
+            style="width:80px;height:80px;border-radius:80px;">
+        </el-col>
+        <el-col :span="18" :offset="0">
+          <div class="sendsContent">
+            <div class="edit">
+              <div style="color:#555;margin:50px 0 20px 80px;font-size:16px;font-weight:bold">{{this.$store.state.currentUsername}}</div>
+              <el-row type="flex" justify="center" align="middle">
+                <el-row>
+
+                </el-row>
+                <el-col :span="6" v-show="showUploadArea"></el-col>
+                <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
+
+                  <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
+                  <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
+                    :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange" :on-success="uploadOnSuccess"
+                    :on-error="uploadOnError" :on-progress="uploadOnProgress" :on-exceed="upLoadOnExceed" :show-file-list="true"
+                    :limit="9" :multiple="true" class="upload" :data="pictureObj">
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+
+
+                </el-col>
+                <el-col v-show="showTextArea" :span="16" :offset="2" style="margin-top:0;">
+                  <el-input type="textarea" resize="none" :rows="12" placeholder="此刻的想法..." v-model="sendText"></el-input>
+                  <div class="editTag">
+                    <el-tag :key="tag" color="#fff" v-for="tag in tags" closable :disable-transitions="false" @close="handleTagClose(tag)">
+                      {{tag}}
+                    </el-tag>
+
+                    <el-input class="input-new-tag" v-if="tagsInputVisible&&ableToAddTag" v-model="tagsInputValue" ref="saveTagInput" size="small"
+                      @keyup.enter.native="handleTagInputConfirm" @blur="handleTagInputConfirm">
+                    </el-input>
+                    <el-button v-if="!tagsInputVisible&&ableToAddTag" class="button-new-tag" size="small" @click="showTagInput">+ tag</el-button>
+                  </div>
+                </el-col>
+              </el-row>
+
+            </div>
+            <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
+              <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
+              <el-col :span="4">
+                <img src="../image/arrow-left.png" alt="" @click="sendLastHandler" class="sendMomentBtn">
+              </el-col>
+              <el-col :span="4">
+                <img src="../image/send-moment.png" @click="sendMomentHandler" v-if="showNextBtn" class="sendMomentBtn">
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="end" style="margin-top:10px" v-if="!showUploadArea&&showTextArea">
+              <el-col :span="4">
+                <img src="../image/arrow-right.png" @click="sendNextHandler" class="sendMomentBtn">
+              </el-col>
+              <!-- <el-col :span="4">
+                      <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
+                    </el-col> -->
+            </el-row>
+          </div>
+
+        </el-col>
+      </el-row>
+
+    </el-dialog>
 
   </el-container>
 </template>
 
 <style>
-  .loadingbackground {
+  /* .loadingbackground {
     position: fixed;
     z-index: 1000;
     height: 100%;
     width: 100%;
     background-image: url(../image/slash.png);
     background-repeat: repeat;
-  }
+  } */
 
   .container-back {
     /* background-color: #fafafa; */
@@ -145,26 +147,28 @@
     background-repeat: repeat;
   }
 
-  .navBarWrap {
+  .navBarWraps {
     position: fixed;
     top: 0;
     z-index: 999;
   }
 
-  .mainContentScroll {
+  .mainContentScrolls {
     margin-top: 55px
   }
 
-  .send {
+  .sends {
     background: transparent;
     height: 0;
     padding-bottom: 38%;
     position: relative;
     -webkit-box-shadow: 0 0;
     box-shadow: 0 0;
+    /* opacity: 0; */
+    /* background-color: aqua */
   }
 
-  .sendContent {
+  .sendsContent {
     height: 500px;
     background: url('../image/send-dialog.png');
   }
@@ -286,9 +290,8 @@
         if (key == 'user') {
           key = 'user/' + this.$store.state.currentUserId;
           // console.log(key)
-        }
-        else if (key == 'personalpage') {
-          key = 'personalpage/' + this.$store.state.currentUserId;
+        } else if (key == 'personalpage') {
+          key = 'personalpage/' + this.$store.state.currentUserId_ID;
         }
         this.$router.push('/main/' + key);
 
@@ -301,6 +304,7 @@
         } else {
           this.navBarFixed = false
         }
+        // console.log(scrollTop)
       },
       sendMomentInit: function () {
         this.sendMomentVisible = true;
@@ -333,6 +337,7 @@
               //   message: '发布成功！',
               //   type: 'success'
               // });
+              // this.myre
             } else {
               this.$message.error('本次发布失败，服务器内部错误，请重试。');
             }
@@ -561,14 +566,14 @@
       }
     },
 
-    mounted: function () {
-      this.$nextTick(function () {
-        // Code that will run only after the
-        // entire view has been rendered
-        console.log('mouted')
-        setTimeout(this.backgroundHandler(), 1000);
-      })
-    },
+    // mounted: function () {
+    //   this.$nextTick(function () {
+    //     // Code that will run only after the
+    //     // entire view has been rendered
+    //     console.log('mouted')
+    //     setTimeout(this.backgroundHandler(), 1000);
+    //   })
+    // },
     // beforeRouteEnter(from, to, next) {
     //   next(vm => {
     //     vm.$nextTick(function () {

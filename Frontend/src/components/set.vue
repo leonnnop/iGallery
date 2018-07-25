@@ -287,6 +287,8 @@
       //   });
       this.ruleForm.name = this.$store.state.currentUsername;
       this.ruleForm.desc = this.$store.state.currentUserBio;
+      window.scroll(0, 0);
+
     }
   }
 </script>

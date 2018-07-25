@@ -12,14 +12,13 @@
             <el-col>
               <div class="user-img border">
                 <img class="user-img img-border hover-cursor" :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
-              '&type=2'" alt="头像" @click="jumpToUser(
-                $store.state.currentUserId)" />
+              '&type=2'" alt="头像" @click="jumpToUser($store.state.currentUserId_ID)" />
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
             <el-col style="margin-left:-70%;width:50%;overflow:hidden">
               <el-row>
-                <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser($store.state.currentUserId)">{{this.$store.state.currentUsername}}</div>
+                <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser($store.state.currentUserId_ID)">{{this.$store.state.currentUsername}}</div>
               </el-row>
               <el-row>
                 <div style="font-size:14px; color:#999999" class="self-intro">{{this.$store.state.currentUserBio}}</div>
@@ -42,13 +41,13 @@
             <el-row v-if="followings.length>0" :key="index" v-for="(following,index) in followings" type="flex" align="middle" style="margin-bottom:12px">
               <el-col>
                 <div class="user-img border">
-                  <img class="user-img img-border hover-cursor" :src="following.Photo" alt="头像" @click="jumpToUser(following.Email)" />
+                  <img class="user-img img-border hover-cursor" :src="following.Photo" alt="头像" @click="jumpToUser(following.ID)" />
                 </div>
               </el-col>
               <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
               <el-col style="margin-left:-70%;width:50%;overflow:hidden">
                 <el-row>
-                  <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser(following.Email)">{{following.Username}}</div>
+                  <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser(following.ID)">{{following.Username}}</div>
                 </el-row>
                 <el-row>
                   <div style="font-size:14px; color:#999999" class="self-intro">{{following.Bio}}</div>
@@ -79,14 +78,14 @@
               <el-row class="usr" type="flex" align="middle" style="padding:7px 15px;margin-top:5px">
                 <el-col :span="2">
                   <div class="small-user-img small-border">
-                    <img class="small-user-img small-img-border hover-cursor" :src="moment.Photo" alt="头像" @click="jumpToUser(moment.user_email)"
+                    <img class="small-user-img small-img-border hover-cursor" :src="moment.Photo" alt="头像" @click="jumpToUser(moment.moment.SenderID)"
                     />
                   </div>
                 </el-col>
                 <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
                 <el-col :span="6">
                   <el-row>
-                    <span style="font-size:16px; font-weight:bold hover-cursor" @click="jumpToUser(moment.user_email)" class="hover-cursor">{{moment.user_username}}</span>
+                    <span style="font-size:16px; font-weight:bold hover-cursor" @click="jumpToUser(moment.moment.SenderID)" class="hover-cursor">{{moment.user_username}}</span>
                   </el-row>
                   <el-row>
                     <span style="font-size:14px; color:#999999">{{moment.user_bio}}</span>
@@ -97,7 +96,7 @@
             <el-row style="font-size:13px;color:#555;margin-left:15px" v-if="moment.forwarded_email!=null">
               <span>
                 <img src="../image/forwarded-icon.png" alt="forwarded-icon"> 转发自
-                <span @click="jumpToUser(moment.forwarded_email)" style="color:#6191d5;display:inline-block;margin:5px 0" class="hover-cursor">
+                <span @click="jumpToUser(moment.forwarded_id)" style="color:#6191d5;display:inline-block;margin:5px 0" class="hover-cursor">
                   @{{moment.forwarded_username}}</span>
               </span>
             </el-row>
@@ -642,22 +641,29 @@
         askNum: 0 //再次请求动态的次数
       }
     },
+    // mounted() {
+    //   window.addEventListener('scroll', this.handleScroll)
+    // },
+    destroyed() {
+      window.removeEventListener('scroll', this.handleScroll)
+    },
     created() {
       //请求动态
-      window.onscroll = () => {
-        //监听事件内容
-        // console.log(getDocumentTop())
-        // console.log(getWindowHeight())
-        // console.log(getScrollHeight())
-        if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
-          //当滚动条到底时,这里是触发内容
-          //异步请求数据,局部刷新dom
-          // ajax_function()
-          console.log('请求')
-          this.currentPage++;
-          this.requestHandler(this.currentPage);
-        }
-      }
+      // window.onscroll = () => {
+      //   //监听事件内容
+      //   // console.log(getDocumentTop())
+      //   // console.log(getWindowHeight())
+      //   // console.log(getScrollHeight())
+      //   if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
+      //     //当滚动条到底时,这里是触发内容
+      //     //异步请求数据,局部刷新dom
+      //     // ajax_function()
+      //     console.log('请求')
+      //     this.currentPage++;
+      //     this.requestHandler(this.currentPage);
+      //   }
+
+      // }
       //监听滚动条，到底时请求动态...
       this.axios.all([this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
             params: {
@@ -807,6 +813,16 @@
       //   });
     },
     methods: {
+      handleScroll() {
+        if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
+          //当滚动条到底时,这里是触发内容
+          //异步请求数据,局部刷新dom
+          // ajax_function()
+          console.log('请求')
+          this.currentPage++;
+          this.requestHandler(this.currentPage);
+        }
+      },
       showArrow: function (moment) {
         if (moment.moment.imgList.length > 1) {
           return 'hover';
@@ -966,8 +982,8 @@
       jumpToTag: function (tag) {
         this.$router.push('/main/tag/' + tag);
       },
-      jumpToUser: function (email) {
-        this.$router.push('/main/personalpage/' + email);
+      jumpToUser: function (ID) {
+        this.$router.push('/main/personalpage/' + ID);
         // this.$router.push('/main/leaderboard');
 
       },
@@ -1087,6 +1103,8 @@
 
     mounted: function () {
       this.$nextTick(function () {
+        window.addEventListener('scroll', this.handleScroll)
+
         // Code that will run only after the
         // entire view has been rendered
         // console.log('mouted')

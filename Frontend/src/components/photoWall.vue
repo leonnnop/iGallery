@@ -327,12 +327,12 @@
         this.$router.push('/main/momentDetail/' + momentId);
       },
       jumpToUser: function (ID) {
-        console.log('ge')
-        if (ID == this.$store.state.currentUserId_ID) {
-          this.$router.push('/main/personalpage/');
-        } else {
-          this.$router.push('/main/userpage/' + ID);
-        }
+        // console.log('ge')
+        // if (ID == this.$store.state.currentUserId_ID) {
+        //   this.$router.push('/main/personalpage/');
+        // } else {
+        this.$router.push('/main/personalpage/' + ID);
+        // }
       },
       handleLikeClick(item) {
         console.log(item.LikeState)
@@ -440,7 +440,9 @@
         // this.noBg = bgState;
         setTimeout(function () {
           self.loadingPage = false;
-        }, 1500)
+        }, 2000);
+        window.scroll(0, 0);
+
       })
     },
     beforeRouteEnter(from, to, next) {
@@ -452,7 +454,7 @@
           // this.noBg = bgState;
           setTimeout(function () {
             self.loadingPage = false;
-          }, 1500)
+          }, 2000)
 
           // Code that will run only after the
           // entire view has been rendered

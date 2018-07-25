@@ -442,11 +442,11 @@
             },
             jumpToUser: function (ID) {
                 console.log('ge')
-                if (ID == this.$store.state.currentUserId_ID) {
-                    this.$router.push('/main/personalpage/');
-                } else {
-                    this.$router.push('/main/userpage/' + ID);
-                }
+                // if (ID == this.$store.state.currentUserId_ID) {
+                //     this.$router.push('/main/personalpage/');
+                // } else {
+                this.$router.push('/main/personalpage/' + ID);
+                // }
             },
             getNaturalWidth(id) {
                 var image = new Image()
@@ -532,7 +532,9 @@
                 // this.noBg = bgState;
                 setTimeout(function () {
                     self.loadingPage = false;
-                }, 1000)
+                }, 2000);
+                window.scroll(0, 0);
+
             })
         },
         beforeRouteEnter(from, to, next) {
@@ -544,7 +546,7 @@
                     // this.noBg = bgState;
                     setTimeout(function () {
                         self.loadingPage = false;
-                    }, 1000)
+                    }, 1500)
 
                     // Code that will run only after the
                     // entire view has been rendered

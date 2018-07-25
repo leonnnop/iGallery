@@ -22,7 +22,7 @@
                             <div class="display-user" v-for="(user,index) in users" :key="index">
                                 <el-row style="width:80%;margin:0 auto">
                                     <el-row>
-                                        <img :src="user.Photo" alt="头像" class="user-img hover-cursor" @click="jumpToUser(user.Email)">
+                                        <img :src="user.Photo" alt="头像" class="user-img hover-cursor" @click="jumpToUser(user.ID)">
                                     </el-row>
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">{{user.Username}}</el-row>
                                     <el-row style="margin-top:5%;color:#777;font-size:13px" class="self-intro">{{user.Bio}}</el-row>
@@ -637,12 +637,16 @@
                         '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
-                            if (!user.FollowState) {
+                            if (user.FollowState == 'False') {
                                 user.followWord = '已关注';
+                                user.FollowState = 'True';
+
                             } else {
                                 user.followWord = '关注';
+                                user.FollowState = 'False';
+
                             }
-                            user.FollowState = !user.FollowState;
+                            // user.FollowState = !user.FollowState;
                         } else {
                             this.$message.error('关注失败，服务器内部错误，请重试。');
                         }
@@ -664,12 +668,12 @@
                         }
                     })
             },
-            jumpToUser: function (email) {
-                if (email == this.$store.state.currentUserId) {
-                    this.$router.push('/main/personalpage/');
-                } else {
-                    this.$router.push('/main/userpage/' + email);
-                }
+            jumpToUser: function (ID) {
+                // if (email == this.$store.state.currentUserId) {
+                //     this.$router.push('/main/personalpage/');
+                // } else {
+                this.$router.push('/main/personalpage/' + ID);
+                // }
             },
             jumpToTag: function (tag) {
                 this.$router.push('/main/tag/' + tag);
@@ -747,7 +751,9 @@
                 // this.noBg = bgState;
                 setTimeout(function () {
                     self.loadingPage = false;
-                }, 1500)
+                }, 1700);
+                window.scroll(0, 0);
+
             })
         },
         beforeRouteEnter(from, to, next) {

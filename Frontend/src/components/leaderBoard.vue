@@ -38,7 +38,7 @@
   }
 </style>
 
-<script>
+<script scoped>
   export default {
     data() {
       return {
@@ -60,9 +60,9 @@
         this.$router.push('/main/user/' + this.$store.state.currentUserId);
       }
     },
-created(){
-this.myrefresh();
-},
+    created() {
+      this.myrefresh();
+    },
     beforeRouteEnter(to, from, next) {
       // 处理无法访问的情况
       next((vm) => {

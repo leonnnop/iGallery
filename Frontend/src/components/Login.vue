@@ -85,7 +85,7 @@
             this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.ruleForm.email + "&Password=" +
                 this.ruleForm.password)
               .then((response) => {
-                if (response.data == 'Not Found') {
+                if (response.data == 'NotFound') {
                   this.$message.error('邮箱不存在！请先注册一个账户！');
                 } else if (response.data == 'Error') {
                   this.$message.error('密码错误！');
@@ -104,7 +104,7 @@
 
                       var exp = new Date();
                       exp.setTime(exp.getTime() + 1000 * 60 * 60 * 24); //这里表示保存24小时
-                      this.document.cookie = "username=" + esponse.data.Username + "password=" + esponse.data.Password + "bio=" + esponse.data.Bio + "Photo=" + esponse.data.Photo + ";expires=" + exp.toGMTString();
+                      this.document.cookie = "Username=" + esponse.data.Username + "Password=" + esponse.data.Password + "Bio=" + esponse.data.Bio + "Photo=" + esponse.data.Photo + ";expires=" + exp.toGMTString();
 
                       console.log(this.$store.state)
                     })
