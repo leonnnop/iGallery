@@ -57,7 +57,6 @@ namespace ProductsApp.Controllers
                 rd = cmd.ExecuteReader();
                 rd.Read();
                 id += rd.GetInt32(0);
-
                 //将新建用户插入数据库
                 var file = @"C:\heads\default.png";
                 cmd.CommandText = "insert into USERS(ID,EMAIL,PASSWORD,USERNAME,BIO,PHOTO) " +
@@ -187,6 +186,7 @@ namespace ProductsApp.Controllers
             {
                 string password = rd["Password"].ToString();
                 conn.Close();
+                
                 if (password == Password)
                 {
                     cmd.CommandText = "select ID from USERS where email='" + Email + "'";//根据邮箱查找该用户的正确密码
@@ -322,7 +322,7 @@ namespace ProductsApp.Controllers
         {
             string mess = "true";
             HttpResponseMessage response = Request.CreateResponse();
-
+            
             string update = Access.Update("USERS", "PASSWORD = '" + NewPassword + "'", "EMAIL='" + email + "'");
             if(Access.ExecuteSql(update))
             {
@@ -577,9 +577,11 @@ namespace ProductsApp.Controllers
             {
                 throw (ex);
             }
+
             OracleCommand cmd = new OracleCommand();
-            cmd.CommandText = "select USER_ID from Follow_User where FOLLOWING_ID='" + user_id + "'";//找到所有关注此用户的ID
             cmd.Connection = conn;
+            cmd.CommandText = "select USER_ID from Follow_User where FOLLOWING_ID='" + user_id + "'";//找到所有关注此用户的ID
+
             OracleDataReader rd = cmd.ExecuteReader();
             List<User_Follow> followed_list = new List<User_Follow>();
             if (!rd.HasRows)
@@ -593,6 +595,7 @@ namespace ProductsApp.Controllers
                 OracleCommand cmd1 = new OracleCommand();
                 cmd1.CommandText = "select * from Users where ID='" + followed_id + "'";//根据ID查找用户的所有信息
                 cmd1.Connection = conn;
+
                 OracleDataReader rd1 = cmd1.ExecuteReader();
                 if (rd1.Read())
                 {
