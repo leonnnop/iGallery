@@ -440,7 +440,7 @@
         // this.noBg = bgState;
         setTimeout(function () {
           self.loadingPage = false;
-        }, 1000)
+        }, 1500)
       })
     },
     beforeRouteEnter(from, to, next) {
@@ -452,7 +452,7 @@
           // this.noBg = bgState;
           setTimeout(function () {
             self.loadingPage = false;
-          }, 1000)
+          }, 1500)
 
           // Code that will run only after the
           // entire view has been rendered

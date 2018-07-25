@@ -721,7 +721,7 @@
             },
             jumpToUser: function (url) {
                 console.log(url);
-                this.$router.push(url)
+                this.$router.push('/mian/personalpage/'+url)
             },
             collectHandler: function () {
                 if (!this.moment.collectState) {

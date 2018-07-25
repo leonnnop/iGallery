@@ -374,6 +374,40 @@ namespace ProductsApp.Controllers
         }
 
 
+        /// <summary>
+        /// 通过id获取用户信息
+        /// </summary>
+        /// <param name="email">string</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult GetUserInfobyID(string id)
+        {
+
+            //todo:连接数据库
+            DBAccess dBAccess = new DBAccess();
+
+
+            //执行数据库操作
+            OracleDataReader rd = dBAccess.GetDataReader("select t.* from USERS t where id='" + id + "'");
+
+            //创建Users对象
+            Users user = new Users();
+
+            if (rd.Read())//数据库中有此用户，返回其个人信息
+            {
+
+                user.ID = rd["ID"].ToString();
+                user.Email = rd["EMAIL"].ToString();
+                user.Username = rd["USERNAME"].ToString();
+                user.Password = rd["PASSWORD"].ToString();
+                user.Bio = rd["BIO"].ToString();
+                user.Photo = rd["PHOTO"].ToString();
+            }
+
+            return Ok<Users>(user);
+        }
+
+
 
         /// <summary>
         /// 修改用户信息
