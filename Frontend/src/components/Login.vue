@@ -180,10 +180,6 @@ import md5 from 'js-md5';
 </script>
 
 <style scoped>
-  .loginForm {
-    /* opacity: .7; */
-    /* background: rgba(252, 247, 247, 0.6); */
-  }
 
   .form {
     margin: 50px 0;
