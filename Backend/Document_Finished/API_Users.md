@@ -173,6 +173,36 @@
 
 ------
 
+
+# 通过id获取个人信息(韩乐桐)#
+请求地址：/api/Users/GetUserInfobyID  
+请求方式：Get   
+支持格式：json    
+
+
+> 参数：   
+
+| 类型 | 参数名 | 说明 |
+| ---- | ---- | ---- |
+| string | id | 通过id唯一确定用户 |
+
+{id:""}
+
+> 返回结果：json文件   
+
+
+| 参数名 | 说明 |
+| -- | -- |
+| ID | 用户ID |
+| Email | 邮箱地址 |
+| Username | 用户昵称 |
+| Password | 用户密码 |
+| Bio | 个人简介 |
+| Photo | 头像URL |
+
+------
+
+
 # 修改个人信息（韩乐桐）Finished #
 请求地址：/api/Users/ModifyUserInfo   
 请求方式：Put   
