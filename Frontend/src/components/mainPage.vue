@@ -11,8 +11,8 @@
           <!-- <span>iGallery</span> -->
           <img src="../image/iga_exa.png" alt="example pic" height="35">
         </el-col>
-        <el-col :span="4">
-          <el-menu :default-active="topBarActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleTopBarSelect" style="margin-top:-12px">
+        <el-col :span="5">
+          <el-menu :default-active="topBarActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleTopBarSelect" style="margin-top:-12px;border-bottom:0">
             <el-menu-item index="user">首页</el-menu-item>
             <!-- <el-submenu index="recommend">
               <template slot="title">个人主页</template>
@@ -26,7 +26,7 @@
           </el-menu>
         </el-col>
 
-        <el-col :span="5" :offset="4">
+        <el-col :span="5" :offset="3">
           <el-input placeholder="请输入搜索内容" v-model="searchInput" clearable> </el-input>
         </el-col>
         <el-col :span="2" :offset="1">
@@ -286,6 +286,9 @@
         if (key == 'user') {
           key = 'user/' + this.$store.state.currentUserId;
           // console.log(key)
+        }
+        else if (key == 'personalpage') {
+          key = 'personalpage/' + this.$store.state.currentUserId;
         }
         this.$router.push('/main/' + key);
 

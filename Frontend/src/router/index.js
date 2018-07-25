@@ -70,7 +70,7 @@ export default new Router({
         name: 'photowall',
         component: photoWall
       },{
-        path: 'personalpage',
+        path: 'personalpage/:id',
         name: 'personalpage',
         component: personalpage
       },{
@@ -93,7 +93,7 @@ export default new Router({
         path:'searchResult/:keyword',
         name:'searchResult',
         component:SearchResult
-      } ]
+      }]
 
     },
 

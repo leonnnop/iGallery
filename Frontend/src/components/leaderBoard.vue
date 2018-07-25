@@ -36,15 +36,13 @@
     width: 100%;
     margin-top: 20px;
   }
-
 </style>
 
 <script>
   export default {
     data() {
       return {
-        tableData: [
-        ],
+        tableData: [],
         cards: [{
             id: 1,
             index: 0
@@ -58,29 +56,34 @@
     },
 
     methods: {
-    
+      myrefresh() {
+        this.$router.push('/main/user/' + this.$store.state.currentUserId);
+      }
     },
-
+created(){
+this.myrefresh();
+},
     beforeRouteEnter(to, from, next) {
       // 处理无法访问的情况
       next((vm) => {
-        vm.axios.get('http://192.168.0.37:5000/feed/sss')
-          .then((response) => {
-            for (let index = 0; index < response.length; index++) {
-              let responce = response[index].data;
-              let card = {};
-              let author = responce.author;
-              card.index = index;
-              card.authorName = author.name;
-              card.authorURL = author.url;
-              card.url = responce.url;
-              card.title = responce.title;
-              card.excerpt = responce.excerpt;
+        // vm.axios.get('http://192.168.0.37:5000/feed/sss')
+        //   .then((response) => {
+        //     for (let index = 0; index < response.length; index++) {
+        //       let responce = response[index].data;
+        //       let card = {};
+        //       let author = responce.author;
+        //       card.index = index;
+        //       card.authorName = author.name;
+        //       card.authorURL = author.url;
+        //       card.url = responce.url;
+        //       card.title = responce.title;
+        //       card.excerpt = responce.excerpt;
 
-              this.cards.push(card);
-            }
-          })
-          .catch();
+        //       this.cards.push(card);
+        //     }
+        //   })
+        //   .catch();
+        // vm.myrefresh();
       });
     },
     beforeRouteLeave(to, from, next) {
@@ -89,5 +92,4 @@
       next();
     }
   }
-
 </script>

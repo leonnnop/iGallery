@@ -928,7 +928,7 @@
       },
       //+++++++++++++++++++向后端发送headUrl sendHeadUrl(){},
       toMoment(momentID) {
-        this.$router.push('momentDetail/' + momentID);
+        this.$router.push('/main/momentDetail/' + momentID);
       },
       handleSettingClick() {
         this.$router.push('set');
@@ -1210,9 +1210,10 @@
           console.log(error);
         });
 
-      this.headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+      var headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
         this.$store.state.currentUserId_ID +
         '&type=2';
+        Vue.set(this,'headUrl',headUrl)
 
       this.username = this.$store.state.currentUsername;
       this.desc = this.$store.state.currentUserBio;

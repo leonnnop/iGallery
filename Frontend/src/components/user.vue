@@ -12,13 +12,14 @@
             <el-col>
               <div class="user-img border">
                 <img class="user-img img-border hover-cursor" :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
-              '&type=2'" alt="头像" @click="jumpToUser(this.$store.state.currentUserId)" />
+              '&type=2'" alt="头像" @click="jumpToUser(
+                $store.state.currentUserId)" />
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
             <el-col style="margin-left:-70%;width:50%;overflow:hidden">
               <el-row>
-                <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser(this.$store.state.currentUserId)">{{this.$store.state.currentUsername}}</div>
+                <div style="font-size:16px; font-weight:bold" class="hover-cursor" @click="jumpToUser($store.state.currentUserId)">{{this.$store.state.currentUsername}}</div>
               </el-row>
               <el-row>
                 <div style="font-size:14px; color:#999999" class="self-intro">{{this.$store.state.currentUserBio}}</div>
@@ -966,7 +967,14 @@
         this.$router.push('/main/tag/' + tag);
       },
       jumpToUser: function (email) {
-        this.$router.push('/main/userpage/' + email);
+        this.$router.push('/main/personalpage/' + email);
+        // this.$router.push('/main/leaderboard');
+
+      },
+
+      myfresh() {
+        this.$router.push('/main/leaderboard');
+        // this.$router.push('/main/personalpage/' + email);
       },
 
       getSrc(src) {
