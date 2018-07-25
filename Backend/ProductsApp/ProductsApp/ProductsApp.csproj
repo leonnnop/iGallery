@@ -182,6 +182,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="TimestampID.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\Coment.cs" />
     <Compile Include="Models\Comment.cs" />

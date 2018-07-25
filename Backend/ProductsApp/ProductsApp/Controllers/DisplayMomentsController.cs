@@ -34,7 +34,7 @@ namespace ProductsApp.Controllers
             string UserID = api.EmailToUserID(Email);
             
             //获取朋友圈中所有Moment
-            CMD.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, time, quote_mid " +
+            CMD.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, TO_CHAR(time,'MM/DD/YYYY HH:MI:SS am'), quote_mid " +
                 "from users,moment " +
                 "where moment.sender_id = users.id and " +
                 "(users.id = '" + UserID + "' or " +
@@ -90,12 +90,12 @@ namespace ProductsApp.Controllers
                 if (R.Read())
                 {
                     Users forwarded = api.GetUserInfoByID(R[0].ToString());
-                    DM.forwarded_email = forwarded.Email;
+                    DM.forwarded_id = forwarded.ID;
                     DM.forwarded_username = forwarded.Username;
                 }
                 else
                 {
-                    DM.forwarded_email = null;
+                    DM.forwarded_id = null;
                     DM.forwarded_username = null;
                 }
 
@@ -209,12 +209,12 @@ namespace ProductsApp.Controllers
             if (rd.Read())
             {
                 Users forwarded = api.GetUserInfoByID(rd[0].ToString());
-                dm.forwarded_email = forwarded.Email;
+                dm.forwarded_id = forwarded.Email;
                 dm.forwarded_username = forwarded.Username;
             }
             else
             {
-                dm.forwarded_email = null;
+                dm.forwarded_id = null;
                 dm.forwarded_username = null;
             }
 

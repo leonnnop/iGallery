@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ProductsApp.Models
 {
-    public class Moment
+    public class Moment 
     {
         public string ID { get; set; }
         public string SenderID { get; set; }
@@ -30,6 +30,7 @@ namespace ProductsApp.Models
             Time = time;
             //QuoteMID = quotemid;
         }
+
     }
     /*测试
     

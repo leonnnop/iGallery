@@ -32,7 +32,7 @@ namespace ProductsApp.Controllers
             OracleCommand cmd = new OracleCommand();
             string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
             cmd.CommandText = "insert into COLLECT(MOMENT_ID,FOUNDER_ID,NAME,TIME) " +
-                    "values('" + moment_id + "','" + founder_id + "','" + name + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff'))";
+                    "values('" + moment_id + "','" + founder_id + "','" + name + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff am'))";
             cmd.Connection = conn;
             int result_1 = cmd.ExecuteNonQuery();
             if (result_1 != 1)//插入出现错误

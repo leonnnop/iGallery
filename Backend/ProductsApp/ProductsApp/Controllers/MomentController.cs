@@ -27,7 +27,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult NextMomentID()
         {
-            return Ok(api.NewIDOf("users"));
+            return Ok(api.NewIDOf("moment"));
         }
 
         [HttpPost]
@@ -49,9 +49,9 @@ namespace ProductsApp.Controllers
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
             
-            string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
+            string currentTime = DateTime.Now.ToString();
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME) " +
-                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff'))";
+                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh:mi:ss.ff am'))";
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {
@@ -148,7 +148,7 @@ namespace ProductsApp.Controllers
             
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTE_MID) " +
                               "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "'," +
-                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss.ff'),'" + moment.QuoteMID + "')";
+                                      "'" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_TIMESTAMP('" + moment.Time + "', 'yyyy-mm-dd hh24:mi:ss.ff am'),'" + moment.QuoteMID + "')";
             int result1 = cmd.ExecuteNonQuery();
             if (result1 != 1)//插入出现错误
             {

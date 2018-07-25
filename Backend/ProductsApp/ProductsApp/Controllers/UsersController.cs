@@ -617,5 +617,14 @@ namespace ProductsApp.Controllers
             conn.Close();
             return Json<List<User_Follow>>(followed_list);
         }
+
+        [HttpGet]
+        public IHttpActionResult FollowState(string from_id, string to_id)
+        {
+            GeneralAPI a = new GeneralAPI();
+            return Ok(a.CheckFollowState(from_id, to_id));
+        }
+
+
     }
 }

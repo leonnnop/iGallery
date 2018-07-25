@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Oracle.ManagedDataAccess.Client;
 using ProductsApp.Models;
+using ProductsApp;
 
 /*API
     EmailToUserID   给用户邮箱，返回用户ID
@@ -138,24 +139,24 @@ namespace ProductsApp
 
             //执行数据库操作,获取该用户ID
             string ID = EmailToUserID(email);
-            if (ID==null)//用户不存在
+            if (ID == null)//用户不存在
             {
                 return -1;
             }
 
             OracleDataReader rd = dBAccess.GetDataReader("select * from collect where moment_id='" + moment_id + "' " +
-                                                         "and founder_id='"+ID+"'");
-            
+                                                         "and founder_id='" + ID + "'");
+
             if (rd.HasRows)
             {
                 return 0;//已收藏
             }
-            else 
+            else
             {
                 return 1;//未收藏
             }
         }
-        
+
         /// <summary>
         /// 通过用户邮箱获取用户信息
         /// </summary>
@@ -285,15 +286,12 @@ namespace ProductsApp
         /// <returns></returns>
         public string NewIDOf(string table)
         {
-            Random random = new Random();
-            int id = random.Next(1, 100000);
-            OracleDataReader rd = dBAccess.GetDataReader(dBAccess.Select("ID", table, "ID='"+id.ToString()+"'"));
-            while (rd.Read())
-            {
-                id ++;
-                rd = dBAccess.GetDataReader(dBAccess.Select("ID", table, "ID='" + id.ToString() + "'"));
-            }
-            return id.ToString();
+            string time = DateTime.Now.ToString("MMddHHmmssffff");
+            TimestampID creator = new TimestampID();
+            string ts = creator.GetID();
+            string id = time + ts.Substring(ts.Length - 6);
+
+            return id;
         }
     }
 }
