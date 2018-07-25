@@ -17,6 +17,7 @@ import MomentDetail from '@/components/MomentDetail'
 import tag from '@/components/tag'
 import userpage from '@/components/userpage'
 import SearchResult from '@/components/SearchResult'
+import Message from '@/components/Message'
 
 Vue.use(Router)
 
@@ -93,6 +94,10 @@ export default new Router({
         path:'searchResult/:keyword',
         name:'searchResult',
         component:SearchResult
+      },{
+        path:'message/:id',
+        name:'message',
+        component:Message
       }]
 
     },
