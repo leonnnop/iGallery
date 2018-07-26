@@ -139,7 +139,14 @@ namespace ProductsApp.Controllers
             moment.CollectNum = 0;
             moment.CommentNum= 0;
             moment.Time = DateTime.Now.ToString();
-            moment.QuoteMID = forward.Moment_ID;
+            cmd.CommandText="select quotemid" +
+                            "from moment" +
+                            "where id='"+forward.MOMENT_ID+"'";
+            rd = cmd.ExecuteReader();
+            rd.Read();
+            string quote = rd["QUOTE_MID"].ToString();
+            if (quote == null) moment.QuoteMID = forward.MOMENT_ID;
+            else moment.QuoteMID = quote;
             
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTE_MID) " +
                               "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "'," +
