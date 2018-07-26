@@ -51,7 +51,7 @@ namespace ProductsApp.Controllers
         public IHttpActionResult GetMessage(string Sender_ID, string Receiver_ID)
         {
             //连接数据库
-           OracleConnection conn = new OracleConnection(DBAccess.connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -67,7 +67,7 @@ namespace ProductsApp.Controllers
                               "from message " +
                               "where sender_id =  '" + Sender_ID + "' and " +
                               "receiver_id = '" + Receiver_ID + "'"+
-                              "order by send_time desc";
+                              "order by send_time ";
             OracleDataReader rd = cmd.ExecuteReader();
             List<Message> ContentList1 = new List<Message>();
             while(rd.Read())
@@ -82,7 +82,7 @@ namespace ProductsApp.Controllers
                               "from message " +
                               "where sender_id =  '" + Receiver_ID + "' and " +
                               "receiver_id = '" + Sender_ID + "'" +
-                              "order by send_time desc";
+                              "order by send_time ";
             rd = cmd.ExecuteReader();
             List<Message> ContentList2 = new List<Message>();
             while (rd.Read())
@@ -96,7 +96,7 @@ namespace ProductsApp.Controllers
             List<Message> ContentList = ContentList1.Union(ContentList2).ToList<Message>();
             ContentList.Sort(delegate (Message x, Message y)
                 {
-                    return y.Send_Time.CompareTo(x.Send_Time);
+                    return x.Send_Time.CompareTo(y.Send_Time);
                 });
 
             List<int> IdentityList = new List<int>();
@@ -146,16 +146,17 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             cmd.CommandText = "select distinct sender_id " +
                               "from message " +
-                              "where receive_id =  '" + Sender_ID + "'";
+                              "where receiver_id =  '" + Sender_ID + "'";
             rd = cmd.ExecuteReader();
-            while(rd.Read())
+            while (rd.Read())
             {
                 ReceiverList2.Add(rd["SENDER_ID"].ToString());
             }
             List<string> ReceiverList = ReceiverList1.Union(ReceiverList2).ToList<string>();
             List<Message> sender_time = new List<Message>();
-            foreach(string receiver in ReceiverList)
+            foreach (string receiver in ReceiverList)
             {
+                cmd.Connection = conn;
                 cmd.CommandText = "select * " +
                                 "from message " +
                                 "where sender_id= '" + Sender_ID + "' and receiver_id='" + receiver + "'" +
@@ -163,51 +164,87 @@ namespace ProductsApp.Controllers
                                                   "from message " +
                                                   "where  sender_id= '" + Sender_ID + "' and receiver_id='" + receiver + "')";
                 rd = cmd.ExecuteReader();
-                while(rd.Read())
+                if (rd.Read())
                 {
                     OracleCommand cmd1 = new OracleCommand();
                     cmd1.Connection = conn;
                     cmd1.CommandText = "select send_time " +
                                        "from message " +
-                                       "where sender_id= '" + receiver + "' and receiver_id='" + Sender_ID + "'"+
+                                       "where sender_id= '" + receiver + "' and receiver_id='" + Sender_ID + "'" +
                                        "and send_time >= all( select send_time " +
                                                             "from message " +
                                                             "where sender_id= '" + receiver + "' and receiver_id='" + Sender_ID + "')";
-                    OracleDataReader rd1 = cmd.ExecuteReader();
-                    rd1.Read();
-                    if(Convert.ToDateTime(rd["SEND_TIME"])> Convert.ToDateTime(rd1["SEND_TIME"]))
+                    OracleDataReader rd1 = cmd1.ExecuteReader();
+                    if (rd1.Read())
                     {
-                        Message s_t = new Message();
-                        s_t.Sender_ID = Sender_ID;
-                        s_t.Receiver_ID = receiver;
-                        s_t.Send_Time=rd["SEND_TIME"].ToString();
-                        sender_time.Add(s_t);
+                        if (Convert.ToDateTime(rd["SEND_TIME"]) > Convert.ToDateTime(rd1["SEND_TIME"]))
+                        {
+                            Message s_t = new Message();
+                            s_t.Sender_ID = Sender_ID;
+                            s_t.Receiver_ID = receiver;
+                            s_t.Send_Time = rd["SEND_TIME"].ToString();
+                            sender_time.Add(s_t);
+                        }
+                        else
+                        {
+                            Message s_t = new Message();
+                            s_t.Sender_ID = receiver;
+                            s_t.Receiver_ID = Sender_ID;
+                            s_t.Send_Time = rd1["SEND_TIME"].ToString();
+                            sender_time.Add(s_t);
+                        }
                     }
                     else
                     {
                         Message s_t = new Message();
                         s_t.Sender_ID = Sender_ID;
                         s_t.Receiver_ID = receiver;
-                        s_t.Send_Time = rd1["SEND_TIME"].ToString();
+                        s_t.Send_Time = rd["SEND_TIME"].ToString();
                         sender_time.Add(s_t);
                     }
+                }
+                else
+                {
+                    Message s_t = new Message();
+                    OracleCommand cmd1 = new OracleCommand();
+                    cmd1.Connection = conn;
+                    cmd1.CommandText = "select send_time " +
+                                       "from message " +
+                                       "where sender_id= '" + receiver + "' and receiver_id='" + Sender_ID + "'" +
+                                       "and send_time >= all( select send_time " +
+                                                            "from message " +
+                                                            "where sender_id= '" + receiver + "' and receiver_id='" + Sender_ID + "')";
+                    OracleDataReader rd1 = cmd1.ExecuteReader();
+                    rd1.Read();
+                    s_t.Send_Time = rd1["SEND_TIME"].ToString();
+                    s_t.Sender_ID = receiver;
+                    s_t.Receiver_ID = Sender_ID;
+                    s_t.Send_Time = rd1["SEND_TIME"].ToString();
+                    sender_time.Add(s_t);
                 }
             }
             List<Users> UsersList = new List<Users>();
             foreach (Message s_t in sender_time)
             {
-                cmd.CommandText = "select Receiver_ID " +
+                cmd.Connection = conn;
+                cmd.CommandText = "select * " +
                                 "from message " +
                                 "where Receiver_ID='" + s_t.Receiver_ID + "' and Sender_ID='" + s_t.Sender_ID + "' and send_time='" + s_t.Send_Time + "'" +
                                 "order by send_time desc";
-                rd= cmd.ExecuteReader();
+                rd = cmd.ExecuteReader();
                 while (rd.Read())
                 {
                     string user_id = rd["RECEIVER_ID"].ToString();
-                    cmd.CommandText = "select * " +
+                    if (user_id == Sender_ID)
+                    {
+                        user_id = rd["SENDER_ID"].ToString();
+                    }
+                    OracleCommand cmd1 = new OracleCommand();
+                    cmd1.Connection = conn;
+                    cmd1.CommandText = "select * " +
                                       "from users " +
                                       "where id =  '" + user_id + "'";
-                    OracleDataReader rd1 = cmd.ExecuteReader();
+                    OracleDataReader rd1 = cmd1.ExecuteReader();
                     rd1.Read();
                     Users user = new Users();
                     user.ID = rd1["ID"].ToString();
@@ -220,11 +257,17 @@ namespace ProductsApp.Controllers
                 }
             }
 
-            
+
+
             conn.Close();
+<<<<<<< HEAD
             return Json(UsersList);
         }
+=======
+            return Json(UsersList);
+            }
 
+>>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
 
         //返回评论信息
         [HttpGet]
@@ -266,12 +309,9 @@ namespace ProductsApp.Controllers
                     cmd1.CommandText = "select USER_ID,COMMENT_ID from Publish_Comment where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (rd1.HasRows)
-                    {
-                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
-                    }
                     while (rd1.Read())
                     {
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                         Users temp = new Users();
                         Coment ctemp = new Coment();
                         temp.ID = rd1["USER_ID"].ToString();
@@ -344,12 +384,9 @@ namespace ProductsApp.Controllers
                     cmd1.CommandText = "select USER_ID from FAVORITE where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (rd1.HasRows)
-                    {
-                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
-                    }
                     while (rd1.Read())//返回用户详情
                     {
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                         Users temp = new Users();
                         temp.ID = rd1["USER_ID"].ToString();
                         OracleCommand cmd2 = new OracleCommand();
@@ -413,12 +450,9 @@ namespace ProductsApp.Controllers
                     cmd1.CommandText = "select USER_ID from Forward where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (rd1.HasRows)
-                    {
-                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
-                    }
                     while (rd1.Read())//返回用户详情
                     {
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                         Users temp = new Users();
                         temp.ID = rd1["USER_ID"].ToString();
                         OracleCommand cmd2 = new OracleCommand();
@@ -441,6 +475,10 @@ namespace ProductsApp.Controllers
             rd.Close();
             conn.Close();
             return result;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
         }
     }
 }
