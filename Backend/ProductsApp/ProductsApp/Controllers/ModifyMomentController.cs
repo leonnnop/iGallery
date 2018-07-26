@@ -131,16 +131,18 @@ namespace ProductsApp.Controllers
                             //删除本条动态的所有评论
                             CmtApi.DelCmt(moment_id);
 
-                            //删除本条动态
-                            if (dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'"))
-                            {
-                                status = 0;//成功删除
-                            }
-                            else
-                            {
-                                status = 3;//动态删除失败
-                            }
+                            
                         }
+                    }
+
+                    //删除本条动态
+                    if (dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'"))
+                    {
+                        status = 0;//成功删除
+                    }
+                    else
+                    {
+                        status = 3;//动态删除失败
                     }
                 }
 

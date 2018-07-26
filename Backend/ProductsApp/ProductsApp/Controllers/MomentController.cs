@@ -49,7 +49,10 @@ namespace ProductsApp.Controllers
             
             string currentTime = DateTime.Now.ToString();
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME) " +
-                    "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_DATE ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss'))";
+                    "values('" + moment.ID + "','" + moment.SenderID + "',:content,'" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_DATE ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss'))";
+            cmd.Parameters.Add(new OracleParameter("content", OracleDbType.Clob));
+            cmd.Parameters["content"].Value = moment.Content;
+
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {

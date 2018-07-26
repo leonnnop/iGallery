@@ -107,13 +107,18 @@ namespace ProductsApp.Controllers
                     format = ImageFormat.Jpeg;
                     break;
             }
+            if (path == "")
+            {
+                response.Content = null;
+                return response;
+            }
             System.Drawing.Image image = System.Drawing.Image.FromFile(path);
             image.Save(new MemoryStream(), format);
-            image.Dispose();
 
             Dictionary<string, int> dic = new Dictionary<string, int>();
             dic.Add("width", image.Width);
             dic.Add("height", image.Height);
+            image.Dispose();
             string json = JsonConvert.SerializeObject(dic, Formatting.Indented);
             response.Content = new StringContent(json);
             return response;

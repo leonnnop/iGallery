@@ -59,7 +59,9 @@ namespace ProductsApp.Controllers
                 //将新建用户插入数据库
                 var file = @"C:\heads\default.png";
                 cmd.CommandText = "insert into USERS(ID,EMAIL,PASSWORD,USERNAME,BIO,PHOTO) " +
-                "values('" + id.ToString() + "','" + user.Email + "','" + user.Password + "','" + user.Username + "','','"+file+"')";
+                "values('" + id.ToString() + "','" + user.Email + "','" + user.Password + "',:user.Username,'"+file+"')";
+                cmd.Parameters.Add(new OracleParameter("username", OracleDbType.Varchar2, 20));
+                cmd.Parameters["username"].Value = user.Username;
                 
                 int result = cmd.ExecuteNonQuery();
                 if (result != 1)//插入出现错误
@@ -133,7 +135,7 @@ namespace ProductsApp.Controllers
               //htmlBodyContent += "<p>您的iGallery账号正在重置密码，若非本人操作请及时登录处理。</p>";
               htmlBodyContent += "<p>注册iGallery，分享精彩视界</p>";
               AlternateView htmlBody = AlternateView.CreateAlternateViewFromString(htmlBodyContent, null, "text/html");
-              LinkedResource lrlmage = new LinkedResource(@"C:\heads\logo_img.png","image/g");
+              LinkedResource lrlmage = new LinkedResource(@"C:\heads\logo_img.png","image/png");
               lrlmage.ContentId = "img_logo";
               htmlBody.LinkedResources.Add(lrlmage);
               message.AlternateViews.Add(htmlBody); 
