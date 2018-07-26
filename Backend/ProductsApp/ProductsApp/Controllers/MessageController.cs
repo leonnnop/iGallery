@@ -51,8 +51,7 @@ namespace ProductsApp.Controllers
         public IHttpActionResult GetMessage(string Sender_ID, string Receiver_ID)
         {
             //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -261,8 +260,14 @@ namespace ProductsApp.Controllers
 
 
             conn.Close();
+<<<<<<< HEAD
             return Json(UsersList);
         }
+=======
+            return Json(UsersList);
+            }
+
+>>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
 
         //返回评论信息
         [HttpGet]
@@ -470,6 +475,10 @@ namespace ProductsApp.Controllers
             rd.Close();
             conn.Close();
             return result;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
         }
     }
 }
