@@ -647,6 +647,9 @@
       window.removeEventListener('scroll', this.handleScroll)
     },
     created() {
+      this.bodyWidth=document.body.clientWidth;
+        console.log('------------------------------------------body');
+        console.log(this.bodyWidth);
       //请求动态
       // window.onscroll = () => {
       //   //监听事件内容
@@ -836,8 +839,20 @@
         }
       },
       carouselHeight: function (moment) {
+        let carouselWidth=this.bodyWidth*0.41;
+        this.axios.get('http://10.0.1.8:54468/api/Picture/GetSz?mid='+moment.moment.id)
+        .then((response) => {
+          var width=response.data.width;
+          var height=response.data.height;
+          var rate=height/width;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
         // return dic.get(moment.moment.imgList[0].url) + 'px';
-        return '800px'
+        // return '800px';
+        return carouselWidth*rate+'px';
       },
       messageWebsocketHandler(path, state, content = "") {
         // 0 关注 1 点赞 2 评论 3 转发 4 私信
