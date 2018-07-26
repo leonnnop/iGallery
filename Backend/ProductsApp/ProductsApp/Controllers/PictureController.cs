@@ -81,7 +81,8 @@ namespace ProductsApp.Controllers
             dic.Add("width", image.Width);
             dic.Add("height", image.Height);
             string json = JsonConvert.SerializeObject(dic, Formatting.Indented);
-            response.WriteLine(json);
+            response.Content = new StringContent(json);
+            return response;
         }
         
         
