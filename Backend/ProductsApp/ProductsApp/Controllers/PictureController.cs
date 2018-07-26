@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Utility;
 using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
 using System.Net.Http.Headers;
 using System.Net.Http.Formatting;
 using System.Web;
@@ -63,6 +64,27 @@ namespace ProductsApp.Controllers
             return result;
         }
 
+        [HttpGet]
+        public HttpResponseMessage GetSz(string mid)
+        {
+            //获得图片url
+            HttpResponseMessage response = new HttpResponseMessage();
+            DBAccess dBAccess = new DBAccess();
+            OracleDataReader rd=dBAccess.GetDataReader("select  url  from PICTURE where mid='" + mid + "'");
+            var path = "";
+            if (rd.Read())
+            {
+                path = rd[0].ToString();
+            }
+            System.Drawing.Image image = System.Drawing.Image.FromFile(path);
+            Dictionary<string, int> dic = new Dictionary<string, int>();
+            dic.Add("width", image.Width);
+            dic.Add("height", image.Height);
+            string json = JsonConvert.SerializeObject(dic, Formatting.Indented);
+            response.WriteLine(json);
+        }
+        
+        
         [HttpPost]
         public HttpResponseMessage Save(string id, int type)
         {
