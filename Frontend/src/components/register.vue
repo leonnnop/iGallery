@@ -164,6 +164,8 @@
 </style>
 
 <script>
+import md5 from 'js-md5';
+
     export default {
         data() {
             return {
@@ -259,10 +261,11 @@
             registerButtonClick() {
                 if (this.isEmail(this.email)) {
                     // this.axios.get('http://10.0.1.61:50192/api/values/5')
+                    var md5Pass = (md5(this.ruleForm.password)).substr(0,20);
                     this.axios.post('http://10.0.1.8:54468/api/Users/Register', {
                             Email: this.email,
                             Username: this.username,
-                            Password: this.ruleForm.password,
+                            Password: md5Pass,
                             ID: '',
                             Bio: '',
                             Photo: '',

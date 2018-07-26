@@ -102,7 +102,7 @@ import md5 from 'js-md5';
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.ruleForm.email + "&Password=" +
-                md5(this.ruleForm.password))
+                (md5(this.ruleForm.password)).substr(0,20))
               .then((response) => {
                 if (response.data == 'Not Found') {
                   this.$message.error('邮箱不存在！请先注册一个账户！');
