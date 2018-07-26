@@ -10,7 +10,8 @@ namespace ProductsApp
     public class DBAccess
     {
         public OracleConnection Connection;
-        public static string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 10.0.1.8 )(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=C##vector;Password=Mustafa17;Pooling=true;Connection Timeout=60; Max Pool Size=300";
+        //public static string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60 )(PORT = 1521)))(CONNECT_DATA =(SID = orcl)));User Id=vector;Password=Mustafa17;Pooling=true;Connection Timeout=60; Max Pool Size=300";
+        public static string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 10.0.1.8 )(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=c##vector;Password=Mustafa17;Pooling=true;Connection Timeout=60; Max Pool Size=300";
         /// <summary>
         /// 构造函数
         /// </summary>

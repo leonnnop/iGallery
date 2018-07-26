@@ -47,7 +47,7 @@ namespace ProductsApp.Controllers
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
             
-            string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
+            string currentTime = DateTime.Now.ToString();
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME) " +
                     "values('" + moment.ID + "','" + moment.SenderID + "','" + moment.Content + "','" + moment.LikeNum + "','" + moment.ForwardNum + "','" + moment.CollectNum + "','" + moment.CommentNum + "',TO_DATE ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss'))";
             int result = cmd.ExecuteNonQuery();
@@ -138,7 +138,7 @@ namespace ProductsApp.Controllers
             moment.ForwardNum = 0;
             moment.CollectNum = 0;
             moment.CommentNum= 0;
-            moment.Time = DateTime.Now.ToString("yyyyMMddhhmmss");
+            moment.Time = DateTime.Now.ToString();
             moment.QuoteMID = forward.Moment_ID;
             
             cmd.CommandText = "insert into MOMENT(ID,SENDER_ID,CONTENT,LIKE_NUM,FORWARD_NUM,COLLECT_NUM,COMMENT_NUM,TIME,QUOTE_MID) " +
