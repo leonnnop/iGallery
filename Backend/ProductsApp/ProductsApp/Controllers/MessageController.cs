@@ -219,55 +219,63 @@ namespace ProductsApp.Controllers
                     s_t.Send_Time = rd1["SEND_TIME"].ToString();
                     s_t.Sender_ID = receiver;
                     s_t.Receiver_ID = Sender_ID;
-                    s_t.Send_Time = rd1["SEND_TIME"].ToString();
                     sender_time.Add(s_t);
                 }
             }
             List<Users> UsersList = new List<Users>();
+            List<Message> time = new List<Message>();
             foreach (Message s_t in sender_time)
             {
                 cmd.Connection = conn;
                 cmd.CommandText = "select * " +
                                 "from message " +
-                                "where Receiver_ID='" + s_t.Receiver_ID + "' and Sender_ID='" + s_t.Sender_ID + "' and send_time='" + s_t.Send_Time + "'" +
-                                "order by send_time desc";
+                                "where Receiver_ID='" + s_t.Receiver_ID + "' and Sender_ID='" + s_t.Sender_ID + "' and send_time='" + s_t.Send_Time + "'";
                 rd = cmd.ExecuteReader();
                 while (rd.Read())
                 {
                     string user_id = rd["RECEIVER_ID"].ToString();
-                    if (user_id == Sender_ID)
+                    if(user_id==Sender_ID)
                     {
                         user_id = rd["SENDER_ID"].ToString();
                     }
-                    OracleCommand cmd1 = new OracleCommand();
-                    cmd1.Connection = conn;
-                    cmd1.CommandText = "select * " +
-                                      "from users " +
-                                      "where id =  '" + user_id + "'";
-                    OracleDataReader rd1 = cmd1.ExecuteReader();
-                    rd1.Read();
-                    Users user = new Users();
-                    user.ID = rd1["ID"].ToString();
-                    user.Email = rd1["EMAIL"].ToString();
-                    user.Username = rd1["USERNAME"].ToString();
-                    user.Bio = rd1["BIO"].ToString();
-                    user.Photo = rd1["PHOTO"].ToString();
-                    UsersList.Add(user);
+                    Message mm = new Message();
+                    mm.Sender_ID = user_id;
+                    mm.Send_Time = rd["SEND_TIME"].ToString();
+                    time.Add(mm);   
 
                 }
+                
             }
-
-
+            time.Sort(delegate (Message x, Message y)
+            {
+                return y.Send_Time.CompareTo(x.Send_Time);
+            });
+            foreach (Message m in time)
+            {
+                OracleCommand cmd1 = new OracleCommand();
+                cmd1.Connection = conn;
+                cmd1.CommandText = "select * " +
+                                  "from users " +
+                                  "where id =  '" + m.Sender_ID + "'";
+                OracleDataReader rd1 = cmd1.ExecuteReader();
+                rd1.Read();
+                Users user = new Users();
+                user.ID = rd1["ID"].ToString();
+                user.Email = rd1["EMAIL"].ToString();
+                user.Username = rd1["USERNAME"].ToString();
+                user.Bio = rd1["BIO"].ToString();
+                user.Photo = rd1["PHOTO"].ToString();
+                UsersList.Add(user);
+            }
 
             conn.Close();
-<<<<<<< HEAD
             return Json(UsersList);
         }
-=======
-            return Json(UsersList);
-            }
 
->>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
+
+          
+
+
 
         //返回评论信息
         [HttpGet]
@@ -475,10 +483,7 @@ namespace ProductsApp.Controllers
             rd.Close();
             conn.Close();
             return result;
-<<<<<<< HEAD
-=======
 
->>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
         }
     }
 }
