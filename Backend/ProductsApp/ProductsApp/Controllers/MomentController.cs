@@ -139,7 +139,7 @@ namespace ProductsApp.Controllers
             moment.CollectNum = 0;
             moment.CommentNum= 0;
             moment.Time = DateTime.Now.ToString();
-            cmd.CommandText="select quotemid" +
+            cmd.CommandText="select quote_mid" +
                             "from moment" +
                             "where id='"+forward.MOMENT_ID+"'";
             rd = cmd.ExecuteReader();
