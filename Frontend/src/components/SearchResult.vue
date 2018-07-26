@@ -22,7 +22,7 @@
                             <div class="display-user" v-for="(user,index) in users" :key="index">
                                 <el-row style="width:80%;margin:0 auto">
                                     <el-row>
-                                        <img :src="user.Photo" alt="头像" class="user-img hover-cursor" @click="jumpToUser(user.ID)">
+                                        <img :src="user.Photo+'&Rand=' + Math.random()" alt="头像" class="user-img hover-cursor" @click="jumpToUser(user.ID)">
                                     </el-row>
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">{{user.Username}}</el-row>
                                     <el-row style="margin-top:5%;color:#777;font-size:13px" class="self-intro">{{user.Bio}}</el-row>
@@ -55,7 +55,7 @@
                             <div class="display-tag" v-for="(tag,index) in tags" :key="index">
                                 <el-row style="width:80%;margin:0 auto">
                                     <el-row>
-                                        <img :src="tag.Pic" alt="tagImg" class="tag-img hover-cursor" @click="jumpToTag(tag.Tag)">
+                                        <img :src="tag.Pic+'&Rand=' + Math.random()" alt="tagImg" class="tag-img hover-cursor" @click="jumpToTag(tag.Tag)">
                                     </el-row>
                                     <el-row style="margin-top:10%;color:#333;font-weight:600">#{{tag.Tag}}</el-row>
                                     <el-row>
@@ -76,7 +76,7 @@
                 </el-row>
                 <div v-if="!hasMoment" class="message">没有找到相关动态</div>
                 <div style="width:902px" class="moment-container">
-                    <div v-for="(moment,index) in moments" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) + ')'}">
+                    <div v-for="(moment,index) in moments" :key="index" class="moment" :style="{backgroundImage: 'url(' + (moment.src) +'&Rand=' + Math.random() +  ')'}">
                         <div class="moment-inner">
                             <div class="icon">
                                 <el-row type="flex" justify="space-between">

@@ -8,7 +8,7 @@
                 <el-carousel v-if="hackReset" height="500px" :interval="0" indicator-position="outside">
                     <el-carousel-item v-for="(img,index) in imgList" :key="index">
                         <div class="pic">
-                            <img :src="img.url" alt="movementImg">
+                            <img :src="img.url+'&Rand=' + Math.random()" alt="movementImg">
                         </div>
                     </el-carousel-item>
                 </el-carousel>
@@ -27,7 +27,7 @@
                                             <div v-for="(likeUser,index) in likeUsers" :key="index" class="like-user-li">
                                                 <el-row type="flex" justify="center" align="middle">
                                                     <el-col :span="3" :offset="1" style="height:50px;">
-                                                        <img :src="likeUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.ID)">
+                                                        <img :src="likeUser.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(likeUser.ID)">
                                                     </el-col>
                                                     <el-col :span="16">
                                                         <el-row>{{likeUser.Username}}</el-row>
@@ -71,7 +71,7 @@
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
                                 <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
-                        '&type=2'" alt="" style="width:40px;height:40px;border-radius:40px;">
+                        '&type=2'+'&Rand=' + Math.random()" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment" :inline="true">
@@ -94,7 +94,7 @@
                         <div v-for="(comment,index) in comments" :key="index" class="show-comment">
                             <el-row type="flex" align="middle">
                                 <el-col :span="3">
-                                    <img :src="comment.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.Sender_id)">
+                                    <img :src="comment.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.Sender_id)">
                                 </el-col>
                                 <el-col :span="3">
                                     <span class="hover-cursor" @click="jumpToUser(comment.Sender_id)">{{comment.Username}}</span>
@@ -156,7 +156,7 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img :src="userHeadImg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">
+                                <img :src="userHeadImg+'&Rand=' + Math.random()" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.SenderID)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
@@ -380,18 +380,7 @@
                 commentComment: {
                     comment: ''
                 },
-                imgList: [{
-                        url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
-                    },
-                    {
-                        url: require('../image/ins2.png')
-                    },
-                    {
-                        url: require('../image/ins3.png')
-                    },
-                    {
-                        url: require('../image/a.jpg')
-                    }
+                imgList: [
                 ],
                 moment: {
 
@@ -1078,6 +1067,7 @@
             this.$nextTick(() => {
                 this.hackReset = true
             })
+            console.log('route.params',this.$route.params.id)
             this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$route.params.id +
                     '&type=1')
                 .then((response) => {
@@ -1103,9 +1093,7 @@
 
                     this.userHeadImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
                         '&type=2';
-                    // this.imgList = [{
-                    //     url: "http://10.0.1.8:54468/api/Picture/Gets?pid=21341"
-                    // }];
+                   
 
                     if (response.data.FollowState == 0) {
                         this.moment.FollowState = true

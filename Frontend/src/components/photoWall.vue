@@ -9,13 +9,13 @@
           <el-card class="box-card" :key="item.MomentID" v-for="item in items_col_1">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <img :src="item.src+'&Rand=' + Math.random()" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -29,13 +29,13 @@
           <el-card class="box-card" :key="item.MomentID" v-for="item in items_col_2">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <img :src="item.src+'&Rand=' + Math.random()" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -49,13 +49,13 @@
           <el-card class="box-card" :key="item.MomentID" v-for="item in items_col_3">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <img :src="item.src+'&Rand=' + Math.random()" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}
@@ -69,13 +69,13 @@
           <el-card class="box-card" :key="item.MomentID" v-for="item in items_col_4">
             <div slot="header" class="clearfix">
               <el-row type="flex" align="middle" justify="space-between">
-                <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
+                <img :src="item.src+'&Rand=' + Math.random()" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
                 <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.Username}}</span>
                 <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
               </el-row>
             </div>
             <el-row>
-              <img :src="item.contentSrc" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
+              <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.MomentID)" alt="hex" width="300px;" style="margin:-20px">
             </el-row>
             <el-row style="margin-top:10%">
               {{item.Content}}

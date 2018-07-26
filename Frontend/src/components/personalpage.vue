@@ -17,7 +17,7 @@
                 :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">
                 <!-- <img :src="headUrl" class="headImg" alt="头像"> -->
                 <!-- <div class="headImg">点我换头</div> -->
-                <div class="moment" :style="{backgroundImage: 'url(' + (headUrl) + ')'}">
+                <div class="moment" :style="{backgroundImage: 'url(' + (headUrl)+'&Rand=' + Math.random() + ')'}">
                   <div class="moment-inner">
                     <div class="icon">
                       <el-row type="flex" justify="center" align="middle">
@@ -29,7 +29,7 @@
                   </div>
                 </div>
               </el-upload>
-              <img v-if="$route.params.id!=$store.state.currentUserId_ID" :src="headUrl" class="headImg" alt="头像">
+              <img v-if="$route.params.id!=$store.state.currentUserId_ID" :src="headUrl+'&Rand=' + Math.random()" class="headImg" alt="头像">
 
             </el-col>
             <el-col :span="12" style="padding-top:20px">
@@ -45,7 +45,7 @@
                     <div v-for="(followUser,index) in followUsers" :key="index" class="like-user-li">
                       <el-row type="flex" justify="center" align="middle">
                         <el-col :span="3" :offset="1" style="height:50px;">
-                          <img :src="followUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(followUser.ID)">
+                          <img :src="followUser.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(followUser.ID)">
                         </el-col>
                         <el-col :span="16">
                           <el-row>{{followUser.Username}}</el-row>
@@ -68,7 +68,7 @@
                     <div v-for="(fanUser,index) in fanUsers" :key="index" class="like-user-li">
                       <el-row type="flex" justify="center" align="middle">
                         <el-col :span="3" :offset="1" style="height:50px;">
-                          <img :src="fanUser.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(fanUser.ID)">
+                          <img :src="fanUser.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(fanUser.ID)">
                         </el-col>
                         <el-col :span="16">
                           <el-row>{{fanUser.Username}}</el-row>
@@ -118,7 +118,7 @@
           <el-col v-for="moment in moments" :key="moment.name" :span="6">
             <el-col>
               <!--el-card shadow="always" :body-style="{ padding: '0px' }"-->
-              <div class="moments" :style="{backgroundImage:'url('+moment.url+')'}" @click="toMoment(moment.momentID)"></div>
+              <div class="moments" :style="{backgroundImage:'url('+moment.url+'&Rand=' + Math.random() + ')'}" @click="toMoment(moment.momentID)"></div>
               <!--/el-card-->
             </el-col>
           </el-col>
@@ -247,7 +247,7 @@
 
             <el-col v-for="(collect,index) in collects" :key="index" :span="8">
               <el-col>
-                <div class="moments" :style="{backgroundImage:'url('+collect.url+')'}" @click="toMoment(collect.momentID)"></div>
+                <div class="moments" :style="{backgroundImage:'url('+collect.url+'&Rand=' + Math.random() + ')'}" @click="toMoment(collect.momentID)"></div>
                 <el-col :span="2">
                   <el-dropdown>
                     <span class="el-dropdown-link">
@@ -887,8 +887,6 @@
       },
       followClickHandler() {
 
-        // console.log(this.FollowState);
-
         this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
             '&followedID=' + this.$route.params.id)
           .then((response) => {
@@ -989,6 +987,18 @@
           console.log(response.data);
           // this.headUrl = 
           // this.myfresh();
+          this.$message({
+            message: '上传成功!',
+            type: 'success'
+          });
+          this.myfresh()
+          // var self = this;
+          // this.toastrVal = inVal;
+          // this.loadState = true;
+          // this.noBg = bgState;
+          // setTimeout(function () {
+          //   self.myfresh();
+          // }, 500);
         })
 
       },
@@ -1747,7 +1757,7 @@
           });
           // index++;
         })
-      
+
     },
   }
 </script>
