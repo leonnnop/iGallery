@@ -28,7 +28,7 @@ namespace ProductsApp.Controllers
                 throw (ex);
             }
             OracleCommand cmd = new OracleCommand();
-            string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
+            string currentTime = DateTime.Now.ToString();
             cmd.CommandText = "insert into COLLECT(MOMENT_ID,FOUNDER_ID,NAME,TIME) " +
                     "values('" + moment_id + "','" + founder_id + "','" + name + "',TO_DATE('" + currentTime + "','yyyy-mm-dd hh24:mi:ss'))";
             cmd.Connection = conn;

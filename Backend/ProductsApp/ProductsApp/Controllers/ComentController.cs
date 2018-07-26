@@ -145,7 +145,7 @@ namespace ProductsApp.Controllers
             comment.Sender_id = coment["Sender_id"];
             comment.Content = coment["Content"];
             //comment.Send_time = coment["Send_time"];
-            comment.Send_time = DateTime.Now.ToString("yyyyMMddhhmmss");
+            comment.Send_time = DateTime.Now.ToString();
             comment.Quote_id = coment["Quote_id"];
 
 

@@ -110,7 +110,7 @@ namespace ProductsApp.Controllers
             {
                 dBAccess.ExecuteSql("delete from FORWARD where moment_id = '" + moment_id + "'");
 
-                dBAccess.ExecuteSql("delete from MOMENT where quote_id = '" + moment_id + "'");
+                dBAccess.ExecuteSql("delete from MOMENT where quote_mid = '" + moment_id + "'");
 
                 dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'");
             }
@@ -203,7 +203,7 @@ namespace ProductsApp.Controllers
             OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + modifyMoment.moment_id + "'and SENDER_ID = '" + user_id + "'");
             if (rd.Read())
             {
-                string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
+                string currentTime = DateTime.Now.ToString();
                 if (dBAccess.ExecuteSql("update MOMENT set content = '" + modifyMoment.content + "',time = TO_DATE ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss') where sender_id = '" + user_id + "'and id = '" + modifyMoment.moment_id + "'"))
                 {
                     status = 0;//修改成功

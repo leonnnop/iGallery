@@ -50,8 +50,6 @@ namespace Utility
             {
                 return null;
             }
-            Image img = Image.FromFile(filePath);  //这里我把路径给出了，他只用给我文件名
-
 
             //图片文件转字节流
             MemoryStream ms = new MemoryStream();
@@ -78,6 +76,7 @@ namespace Utility
                     break;
             }
 
+            Image img = Image.FromFile(filePath);  //这里我把路径给出了，他只用给我文件名
             //从格式图像转成字节流
             img.Save(ms, format);
             img.Dispose();
