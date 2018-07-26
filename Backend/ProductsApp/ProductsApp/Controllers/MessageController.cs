@@ -333,16 +333,14 @@ namespace ProductsApp.Controllers
                     int forward_num = Convert.ToInt32(rd["FORWARD_NUM"]);
                     int collect_num = Convert.ToInt32(rd["COLLECT_NUM"]);
                     int comment_num = Convert.ToInt32(rd["COMMENT_NUM"]);
-                    moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                     OracleCommand cmd1 = new OracleCommand();
                     cmd1.CommandText = "select USER_ID from FAVORITE where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    /*if (!rd1.HasRows)
+                    if (rd1.HasRows)
                     {
-                        users = null;
-                        return result;
-                    }*/
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
+                    }
                     while (rd1.Read())//返回用户详情
                     {
                         Users temp = new Users();
