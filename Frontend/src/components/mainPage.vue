@@ -295,8 +295,8 @@
     },
     methods: {
       bellClickHandler() {
-        // this.$router.push('/main/message/self');
-        this.$router.push('/main/leaderboard');
+        this.$router.push('/main/message/self');
+        // this.$router.push('/main/leaderboard');
       },
       handleTopBarSelect(key, keyPath) {
         console.log('/' + key);
@@ -519,7 +519,7 @@
         this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=' + this.currentMomentID + '&type=1', formdata1,
           config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);
-          console.log('啊哈哈',this.fileListLength)
+          console.log('啊哈哈', this.fileListLength)
           this.fileListLength--;
           if (this.fileListLength == 0) {
             this.myfresh()
@@ -619,6 +619,10 @@
             }, '' + evt.data)
           });
           that.bellDot = true;
+          if ((that.$route.name == "message")&&((evt.data).indexOf("私信")!=-1)) {
+            that.myfresh();
+          }
+
         };
 
         // 当链接对象找到服务端成功对接后，提示正常打开

@@ -46,12 +46,12 @@ namespace ProductsApp.Controllers
 
 
         }
-
-         [HttpGet]
+        
+        [HttpGet]
         public IHttpActionResult GetMessage(string Sender_ID, string Receiver_ID)
         {
             //连接数据库
-            OracleConnection conn = new OracleConnection(DBAccess.connStr);
+           OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -63,26 +63,58 @@ namespace ProductsApp.Controllers
 
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "select sender_id,content " +
+            cmd.CommandText = "select * " +
                               "from message " +
                               "where sender_id =  '" + Sender_ID + "' and " +
                               "receiver_id = '" + Receiver_ID + "'"+
                               "order by send_time desc";
             OracleDataReader rd = cmd.ExecuteReader();
-            List<string> ContentList = new List<string>();
-            List<int> IdentityList = new List<int>();
+            List<Message> ContentList1 = new List<Message>();
+            while(rd.Read())
+            {
+                Message m = new Message();
+                m.Sender_ID = rd["SENDER_ID"].ToString();
+                m.Content = rd["CONTENT"].ToString();
+                m.Send_Time = rd["SEND_TIME"].ToString();
+                ContentList1.Add(m);
+            }
+            cmd.CommandText = "select * " +
+                              "from message " +
+                              "where sender_id =  '" + Receiver_ID + "' and " +
+                              "receiver_id = '" + Sender_ID + "'" +
+                              "order by send_time desc";
+            rd = cmd.ExecuteReader();
+            List<Message> ContentList2 = new List<Message>();
             while (rd.Read())
             {
-                string name = rd["SENDER_ID"].ToString();
+                Message m = new Message();
+                m.Sender_ID = rd["SENDER_ID"].ToString();
+                m.Content = rd["CONTENT"].ToString();
+                m.Send_Time = rd["SEND_TIME"].ToString();
+                ContentList2.Add(m);
+            }
+            List<Message> ContentList = ContentList1.Concat(ContentList2).ToList<Message>();
+            ContentList.Sort(delegate (Message x, Message y)
+                {
+                    return y.Send_Time.CompareTo(x.Send_Time);
+                });
+
+            List<int> IdentityList = new List<int>();
+            List<string> Content = new List<string>();
+            foreach(Message m in ContentList)
+            {
+                string name = m.Sender_ID;
                 if (name == Sender_ID) IdentityList.Add(0);
                 else IdentityList.Add(1);
-                string content = rd["CONTENT"].ToString();
-                ContentList.Add(content);
+                string content = m.Content;
+                Content.Add(content);
             }
             Tuple<List<int>, List<string>> result = new Tuple<List<int>, List<string>>(null, null);
-            result = new Tuple<List<int>, List<string>> (IdentityList, ContentList);
+            result = new Tuple<List<int>, List<string>> (IdentityList, Content);
+            conn.Close();
             return Json(result);
         }
+
 
         [HttpGet]
         public IHttpActionResult GetUser(string Sender_ID)
@@ -144,8 +176,8 @@ namespace ProductsApp.Controllers
                     else
                     {
                         Message s_t = new Message();
-                        s_t.Sender_ID = receiver;
-                        s_t.Receiver_ID = Sender_ID;
+                        s_t.Sender_ID = Sender_ID;
+                        s_t.Receiver_ID = receiver;
                         s_t.Send_Time = rd1["SEND_TIME"].ToString();
                         sender_time.Add(s_t);
                     }
@@ -162,9 +194,7 @@ namespace ProductsApp.Controllers
                 while (rd.Read())
                 {
                     string user_id = rd["RECEIVER_ID"].ToString();
-                    OracleCommand cmd1 = new OracleCommand();
-                    cmd1.Connection = conn;
-                    cmd1.CommandText = "select * " +
+                    cmd.CommandText = "select * " +
                                       "from users " +
                                       "where id =  '" + user_id + "'";
                     OracleDataReader rd1 = cmd.ExecuteReader();

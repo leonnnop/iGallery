@@ -94,10 +94,10 @@
                         <div v-for="(comment,index) in comments" :key="index" class="show-comment">
                             <el-row type="flex" align="middle">
                                 <el-col :span="3">
-                                    <img :src="comment.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.userPage)">
+                                    <img :src="comment.headImg" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.Sender_id)">
                                 </el-col>
                                 <el-col :span="3">
-                                    <span class="hover-cursor" @click="jumpToUser(comment.userPage)">{{comment.Username}}</span>
+                                    <span class="hover-cursor" @click="jumpToUser(comment.Sender_id)">{{comment.Username}}</span>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -108,7 +108,7 @@
                             <!-- 引用评论 -->
                             <el-row v-if="JSON.stringify(comment.quoteComment)!=='{}'" style="margin-top:10px;">
                                 <el-card shadow="never" :body-style="{ padding: '10px' }" v-if="comment.quoteComment!=undefined">
-                                    <el-button type="text" @click="jumpToUser(comment.quoteComment.userPage)">@{{comment.quoteComment.Username}}：</el-button>{{comment.quoteComment.content}}
+                                    <el-button type="text" @click="jumpToUser(comment.quoteComment.Sender_id)">@{{comment.quoteComment.Username}}：</el-button>{{comment.quoteComment.content}}
                                 </el-card>
                             </el-row>
                             <el-row type="flex" justify="space-between" align="middle">
@@ -156,12 +156,12 @@
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img :src="userHeadImg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.userPage)">
+                                <img :src="userHeadImg" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
                                     <el-col :span="10" :offset="2">
-                                        <span class="hover-cursor" @click="jumpToUser(moment.userPage)">{{moment.Username}}</span>
+                                        <span class="hover-cursor" @click="jumpToUser(moment.moment.SenderID)">{{moment.Username}}</span>
                                     </el-col>
                                     <el-col :span="4" :offset="4">
                                         <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.FollowState)"
@@ -974,16 +974,16 @@
                     this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
                             // if (response.data == 'OK') {
-                            if (true) {
-                                this.$message({
-                                    message: '评论成功！',
-                                    type: 'success'
-                                });
-                                this.blogComment.comment = '';
-                                this.messageWebsocketHandler(this.moment.SenderID, 2, this.blogComment.comment)
-                            } else {
-                                this.$message.error('评论失败，请稍后重试！');
-                            }
+                            // if (true) {
+                            this.$message({
+                                message: '评论成功！',
+                                type: 'success'
+                            });
+                            this.blogComment.comment = '';
+                            this.messageWebsocketHandler(this.moment.SenderID, 2, this.blogComment.comment)
+                            // } else {
+                            //     this.$message.error('评论失败，请稍后重试！');
+                            // }
                         })
                         .catch((error) => {
                             console.log(error);
@@ -1047,16 +1047,16 @@
                     this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
                             // if (response.data == 'OK') {
-                            if (true) {
+                            // if (true) {
                                 this.$message({
                                     message: '评论成功！',
                                     type: 'success'
                                 });
                                 this.messageWebsocketHandler(this.moment.SenderID, 2, this.commentComment.comment)
                                 this.commentComment.comment = '';
-                            } else {
-                                this.$message.error('评论失败，请稍后重试！');
-                            }
+                            // } else {
+                            //     this.$message.error('评论失败，请稍后重试！');
+                            // }
                         })
                         .catch((error) => {
                             console.log(error);

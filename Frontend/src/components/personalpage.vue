@@ -1742,11 +1742,12 @@
                 // Vue.set(this.collects[index], 'url', url)
                 Vue.set(temp, 'url', url)
                 this.collects.push(temp)
+                next()
               })
           });
           // index++;
         })
-      next()
+      
     },
   }
 </script>
