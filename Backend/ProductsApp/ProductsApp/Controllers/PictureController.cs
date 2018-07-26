@@ -70,7 +70,7 @@ namespace ProductsApp.Controllers
             //获得图片url
             HttpResponseMessage response = new HttpResponseMessage();
             DBAccess dBAccess = new DBAccess();
-            OracleDataReader rd=dBAccess.GetDataReader("select  url  from PICTURE where mid='" + mid + "'");
+            OracleDataReader rd=dBAccess.GetDataReader("select  url  from PICTURE where moment_id = '" + mid + "'");
             var path = "";
             if (rd.Read())
             {

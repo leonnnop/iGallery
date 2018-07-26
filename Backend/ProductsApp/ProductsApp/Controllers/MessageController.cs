@@ -46,7 +46,7 @@ namespace ProductsApp.Controllers
 
 
         }
-        
+
         [HttpGet]
         public IHttpActionResult GetMessage(string Sender_ID, string Receiver_ID)
         {
@@ -66,11 +66,11 @@ namespace ProductsApp.Controllers
             cmd.CommandText = "select * " +
                               "from message " +
                               "where sender_id =  '" + Sender_ID + "' and " +
-                              "receiver_id = '" + Receiver_ID + "'"+
+                              "receiver_id = '" + Receiver_ID + "'" +
                               "order by send_time ";
             OracleDataReader rd = cmd.ExecuteReader();
             List<Message> ContentList1 = new List<Message>();
-            while(rd.Read())
+            while (rd.Read())
             {
                 Message m = new Message();
                 m.Sender_ID = rd["SENDER_ID"].ToString();
@@ -101,7 +101,7 @@ namespace ProductsApp.Controllers
 
             List<int> IdentityList = new List<int>();
             List<string> Content = new List<string>();
-            foreach(Message m in ContentList)
+            foreach (Message m in ContentList)
             {
                 string name = m.Sender_ID;
                 if (name == Sender_ID) IdentityList.Add(0);
@@ -110,7 +110,7 @@ namespace ProductsApp.Controllers
                 Content.Add(content);
             }
             Tuple<List<int>, List<string>> result = new Tuple<List<int>, List<string>>(null, null);
-            result = new Tuple<List<int>, List<string>> (IdentityList, Content);
+            result = new Tuple<List<int>, List<string>>(IdentityList, Content);
             conn.Close();
             return Json(result);
         }
@@ -260,14 +260,10 @@ namespace ProductsApp.Controllers
 
 
             conn.Close();
-<<<<<<< HEAD
             return Json(UsersList);
         }
-=======
-            return Json(UsersList);
-            }
 
->>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
+
 
         //返回评论信息
         [HttpGet]
@@ -475,10 +471,6 @@ namespace ProductsApp.Controllers
             rd.Close();
             conn.Close();
             return result;
-<<<<<<< HEAD
-=======
-
->>>>>>> e3819112e6f869b5b73bee597a1d9b3613cb0670
         }
     }
 }
