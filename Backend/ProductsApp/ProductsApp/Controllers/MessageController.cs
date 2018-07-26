@@ -93,7 +93,7 @@ namespace ProductsApp.Controllers
                 m.Send_Time = rd["SEND_TIME"].ToString();
                 ContentList2.Add(m);
             }
-            List<Message> ContentList = ContentList1.Concat(ContentList2).ToList<Message>();
+            List<Message> ContentList = ContentList1.Union(ContentList2).ToList<Message>();
             ContentList.Sort(delegate (Message x, Message y)
                 {
                     return y.Send_Time.CompareTo(x.Send_Time);
@@ -136,13 +136,23 @@ namespace ProductsApp.Controllers
                               "from message " +
                               "where sender_id =  '" + Sender_ID + "'";
             OracleDataReader rd = cmd.ExecuteReader();
-            List<string> ReceiverList = new List<string>();
+            List<string> ReceiverList1 = new List<string>();
+            List<string> ReceiverList2 = new List<string>();
             while (rd.Read())
             {
                 string receiver = rd["RECEIVER_ID"].ToString();
-                ReceiverList.Add(receiver);
+                ReceiverList1.Add(receiver);
             }
-            
+            cmd.Connection = conn;
+            cmd.CommandText = "select distinct sender_id " +
+                              "from message " +
+                              "where receive_id =  '" + Sender_ID + "'";
+            rd = cmd.ExecuteReader();
+            while(rd.Read())
+            {
+                ReceiverList2.Add(rd["SENDER_ID"].ToString());
+            }
+            List<string> ReceiverList = ReceiverList1.Union(ReceiverList2).ToList<string>();
             List<Message> sender_time = new List<Message>();
             foreach(string receiver in ReceiverList)
             {
@@ -186,8 +196,8 @@ namespace ProductsApp.Controllers
             List<Users> UsersList = new List<Users>();
             foreach (Message s_t in sender_time)
             {
-                cmd.CommandText = "select Receiver_ID" +
-                                "from message" +
+                cmd.CommandText = "select Receiver_ID " +
+                                "from message " +
                                 "where Receiver_ID='" + s_t.Receiver_ID + "' and Sender_ID='" + s_t.Sender_ID + "' and send_time='" + s_t.Send_Time + "'" +
                                 "order by send_time desc";
                 rd= cmd.ExecuteReader();
