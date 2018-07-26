@@ -236,7 +236,7 @@ namespace ProductsApp.Controllers
                 while (rd.Read())
                 {
                     string user_id = rd["RECEIVER_ID"].ToString();
-                    if(user_id==Sender_ID)
+                    if (user_id == Sender_ID)
                     {
                         user_id = rd["SENDER_ID"].ToString();
                     }
@@ -259,10 +259,10 @@ namespace ProductsApp.Controllers
             }
 
 
-<<<<<<< HEAD
+
             conn.Close();
             return Json(UsersList);
-=======
+        }
 
         //返回评论信息
         [HttpGet]
@@ -470,7 +470,6 @@ namespace ProductsApp.Controllers
             rd.Close();
             conn.Close();
             return result;
->>>>>>> 0a742f2f00d4b832e4b5ec5ddb054379647a733b
         }
     }
 }
