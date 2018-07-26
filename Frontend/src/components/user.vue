@@ -74,7 +74,7 @@
 
       <el-row style="width:41%;margin-left:18%;" type="flex" justify="center">
         <el-col>
-          <el-row v-for="moment in totalMoments" :key="moment.moment.ID" class="box-color-grey">
+          <el-row v-for="(moment,index) in totalMoments" :key="index" class="box-color-grey">
             <el-row>
               <el-row class="usr" type="flex" align="middle" style="padding:7px 15px;margin-top:5px">
                 <el-col :span="2">
@@ -102,7 +102,7 @@
               </span>
             </el-row>
             <el-row>
-              <el-carousel :height="carouselHeight(moment)" :interval="0" indicator-position="outside" :arrow="showArrow(moment)">
+              <el-carousel :height="carouselHeight[index]" :interval="0" indicator-position="outside" :arrow="showArrow(moment)">
                 <el-carousel-item v-for="(img,index) in moment.moment.imgList" :key="index">
                   <div class="pic">
                     <img :src="img" alt="movementImg">
@@ -483,6 +483,7 @@
   export default {
     data() {
       return {
+        carouselHeight:[],
         loadingPage: true,
 
         flag: true,
@@ -646,8 +647,12 @@
     destroyed() {
       window.removeEventListener('scroll', this.handleScroll)
     },
+    beforeCreate(){
+     
+      console.log('beforecreate');
+    },
     created() {
-      this.bodyWidth=document.body.clientWidth;
+      this.bodyWidth=window.screen.width;
         console.log('------------------------------------------body');
         console.log(this.bodyWidth);
       //请求动态
@@ -746,9 +751,25 @@
               this.followings = [];
             }
 
+            let carouselWidth=this.bodyWidth*0.41;
+              this.axios.get('http://10.0.1.8:54468/api/Picture/GetSz?mid='+element.moment.ID)
+              .then((response) => {
+                if(response.data!=null){
+                  var width=response.data.width;
+                  var height=response.data.height;
+                  var rate=height/width;
+                  var height=carouselWidth*rate;
+
+                  this.carouselHeight.push(height+'px');
+          }
+          
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
           });
         }))
-
       // this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
       //     params: {
       //       Email: this.$store.state.currentUserId,
@@ -837,22 +858,6 @@
         } else {
           return 'never';
         }
-      },
-      carouselHeight: function (moment) {
-        let carouselWidth=this.bodyWidth*0.41;
-        this.axios.get('http://10.0.1.8:54468/api/Picture/GetSz?mid='+moment.moment.id)
-        .then((response) => {
-          var width=response.data.width;
-          var height=response.data.height;
-          var rate=height/width;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-        // return dic.get(moment.moment.imgList[0].url) + 'px';
-        // return '800px';
-        return carouselWidth*rate+'px';
       },
       messageWebsocketHandler(path, state, content = "") {
         // 0 关注 1 点赞 2 评论 3 转发 4 私信
