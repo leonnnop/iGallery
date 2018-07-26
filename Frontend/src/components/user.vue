@@ -41,7 +41,8 @@
             <el-row v-if="followings.length>0" :key="index" v-for="(following,index) in followings" type="flex" align="middle" style="margin-bottom:12px">
               <el-col>
                 <div class="user-img border">
-                  <img class="user-img img-border hover-cursor" :src="following.Photo+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser(following.ID)" />
+                  <img class="user-img img-border hover-cursor" :src="following.Photo+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser(following.ID)"
+                  />
                 </div>
               </el-col>
               <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
@@ -660,7 +661,10 @@
       //     this.currentPage++;
       //     this.requestHandler(this.currentPage);
       //   }
-
+      var self = this;
+      setTimeout(function () {
+        self.loadingPage = false;
+      }, 1000)
       // }
       //监听滚动条，到底时请求动态...
       this.axios.all([this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
@@ -715,6 +719,8 @@
                   // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
                 });
                 Vue.set(element.moment, 'imgList', imgList);
+                this.loadingPage = false;
+                console.log(this.loadingPage)
               })
               .catch((error) => {
                 console.log(error);
@@ -1132,11 +1138,11 @@
       next(vm => {
         var self = vm;
 
-        vm.$nextTick(()=>{
+        vm.$nextTick(() => {
           // this.toastrVal = inVal;
           // this.loadState = true;
           // this.noBg = bgState;
-          setTimeout(()=> {
+          setTimeout(() => {
             self.loadingPage = false;
           }, 1000)
 

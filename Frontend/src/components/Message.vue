@@ -170,13 +170,15 @@
 
     .message-input {
         margin-top: 10px;
-        height: 75px;
+        height: 86px;
         width: 100%;
         border: 0;
         resize: none;
         padding: 10px;
         box-sizing: border-box;
         outline: 0;
+        border-top: 1px solid #d5d3d3;
+        margin-top: 0
     }
 
     .message-pre {
@@ -502,6 +504,8 @@
                             var msg_end = document.getElementById('msg_end');
                             msg_end.scrollIntoView();
                             this.messageWebsocketHandler(this.currentTalker.ID, 4, " " + this.messageInput);
+                            this.currentTalker.message = this.messageInput;
+                            console.log(this.currentTalker)
                             this.messageInput = '';
                         } else {
                             this.$message.error('发送失败，请重试');
@@ -601,7 +605,12 @@
                                 //在历史私信列表中，直接选中
                                 if (element.ID == currentTalkerId) {
                                     element.selected = true;
+                                    // let temp = element;
                                     this.currentTalker = element;
+                                    if (!("message" in this.currentTalker)) {
+                                        Vue.set(this.currentTalker,'message',"")
+                                    }
+                            
                                     index--;
                                     // break;
                                 }
@@ -736,14 +745,16 @@
                     })
                     .then((response) => {
                         if (response.data.Item1.length) {
-                            let index = 0;
+                            var index = 0;
                             this.messages = [];
                             response.data.Item1.forEach(element => {
                                 this.messages.push({
                                     identity: response.data.Item1[index],
                                     content: response.data.Item2[index]
                                 });
+                                index++;
                             });
+                            
                         } else {
                             this.messages = [];
                         }

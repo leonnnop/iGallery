@@ -57,8 +57,8 @@
     <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
       <el-row>
         <el-col :span="3" :offset="0">
-          <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()" alt="headImg"
-            style="width:80px;height:80px;border-radius:80px;">
+          <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()"
+            alt="headImg" style="width:80px;height:80px;border-radius:80px;">
         </el-col>
         <el-col :span="18" :offset="0">
           <div class="sendsContent">
@@ -296,6 +296,7 @@
     methods: {
       bellClickHandler() {
         this.$router.push('/main/message/self');
+        this.topBarActiveIndex = '0'
         this.bellDot = false;
         // this.$router.push('/main/leaderboard');
       },
@@ -601,6 +602,7 @@
       searchHandler: function () {
         this.$router.push('/main/searchResult/' + this.searchInput);
         this.searchInput = '';
+        this.topBarActiveIndex = '0'
       },
       backgroundHandler() {
         console.log('backgroundHandler');
@@ -621,13 +623,15 @@
         // 当数据从服务器服务中心发送后，继续向下运行过程
         ws.onmessage = function (evt) {
           console.log('..我收到了')
-          that.$notify({
-            title: '您有新的消息',
-            message: '' + evt.data
-          });
+
           that.bellDot = true;
           if ((that.$route.name == "message") && ((evt.data).indexOf("私信") != -1)) {
             that.myfresh();
+          } else {
+            that.$notify({
+              title: '您有新的消息',
+              message: '' + evt.data
+            });
           }
         };
 
