@@ -13,6 +13,8 @@ using System.Web;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using ProductsApp.Models;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace ProductsApp.Controllers
 {
@@ -72,11 +74,43 @@ namespace ProductsApp.Controllers
             DBAccess dBAccess = new DBAccess();
             OracleDataReader rd=dBAccess.GetDataReader("select  url  from PICTURE where moment_id = '" + mid + "'");
             var path = "";
-            if (rd.Read())
+            while (rd.Read())
             {
-                path = rd[0].ToString();
+                if (path == "")
+                {
+                    path = rd[0].ToString();
+                  
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Console.Write(path);
+            //分割后缀
+            string fileExt = Path.GetExtension(path);
+
+            //判断后缀
+            ImageFormat format = null;
+            switch (fileExt.ToLower())
+            {
+                case ".png":
+                    format = ImageFormat.Png;
+                    break;
+                case ".bmp":
+                    format = ImageFormat.Bmp;
+                    break;
+                case ".jpeg":
+                    format = ImageFormat.Jpeg;
+                    break;
+                case ".jpg":
+                    format = ImageFormat.Jpeg;
+                    break;
             }
             System.Drawing.Image image = System.Drawing.Image.FromFile(path);
+            image.Save(new MemoryStream(), format);
+            image.Dispose();
+
             Dictionary<string, int> dic = new Dictionary<string, int>();
             dic.Add("width", image.Width);
             dic.Add("height", image.Height);
