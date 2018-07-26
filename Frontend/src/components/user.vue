@@ -12,7 +12,7 @@
             <el-col>
               <div class="user-img border">
                 <img class="user-img img-border hover-cursor" :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
-              '&type=2'" alt="头像" @click="jumpToUser($store.state.currentUserId_ID)" />
+              '&type=2'+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser($store.state.currentUserId_ID)" />
               </div>
             </el-col>
             <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
@@ -41,7 +41,7 @@
             <el-row v-if="followings.length>0" :key="index" v-for="(following,index) in followings" type="flex" align="middle" style="margin-bottom:12px">
               <el-col>
                 <div class="user-img border">
-                  <img class="user-img img-border hover-cursor" :src="following.Photo" alt="头像" @click="jumpToUser(following.ID)" />
+                  <img class="user-img img-border hover-cursor" :src="following.Photo+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser(following.ID)" />
                 </div>
               </el-col>
               <!-- <i class="el-icon-star-off" style="float: right; padding: 3px 0;"></i> -->
@@ -78,7 +78,7 @@
               <el-row class="usr" type="flex" align="middle" style="padding:7px 15px;margin-top:5px">
                 <el-col :span="2">
                   <div class="small-user-img small-border">
-                    <img class="small-user-img small-img-border hover-cursor" :src="moment.Photo" alt="头像" @click="jumpToUser(moment.moment.SenderID)"
+                    <img class="small-user-img small-img-border hover-cursor" :src="moment.Photo+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser(moment.moment.SenderID)"
                     />
                   </div>
                 </el-col>
@@ -1125,7 +1125,7 @@
         // this.noBg = bgState;
         setTimeout(function () {
           self.loadingPage = false;
-        }, 2500)
+        }, 1000)
       })
     },
     beforeRouteEnter(from, to, next) {
@@ -1138,7 +1138,7 @@
           // this.noBg = bgState;
           setTimeout(()=> {
             self.loadingPage = false;
-          }, 2500)
+          }, 1000)
 
           // Code that will run only after the
           // entire view has been rendered

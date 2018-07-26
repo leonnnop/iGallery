@@ -37,7 +37,7 @@
                         <el-row v-if="messageUserList.length" v-for="(user,index) in messageUserList" :key="index" class="user-li hover-cursor" :class="{selected:user.selected}"
                             @click.native="selectUser(user)">
                             <el-col :span="6">
-                                <img :src="user.Photo" alt="头像" class="header-img">
+                                <img :src="user.Photo+'&Rand=' + Math.random()" alt="头像" class="header-img">
                             </el-col>
                             <el-col :span="15" style="margin-left:10px">
                                 <el-row style="color:#555">{{user.Username}}</el-row>
@@ -56,7 +56,7 @@
                                 <div class="dialog-inner" id="dialog-inner">
                                     <div v-if="messages.length" class="content" v-for="(message,index) in messages" :key="index">
                                         <div v-if="message.identity==0">
-                                            <img :src="photo" alt="" @click="jumpToUser(this.$store.state.currentUserId_ID)" class="float-right header-img">
+                                            <img :src="photo+'&Rand=' + Math.random()" alt="" @click="jumpToUser($store.state.currentUserId_ID)" class="float-right header-img">
                                             <div class="message-limit float-right">
 
                                                 <div class="message-box-right">
@@ -66,7 +66,7 @@
                                             </div>
                                         </div>
                                         <div v-else>
-                                            <img :src="currentTalker.Photo" alt="" @click="jumpToUser(currentTalker.ID)" class="float-left header-img">
+                                            <img :src="currentTalker.Photo+'&Rand=' + Math.random()" alt="" @click="jumpToUser(currentTalker.ID)" class="float-left header-img">
                                             <div class="message-limit float-left">
                                                 <i class="bubble-left"></i>
                                                 <div class="message-box-left">
@@ -92,8 +92,8 @@
                     <div style="height:30px;border-bottom:1px solid #6191d5;color:#555">关注</div>
                     <el-row v-if="messageFollow.length" v-for="(user,index) in messageFollow" :key="index" class="like-list" @click.native="jumpToUser(user.ID)">
                         <el-col :span="2" :offset="1">
-                            <div style="width:45px;height:45px;">
-                                <img :src="user.Photo" alt="" style="width:45px;height:45;border-radius:45px">
+                            <div style="width:45px;height:45px;border-radius:45px;background-position:center;background-size:cover;" :style="{backgroundImage:'url('+(user.Photo)+'&Rand=' + Math.random() + ')'}">
+                                <!-- <img :src="user.Photo" alt="" style="width:45px;height:45;border-radius:45px"> -->
                             </div>
                         </el-col>
                         <el-col :span="15">
@@ -116,9 +116,12 @@
                                 <img :src="msgTypeSrc" alt="messageType" class="middle">
                             </div>
                         </el-col>
-                        <el-col :span="3" style="font-weight:600;line-height:40px;">{{msg.user.Username}}</el-col>
+                        <!-- <el-col :span="3" style="font-weight:600;line-height:40px;">{{msg.user.Username}}</el-col>
                         <el-col :span="13" style="color:#6191d5;line-height:40px;" class="message-pre">{{msg.moment.Content}}</el-col>
-                        <el-col :span="6" style="font-size:12px;color:#999;line-height:40px;text-align:end;">{{msg.moment.Time}}</el-col>
+                        <el-col :span="6" style="font-size:12px;color:#999;line-height:40px;text-align:end;">{{msg.moment.Time}}</el-col> -->
+                        <el-col :span="3" style="font-weight:600;line-height:40px;" class="message-pre">{{msg.user.Username}}</el-col>
+                        <el-col :span="13" :offset="1" style="color:#6191d5;line-height:40px;" class="message-pre">{{msg.moment.Content}}</el-col>
+                        <el-col :span="5" style="font-size:12px;color:#999;line-height:40px;text-align:end;">{{msg.moment.Time}}</el-col>
                     </el-row>
                     <div v-if="!messageMoment.length" class="alert">还没有人{{msgType}}你的动态呢，加油吧~</div>
                 </el-row>
@@ -301,6 +304,7 @@
 
 <script>
     // var msg_end=document.getElementById('msg_end');
+    import Vue from 'vue'
 
     window.onload = function () {
         var dialog = document.getElementById('dialog');
@@ -333,73 +337,81 @@
                 photo: require('../image/hex.jpeg'),
                 bubbleRight: require('../image/bubble-right.png'),
                 //私信列表
-                messageUserList: [{
-                    ID: '1',
-                    Username: 'user1',
-                    Photo: require('../image/a.jpg'),
-                    message: '肝不动了嘤嘤嘤我要回家',
-                    selected: false
-                }, {
-                    ID: '2',
-                    Username: 'user2',
-                    Photo: require('../image/a.jpg'),
-                    message: '辣鸡代码了解一下',
-                    selected: false
-                }],
+                messageUserList: [
+                    //     {
+                    //     ID: '1',
+                    //     Username: 'user1',
+                    //     Photo: require('../image/a.jpg'),
+                    //     message: '肝不动了嘤嘤嘤我要回家',
+                    //     selected: false
+                    // }, {
+                    //     ID: '2',
+                    //     Username: 'user2',
+                    //     Photo: require('../image/a.jpg'),
+                    //     message: '辣鸡代码了解一下',
+                    //     selected: false
+                    // }
+                ],
                 // 两人的私信
-                messages: [{
-                    identity: 0,
-                    content: '肝度太强，最近感觉头上有点冷，霸王生姜洗发水了解一下'
-                }, {
-                    identity: 1,
-                    content: '我是不是要变强了'
-                }, {
-                    identity: 0,
-                    content: '哈哈哈你变秃了，也变强了'
-                }, {
-                    identity: 1,
-                    content: '恭喜数据库课设喜提我狗命'
-                }, {
-                    identity: 0,
-                    content: '怕了怕了'
-                }, {
-                    identity: 1,
-                    content: '肝不动了嘤嘤嘤我要回家'
-                }],
+                messages: [
+                    //     {
+                    //     identity: 0,
+                    //     content: '肝度太强，最近感觉头上有点冷，霸王生姜洗发水了解一下'
+                    // }, {
+                    //     identity: 1,
+                    //     content: '我是不是要变强了'
+                    // }, {
+                    //     identity: 0,
+                    //     content: '哈哈哈你变秃了，也变强了'
+                    // }, {
+                    //     identity: 1,
+                    //     content: '恭喜数据库课设喜提我狗命'
+                    // }, {
+                    //     identity: 0,
+                    //     content: '怕了怕了'
+                    // }, {
+                    //     identity: 1,
+                    //     content: '肝不动了嘤嘤嘤我要回家'
+                    // }
+                ],
                 //其他通知列表
-                messageMoment: [{
-                    moment: {
-                        ID: '1',
-                        Content: '打扰了',
-                        Time: '07/25/2018 12:53:13'
-                    },
-                    user: {
-                        ID: '1',
-                        Username: 'loststars'
-                    }
-                }, {
-                    moment: {
-                        ID: '2',
-                        Content: '不打扰',
-                        Time: '07/25/2018 12:53:13'
-                    },
-                    user: {
-                        ID: '2',
-                        Username: 'loststars'
-                    }
-                }],
+                messageMoment: [
+                    //     {
+                    //     moment: {
+                    //         ID: '1',
+                    //         Content: '打扰了',
+                    //         Time: '07/25/2018 12:53:13'
+                    //     },
+                    //     user: {
+                    //         ID: '1',
+                    //         Username: 'loststars'
+                    //     }
+                    // }, {
+                    //     moment: {
+                    //         ID: '2',
+                    //         Content: '不打扰',
+                    //         Time: '07/25/2018 12:53:13'
+                    //     },
+                    //     user: {
+                    //         ID: '2',
+                    //         Username: 'loststars'
+                    //     }
+                    // }
+                ],
                 //关注通知列表
-                messageFollow: [{
-                    ID: '1',
-                    Username: '友逹',
-                    Photo: require('../image/hex.jpeg'),
-                    Bio: '恭喜生活喜提我狗命，恭喜小学期喜提我狗命，恭喜数据库课设喜提我狗命，恭喜后端喜提我狗命'
-                }, {
-                    ID: '2',
-                    Username: 'lex',
-                    Photo: require('../image/hex.jpeg'),
-                    Bio: ''
-                }]
+                messageFollow: [
+                    //     {
+                    //     ID: '1',
+                    //     Username: '友逹',
+                    //     Photo: require('../image/hex.jpeg'),
+                    //     Bio: '恭喜生活喜提我狗命，恭喜小学期喜提我狗命，恭喜数据库课设喜提我狗命，恭喜后端喜提我狗命'
+                    // }, {
+                    //     ID: '2',
+                    //     Username: 'lex',
+                    //     Photo: require('../image/hex.jpeg'),
+                    //     Bio: ''
+                    // }
+                ]
             }
         },
         created() {
@@ -426,8 +438,8 @@
                 if (key == 'message') {
                     this.isMessage = true;
                     this.messageIcon = require('../image/active-message-icon.png');
-                    this.questUsers();
-                    this.questMessages();
+                    // this.questUsers();
+                    // this.questMessages();
                 } else if (key == 'follow') {
                     this.isFollow = true;
                     this.followIcon = require('../image/active-follow-icon.png');
@@ -437,23 +449,24 @@
                     this.msgType = '评论';
                     this.msgTypeSrc = require('../image/active-comment-icon.png');
                     this.commentIcon = require('../image/active-comment-icon.png');
-                    this.questOthers('Users/Message/CommentState');
+                    this.questOthers('Message/CommentState');
                 } else if (key == 'like') {
                     this.isLike = true;
                     this.msgType = '点赞';
                     this.msgTypeSrc = require('../image/active-like-icon.png');
                     this.likeIcon = require('../image/active-like-icon.png');
-                    this.questOthers('Users/Message/LikeState');
+                    this.questOthers('Message/LikeState');
                 } else {
                     this.isForward = true;
                     this.msgType = '转发';
                     this.msgTypeSrc = require('../image/active-forward-icon.png');
                     this.forwardIcon = require('../image/active-forward-icon.png');
-                    this.questOthers('Users/Message/ForwardState');
+                    this.questOthers('Message/ForwardState');
                 }
+                // console.log(this.currentTalker.ID)
             },
             sendMessage() {
-                this.axios.post('http://10.0.1.8:54468/api/Users/Message/SendMessage', {
+                this.axios.post('http://10.0.1.8:54468/api/Message/SendMessage', {
                         Sender_ID: this.$store.state.currentUserId_ID,
                         Receiver_ID: this.currentTalker.ID,
                         Send_Time: this.getNowFormatDate(),
@@ -488,7 +501,7 @@
 
                             var msg_end = document.getElementById('msg_end');
                             msg_end.scrollIntoView();
-                            this.messageWebsocketHandler(this.currentTalker.ID, 4, this.messageInput);
+                            this.messageWebsocketHandler(this.currentTalker.ID, 4, " " + this.messageInput);
                             this.messageInput = '';
                         } else {
                             this.$message.error('发送失败，请重试');
@@ -549,56 +562,9 @@
                 return currentdate;
             },
             messageInit: function () {
-                this.questUsers();
-                var currentTalkerId = this.$route.params.id;
-                if (currentTalkerId != 'self') { //从私信按钮进来
-                    let index = 0;
-                    this.messageUserList.forEach(element => {
-                        //在历史私信列表中，直接选中
-                        if (element.ID == currentTalkerId) {
-                            element.selected = true;
-                            this.currentTalker = element;
-                        }
-                        index++;
-                    });
-                    //不在历史私信用户列表中
-                    if (index == this.messageUserList.length) {
-                        //插入新的私信用户
-                        this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID', {
-                                params: {
-                                    id: currentTalkerId
-                                }
-                            })
-                            .then((response) => {
-                                let user = response.data;
-                                Vue.set(user, 'selected', true);
-                                var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + user.ID +
-                                    '&type=2';
-                                Vue.set(user, 'Photo', photo);
-                                Vue.set(user, 'message', '');
-                                this.messageUserList.unshift(user);
-                                this.currentTalker = user;
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            })
-                    }
-                } else {
-                    //默认选择第一个
-                    console.log(this.currentTalker.ID);
-                    if (this.currentTalker.ID == '') {
-                        this.messageUserList[0].selected = true;
-                        this.currentTalker = this.messageUserList[0];
-                    }
-                }
-            },
-            messageWebsocketHandler(path, state, content = "") {
-                // 0 关注 1 点赞 2 评论 3 转发 4 私信
-                window.ws.send('/' + path + ' ' + state + content);
-            },
-            questUsers: function () {
+                // this.questUsers();
                 //请求私信用户列表
-                this.axios.get('http://10.0.1.8:54468/api/Users/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://10.0.1.8:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
@@ -607,15 +573,146 @@
                                 '&type=2';
                             Vue.set(element, 'Photo', photo);
                             //最后一条私信内容
-                            this.axios.get('http://10.0.1.8:54468/api/Users/Message/GetMessage', {
+                            this.axios.get('http://10.0.1.8:54468/api/Message/GetMessage', {
                                     params: {
                                         Sender_ID: this.$store.state.currentUserId_ID,
                                         Receiver_ID: element.ID
                                     }
                                 })
                                 .then((res) => {
-                                    if (res.data.m_Item2.length) {
-                                        let message = res.data.m_Item1[res.data.m_Item2.length - 1];
+                                    console.log(res.data.Item2.length)
+                                    if (res.data.Item2.length) {
+                                        let message = res.data.Item2[res.data.Item2.length - 1];
+                                        console.log(message)
+                                        Vue.set(element, 'message', message);
+                                    } else {
+                                        Vue.set(element, 'message', '');
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                })
+                        });
+
+                        var currentTalkerId = this.$route.params.id;
+                        if (currentTalkerId != 'self') { //从私信按钮进来
+                            let index = 0;
+                            this.messageUserList.forEach(element => {
+                                //在历史私信列表中，直接选中
+                                if (element.ID == currentTalkerId) {
+                                    element.selected = true;
+                                    this.currentTalker = element;
+                                    index--;
+                                    // break;
+                                }
+                                index++;
+                            });
+                            //不在历史私信用户列表中
+                            if (index == this.messageUserList.length) {
+                                //插入新的私信用户
+                                this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID', {
+                                        params: {
+                                            id: currentTalkerId
+                                        }
+                                    })
+                                    .then((response) => {
+                                        let user = response.data;
+                                        Vue.set(user, 'selected', true);
+                                        var photo =
+                                            'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                            user.ID +
+                                            '&type=2';
+                                        Vue.set(user, 'Photo', photo);
+                                        Vue.set(user, 'message', '');
+                                        this.messageUserList.unshift(user);
+                                        this.currentTalker = user;
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    })
+                            }
+                        } else {
+                            //默认选择第一个
+                            console.log(this.currentTalker.ID);
+                            if (this.currentTalker.ID == '') {
+                                this.messageUserList[0].selected = true;
+                                this.currentTalker = this.messageUserList[0];
+                            }
+                        }
+                        this.questMessages();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                // var currentTalkerId = this.$route.params.id;
+                // if (currentTalkerId != 'self') { //从私信按钮进来
+                //     let index = 0;
+                //     this.messageUserList.forEach(element => {
+                //         //在历史私信列表中，直接选中
+                //         if (element.ID == currentTalkerId) {
+                //             element.selected = true;
+                //             this.currentTalker = element;
+                //         }
+                //         index++;
+                //     });
+                //     //不在历史私信用户列表中
+                //     if (index == this.messageUserList.length) {
+                //         //插入新的私信用户
+                //         this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID', {
+                //                 params: {
+                //                     id: currentTalkerId
+                //                 }
+                //             })
+                //             .then((response) => {
+                //                 let user = response.data;
+                //                 Vue.set(user, 'selected', true);
+                //                 var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + user.ID +
+                //                     '&type=2';
+                //                 Vue.set(user, 'Photo', photo);
+                //                 Vue.set(user, 'message', '');
+                //                 this.messageUserList.unshift(user);
+                //                 this.currentTalker = user;
+                //             })
+                //             .catch((error) => {
+                //                 console.log(error);
+                //             })
+                //     }
+                // } else {
+                //     //默认选择第一个
+                //     console.log(this.currentTalker.ID);
+                //     if (this.currentTalker.ID == '') {
+                //         this.messageUserList[0].selected = true;
+                //         this.currentTalker = this.messageUserList[0];
+                //     }
+                // }
+                // this.questMessages();
+            },
+            messageWebsocketHandler(path, state, content = "") {
+                // 0 关注 1 点赞 2 评论 3 转发 4 私信
+                window.ws.send('/' + path + ' ' + state + content);
+            },
+            questUsers: function () {
+                //请求私信用户列表
+                this.axios.get('http://10.0.1.8:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                    .then((response) => {
+                        this.messageUserList = response.data;
+                        this.messageUserList.forEach(element => {
+                            Vue.set(element, 'selected', false);
+                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                                '&type=2';
+                            Vue.set(element, 'Photo', photo);
+                            //最后一条私信内容
+                            this.axios.get('http://10.0.1.8:54468/api/Message/GetMessage', {
+                                    params: {
+                                        Sender_ID: this.$store.state.currentUserId_ID,
+                                        Receiver_ID: element.ID
+                                    }
+                                })
+                                .then((res) => {
+                                    console.log(res.data.Item2.length)
+                                    if (res.data.Item2.length) {
+                                        let message = res.data.Item2[res.data.Item2.length - 1];
+                                        console.log(message)
                                         Vue.set(element, 'message', message);
                                     } else {
                                         Vue.set(element, 'message', '');
@@ -631,19 +728,20 @@
                     });
             },
             questMessages: function () {
-                this.axios.get('http://10.0.1.8:54468/api/Users/Message/GetMessage', {
+                this.axios.get('http://10.0.1.8:54468/api/Message/GetMessage', {
                         params: {
                             Sender_ID: this.$store.state.currentUserId_ID,
                             Receiver_ID: this.currentTalker.ID
                         }
                     })
                     .then((response) => {
-                        if (response.data.m_Item1.length) {
+                        if (response.data.Item1.length) {
                             let index = 0;
-                            response.data.m_Item1.forEach(element => {
+                            this.messages = [];
+                            response.data.Item1.forEach(element => {
                                 this.messages.push({
-                                    identity: response.data.m_Item2[index],
-                                    content: response.data.m_Item1[index]
+                                    identity: response.data.Item1[index],
+                                    content: response.data.Item2[index]
                                 });
                             });
                         } else {
@@ -664,6 +762,7 @@
                             this.messageFollow.forEach(element => {
                                 var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
                                     '&type=2';
+                                console.log(photo)
                                 Vue.set(element, 'Photo', photo);
                             })
                         } else {
@@ -675,12 +774,13 @@
                     });
             },
             questOthers: function (api) {
-                this.axios.put('http://10.0.1.8:54468/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://10.0.1.8:54468/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
-                        if (response.data.m_Item1.length) {
+                        if (response.data.m_Item1 != null) {
                             let moments = response.data.m_Item1;
                             let users = response.data.m_Item2;
                             let index = 0;
+                            this.messageMoment = [];
                             response.data.m_Item1.forEach(element => {
                                 this.messageMoment.push({
                                     moment: {
@@ -692,6 +792,7 @@
                                         Username: users[index].Username
                                     }
                                 });
+                                index++
                             });
                         } else {
                             this.messageMoment = [];

@@ -57,7 +57,7 @@
     <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
       <el-row>
         <el-col :span="3" :offset="0">
-          <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
+          <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()" alt="headImg"
             style="width:80px;height:80px;border-radius:80px;">
         </el-col>
         <el-col :span="18" :offset="0">
@@ -296,6 +296,7 @@
     methods: {
       bellClickHandler() {
         this.$router.push('/main/message/self');
+        this.bellDot = false;
         // this.$router.push('/main/leaderboard');
       },
       handleTopBarSelect(key, keyPath) {
@@ -354,6 +355,14 @@
               // this.myre
             } else {
               this.$message.error('本次发布失败，服务器内部错误，请重试。');
+              this.uploadImgs2 = [];
+              this.tags = [];
+              this.sendText = '';
+              this.sendMomentVisible = false;
+              this.showUploadArea = true;
+              this.showNextBtn = false;
+              this.showTextArea = false;
+              this.showUpload = false;
             }
           });
 
@@ -400,10 +409,10 @@
         this.showTextArea = false;
         this.showUpload = false;
 
-        this.$message({
-          message: '发布成功！',
-          type: 'success'
-        })
+        // this.$message({
+        //   message: '发布成功！',
+        //   type: 'success'
+        // })
 
         // setTimeout(this.refresh(), 4000)
 
@@ -611,18 +620,15 @@
 
         // 当数据从服务器服务中心发送后，继续向下运行过程
         ws.onmessage = function (evt) {
-          // console.log('..我收到了')
+          console.log('..我收到了')
           that.$notify({
             title: '您有新的消息',
-            message: h('i', {
-              style: 'color: teal'
-            }, '' + evt.data)
+            message: '' + evt.data
           });
           that.bellDot = true;
-          if ((that.$route.name == "message")&&((evt.data).indexOf("私信")!=-1)) {
+          if ((that.$route.name == "message") && ((evt.data).indexOf("私信") != -1)) {
             that.myfresh();
           }
-
         };
 
         // 当链接对象找到服务端成功对接后，提示正常打开

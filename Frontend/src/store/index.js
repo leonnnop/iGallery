@@ -9,7 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         currentUserId: '277284652@qq.com',
-        currentUserId_ID: '16',
+        currentUserId_ID: '1',
         currentUsername: 'leonnnop',
         currentUserPassword:'liangchen',
         currentUserBio: '个人简介了解一下',
