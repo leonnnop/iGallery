@@ -907,7 +907,7 @@
               // }
               if (!this.FollowState) {
                 this.fansNum++;
-                this.messageClickHandler(this.$route.params.id, 0)
+                this.messageWebsocketHandler(this.$route.params.id, 0)
               } else {
                 this.fansNum--;
               }
