@@ -338,18 +338,18 @@ namespace ProductsApp.Controllers
                     cmd1.CommandText = "select USER_ID from FAVORITE where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (!rd1.HasRows)
+                    /*if (!rd1.HasRows)
                     {
                         users = null;
                         return result;
-                    }
+                    }*/
                     while (rd1.Read())//返回用户详情
                     {
                         Users temp = new Users();
                         temp.ID = rd1["USER_ID"].ToString();
                         OracleCommand cmd2 = new OracleCommand();
-                        cmd2.Connection = conn;
                         cmd2.CommandText = "select * from Users where ID ='" + temp.ID + "'";
+                        cmd2.Connection = conn;
                         OracleDataReader rd2 = cmd2.ExecuteReader();
                         rd2.Read();
                         temp.Email = rd2["EMAIL"].ToString();
@@ -422,14 +422,16 @@ namespace ProductsApp.Controllers
                         cmd2.CommandText = "select * from Users where ID ='" + temp.ID + "'";
                         cmd2.Connection = conn;
                         OracleDataReader rd2 = cmd2.ExecuteReader();
-                        rd2.Read();
-                        temp.Email = rd2["EMAIL"].ToString();
-                        temp.Password = rd2["PASSWORD"].ToString();
-                        temp.Username = rd2["USERNAME"].ToString();
-                        temp.Bio = rd2["BIO"].ToString();
-                        temp.Photo = rd2["PHOTO"].ToString();
-                        users.Add(temp);
-                        rd2.Close();
+                        while (rd2.Read())
+                        {
+                            temp.Email = rd2["EMAIL"].ToString();
+                            temp.Password = rd2["PASSWORD"].ToString();
+                            temp.Username = rd2["USERNAME"].ToString();
+                            temp.Bio = rd2["BIO"].ToString();
+                            temp.Photo = rd2["PHOTO"].ToString();
+                            users.Add(temp);
+                        }
+                            rd2.Close();
                     }
                     rd1.Close();
                 }
