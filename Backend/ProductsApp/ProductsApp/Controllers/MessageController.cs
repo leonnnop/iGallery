@@ -146,7 +146,7 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             cmd.CommandText = "select distinct sender_id " +
                               "from message " +
-                              "where receive_id =  '" + Sender_ID + "'";
+                              "where receiver_id =  '" + Sender_ID + "'";
             rd = cmd.ExecuteReader();
             while(rd.Read())
             {
