@@ -74,7 +74,7 @@ namespace ProductsApp.Controllers
             var path = "";
             if (rd.Read())
             {
-                path = Server.MapPath(rd[0].ToString());
+                path = rd[0].ToString();
             }
             System.Drawing.Image image = System.Drawing.Image.FromFile(path);
             Dictionary<string, int> dic = new Dictionary<string, int>();
