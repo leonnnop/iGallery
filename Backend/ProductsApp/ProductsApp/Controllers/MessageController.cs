@@ -252,16 +252,13 @@ namespace ProductsApp.Controllers
                     int forward_num = Convert.ToInt32(rd["FORWARD_NUM"]);
                     int collect_num = Convert.ToInt32(rd["COLLECT_NUM"]);
                     int comment_num = Convert.ToInt32(rd["COMMENT_NUM"]);
-                    moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                     OracleCommand cmd1 = new OracleCommand();
                     cmd1.CommandText = "select USER_ID,COMMENT_ID from Publish_Comment where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (!rd1.HasRows)
+                    if (rd1.HasRows)
                     {
-                        users = null;
-                        comments = null;
-                        return result;
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                     }
                     while (rd1.Read())
                     {
@@ -402,15 +399,13 @@ namespace ProductsApp.Controllers
                     int forward_num = Convert.ToInt32(rd["FORWARD_NUM"]);
                     int collect_num = Convert.ToInt32(rd["COLLECT_NUM"]);
                     int comment_num = Convert.ToInt32(rd["COMMENT_NUM"]);
-                    moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                     OracleCommand cmd1 = new OracleCommand();
                     cmd1.CommandText = "select USER_ID from Forward where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (!rd1.HasRows)
+                    if (rd1.HasRows)
                     {
-                        users = null;
-                        return result;
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                     }
                     while (rd1.Read())//返回用户详情
                     {
@@ -420,15 +415,13 @@ namespace ProductsApp.Controllers
                         cmd2.CommandText = "select * from Users where ID ='" + temp.ID + "'";
                         cmd2.Connection = conn;
                         OracleDataReader rd2 = cmd2.ExecuteReader();
-                        while (rd2.Read())
-                        {
-                            temp.Email = rd2["EMAIL"].ToString();
-                            temp.Password = rd2["PASSWORD"].ToString();
-                            temp.Username = rd2["USERNAME"].ToString();
-                            temp.Bio = rd2["BIO"].ToString();
-                            temp.Photo = rd2["PHOTO"].ToString();
-                            users.Add(temp);
-                        }
+                        rd2.Read();
+                        temp.Email = rd2["EMAIL"].ToString();
+                        temp.Password = rd2["PASSWORD"].ToString();
+                        temp.Username = rd2["USERNAME"].ToString();
+                        temp.Bio = rd2["BIO"].ToString();
+                        temp.Photo = rd2["PHOTO"].ToString();
+                        users.Add(temp);
                             rd2.Close();
                     }
                     rd1.Close();
