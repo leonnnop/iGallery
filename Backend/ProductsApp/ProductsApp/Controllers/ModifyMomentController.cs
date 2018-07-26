@@ -23,152 +23,133 @@ namespace ProductsApp.Controllers
         [HttpPut]
         public IHttpActionResult DeleteMoment(string email, string moment_id)
         {
-
-            //删除所有评论
-            CmtApi.DelCmt(moment_id);
-
-
+            //设置初始状态码
             int status = 0;
 
-            
             DBAccess dBAccess = new DBAccess();
-
             GeneralAPI api = new GeneralAPI();
 
-            //获取用户ID
+            //获取当前用户ID
             string user_id = api.EmailToUserID(email);
             if (user_id == null)
             {
                 status = 1;//不存在该用户
             }
 
-            //转发了别人的：删自己，更新别人的Tran_Num  【删forward，删moment，更新moment转发字段】
-            //被别人转发：删一群别人，删自己            【删forward，删moment，删moment】
-
-
-            //查Moment 找到 quote_id where ID=moment_id   转发了别人
-            //查Forward 找到 User_id where moment_id=moment_id 被别人转发了 [//查Moment 找到 sender_id  where Quote_id=moment_id;]
-
-
-
-            //删Forward where user_id=user_id && moment_id=quote_id;
-            //删Forward where user_id=sender_id && moment_id=moment_id;
-
-            //删Moment where ID=moment_id
-            //删Moment where ID=moment_id
-
-            //更新 Moment 的 tran_Num-- where id=quote_id
-            //
-            
-            bool tran = true;
-            bool tree = true;
-            
-
-            OracleDataReader rd1 = dBAccess.GetDataReader("select QUOTE_MID from MOMENT where ID='" + moment_id+"'");
-            string oid = "";
-            while (rd1.Read())
+            //获取本条动态信息
+            OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + moment_id + "'and SENDER_ID = '" + user_id + "'");
+            if (rd.Read())
             {
-                oid = rd1[0].ToString();
+
+                //获取该动态的quote_mid
+                string quote_mid = rd["QUOTE_MID"].ToString();
+
+                //
+                //判断本条动态是否来自转发
+                //
+                if (quote_mid != "")
+                {
+                    rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + quote_mid + "'");
+                    if (rd.Read())
+                    {
+                        //设置新的转发数
+                        int new_forward_num = int.Parse(rd["FORWARD_NUM"].ToString()) - 1;
+
+                        //删除本条动态的所有评论
+                        CmtApi.DelCmt(moment_id);
+
+                        //删除本条动态
+                        if (dBAccess.ExecuteSql("delete from MOMENT where sender_id = '" + user_id + "'and id = '" + moment_id + "'"))
+                        {
+                            status = 0;//成功删除
+                        }
+                        else
+                        {
+                            status = 3;//动态删除失败
+                        }
+
+                        if (dBAccess.ExecuteSql("delete from FORWARD where user_id = '" + user_id + "'and moment_id = '" + quote_mid + "'"))
+                        {
+                            if (dBAccess.ExecuteSql("update MOMENT set forward_num= ' " + new_forward_num + " 'where  ID='" + quote_mid + "' "))
+                            {
+                                status = 0;//成功删除该动态和转发表项，并且源动态转发数减一
+                            }
+                            else
+                            {
+                                status = 6;//成功删除该动态和转发表项，但源动态转发数没有更改
+                            }
+                        }
+                        else
+                        {
+                            status = 5;//转发表项删除失败
+                        }
+                    }
+                    else
+                    {
+                        status = 4;//该动态删除成功，找不到源动态
+                    }
+                }
+
+                //
+                //本条动态为源动态
+                //
+                else
+                {
+                    //获取转发了本条动态的动态id
+                    DataSet ds = dBAccess.GetDataSet("select ID from MOMENT where QUOTE_MID='" + moment_id + "'", "unknown");
+                    List<string> list = new List<string>();
+                    foreach (DataRow dr in ds.Tables[0].Rows)
+                    {
+                        list.Add(dr[0].ToString());
+                    }
+
+                    bool forward = true;
+
+                    //判断是否有人转发本动态
+                    if (list.Count.Equals(0))
+                    {
+                        forward = false;
+                    }
+
+                    if (forward) //有人转发本条动态，需要删除所有转发动态
+                    {
+                        foreach (DataRow dr in ds.Tables[0].Rows)
+                        {
+                            string mid = dr[0].ToString();
+                            CmtApi.DelCmt(mid); //删除对应动态的全部评论
+                            dBAccess.ExecuteSql("delete from MOMENT where id = '" + mid + "'"); //从Moment表删除全部转发自本动态的动态
+
+                            if (dBAccess.ExecuteSql("delete from FORWARD where moment_id = '" + moment_id + "'")) //从forward表删除全部转发表项
+                            {
+                                status = 0;
+                            }
+                            else
+                            {
+                                status = 7;
+                            }
+
+                            //删除本条动态的所有评论
+                            CmtApi.DelCmt(moment_id);
+
+                            //删除本条动态
+                            if (dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'"))
+                            {
+                                status = 0;//成功删除
+                            }
+                            else
+                            {
+                                status = 3;//动态删除失败
+                            }
+                        }
+                    }
+                }
+
+
             }
-            OracleDataReader rd2 = dBAccess.GetDataReader("select FORWARD_NUM from MOMENT where ID='" + oid + "'");
-            int fnum = 0;
-            while (rd2.Read())
+            else
             {
-                fnum = int.Parse(rd2[0].ToString());
+                status = 2;//该用户没有发表过该动态
             }
-
-            DataSet dataSet = dBAccess.GetDataSet("select USER_ID from FORWARD where MOMENT_ID='" + moment_id + "'","unknown");
-            List<string> uids = new List<string>();
-            foreach (DataRow dr in dataSet.Tables[0].Rows)
-            {
-                uids.Add(dr[0].ToString());
-            }
-            
-            if (oid.Trim().Equals(""))
-            {
-                tran = false;
-            }
-            if (uids.Count.Equals(0))
-            {
-                tree = false;
-            }
-
-            if (!tran && !tree)
-            {
-                dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'");
-            }
-            if (tran && !tree)
-            {
-                dBAccess.ExecuteSql("delete from FORWARD where moment_id = '" + oid + "'and user_id='"+user_id+"'");
-
-                dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'");
-
-                dBAccess.ExecuteSql("update MOMENT set FORWARD_NUM='"+fnum+"' where id = '" + oid + "'");
-
-            }
-            if (!tran && tree)
-            {
-                dBAccess.ExecuteSql("delete from FORWARD where moment_id = '" + moment_id + "'");
-
-                dBAccess.ExecuteSql("delete from MOMENT where quote_mid = '" + moment_id + "'");
-
-                dBAccess.ExecuteSql("delete from MOMENT where id = '" + moment_id + "'");
-            }
-
-            status = 0;
-
-            ////执行数据库操作
-            //OracleDataReader rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + moment_id + "'and SENDER_ID = '" + user_id + "'");
-            //if (rd.Read())
-            //{
-
-            //    //获取该动态的quote_mid
-            //    string quote_mid = rd["QUOTE_MID"].ToString();
-
-            //    if (dBAccess.ExecuteSql("delete from MOMENT where sender_id = '" + user_id + "'and id = '" + moment_id + "'"))
-            //    {
-            //        status = 0;//成功删除
-            //    }
-            //    else
-            //    {
-            //        status = 3;//动态删除失败
-            //    }
-            //    if (quote_mid != "")//该条动态来自转发，同时修改forward表
-            //    {
-            //        rd = dBAccess.GetDataReader("select * from MOMENT where ID='" + quote_mid + "'");
-            //        if (rd.Read())
-            //        {
-            //            //设置新的转发数
-            //            int new_forward_num = int.Parse(rd["FORWARD_NUM"].ToString()) - 1;
-
-            //            if (dBAccess.ExecuteSql("delete from FORWARD where user_id = '" + user_id + "'and moment_id = '" + quote_mid + "'"))
-            //            {
-            //                if (dBAccess.ExecuteSql("update MOMENT set forward_num= ' " + new_forward_num + " 'where  ID='" + quote_mid + "' "))
-            //                {
-            //                    status = 0;//成功删除该动态和转发表项，并且源动态转发数减一
-            //                }
-            //                else
-            //                {
-            //                    status = 6;//成功删除该动态和转发表项，但源动态转发数没有更改
-            //                }
-            //            }
-            //            else
-            //            {
-            //                status = 5;//转发表项删除失败
-            //            }
-
-            //        }
-            //        else
-            //        {
-            //            status = 4;//该动态删除成功，找不到源动态
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    status = 2;//该用户没有发表过该动态
-            //}
-
             return Ok(status);
         }
 
