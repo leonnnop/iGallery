@@ -266,12 +266,9 @@ namespace ProductsApp.Controllers
                     cmd1.CommandText = "select USER_ID,COMMENT_ID from Publish_Comment where MOMENT_ID ='" + id + "'";
                     cmd1.Connection = conn;
                     OracleDataReader rd1 = cmd1.ExecuteReader();
-                    if (rd1.HasRows)
-                    {
-                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
-                    }
                     while (rd1.Read())
                     {
+                        moments.Add(new Moment(id, sender_id, content, like_num, forward_num, collect_num, comment_num, time));
                         Users temp = new Users();
                         Coment ctemp = new Coment();
                         temp.ID = rd1["USER_ID"].ToString();
