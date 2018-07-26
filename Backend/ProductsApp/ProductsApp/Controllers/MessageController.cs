@@ -31,7 +31,7 @@ namespace ProductsApp.Controllers
             cmd.Connection = conn;
             cmd.CommandText = "insert into MESSAGE(SENDER_ID,RECEIVER_ID,SEND_TIME,CONTENT) " +
                     "values('" + message.Sender_ID + "','" + message.Receiver_ID + "','" + message.Send_Time + "','" + message.Content + "')";
-            OracleDataReader rd = cmd.ExecuteReader();
+            //OracleDataReader rd = cmd.ExecuteReader();
             int result = cmd.ExecuteNonQuery();
             if (result != 1)//插入出现错误
             {
@@ -132,6 +132,7 @@ namespace ProductsApp.Controllers
                                                             "from message" +
                                                             "where sender_id= '" + receiver + "' and receiver_id='" + Sender_ID + "')";
                     OracleDataReader rd1 = cmd.ExecuteReader();
+                    rd1.Read();
                     if(Convert.ToDateTime(rd["SEND_TIME"])> Convert.ToDateTime(rd1["SEND_TIME"]))
                     {
                         Message s_t = new Message();
@@ -167,6 +168,7 @@ namespace ProductsApp.Controllers
                                       "from users " +
                                       "where id =  '" + user_id + "'";
                     OracleDataReader rd1 = cmd.ExecuteReader();
+                    rd1.Read();
                     Users user = new Users();
                     user.ID = rd1["ID"].ToString();
                     user.Email = rd1["EMAIL"].ToString();
@@ -241,6 +243,7 @@ namespace ProductsApp.Controllers
                         cmd2.CommandText = "select * from Users where ID ='" + temp.ID + "'";//返回用户详情
                         cmd2.Connection = conn;
                         OracleDataReader rd2 = cmd2.ExecuteReader();
+                        rd2.Read();
                         temp.Email = rd2["EMAIL"].ToString();
                         temp.Password = rd2["PASSWORD"].ToString();
                         temp.Username = rd2["USERNAME"].ToString();
@@ -249,6 +252,7 @@ namespace ProductsApp.Controllers
                         users.Add(temp);
                         cmd2.CommandText = "select * from Coment where ID ='" + ctemp.ID + "'order by SEND_TIME desc";//返回评论详情
                         rd2 = cmd2.ExecuteReader();
+                        rd2.Read();
                         ctemp.Content = rd2["CONTENT"].ToString();
                         ctemp.SendTime = rd2["SEND_TIME"].ToString();
                         ctemp.QuoteID = rd2["QUOTE_ID"].ToString();
@@ -314,8 +318,10 @@ namespace ProductsApp.Controllers
                         Users temp = new Users();
                         temp.ID = rd1["USER_ID"].ToString();
                         OracleCommand cmd2 = new OracleCommand();
+                        cmd2.Connection = conn;
                         cmd2.CommandText = "select * from Users where ID ='" + temp.ID + "'";
                         OracleDataReader rd2 = cmd2.ExecuteReader();
+                        rd2.Read();
                         temp.Email = rd2["EMAIL"].ToString();
                         temp.Password = rd2["PASSWORD"].ToString();
                         temp.Username = rd2["USERNAME"].ToString();
@@ -386,6 +392,7 @@ namespace ProductsApp.Controllers
                         cmd2.CommandText = "select * from Users where ID ='" + temp.ID + "'";
                         cmd2.Connection = conn;
                         OracleDataReader rd2 = cmd2.ExecuteReader();
+                        rd2.Read();
                         temp.Email = rd2["EMAIL"].ToString();
                         temp.Password = rd2["PASSWORD"].ToString();
                         temp.Username = rd2["USERNAME"].ToString();

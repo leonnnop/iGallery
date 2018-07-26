@@ -33,7 +33,7 @@ namespace ProductsApp.Controllers
             string UserID = api.EmailToUserID(Email);
             
             //获取朋友圈中所有Moment
-            CMD.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, TO_CHAR(time,'MM/DD/YYYY HH:MI:SS am'), quote_mid " +
+            CMD.CommandText = "select moment.id, sender_id, content,  like_num, forward_num, collect_num, comment_num, TO_CHAR(time,'YYYY-MM-DD HH24:MI:SS'), quote_mid " +
                 "from users,moment " +
                 "where moment.sender_id = users.id and " +
                 "(users.id = '" + UserID + "' or " +
