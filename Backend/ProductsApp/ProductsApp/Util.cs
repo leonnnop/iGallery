@@ -20,8 +20,7 @@ namespace Utility
         public static Tuple<ByteArrayContent,string> Get(string id,int type)
         {
             //打开数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             conn.Open();
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
@@ -95,8 +94,7 @@ namespace Utility
         {
             List<String> list = new List<String>();
             //开库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             conn.Open();
 
             //
@@ -124,8 +122,7 @@ namespace Utility
             bool flag = true;
            
             //打开数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true;";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             conn.Open();
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;

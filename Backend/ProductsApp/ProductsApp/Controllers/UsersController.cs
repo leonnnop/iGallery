@@ -29,8 +29,7 @@ namespace ProductsApp.Controllers
             int status = 0;
 
             //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -98,8 +97,7 @@ namespace ProductsApp.Controllers
             HttpResponseMessage response = Request.CreateResponse();
 
             //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -167,8 +165,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public HttpResponseMessage Login(string Email, string Password)//测试输入邮箱和密码是否正确
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -222,8 +219,7 @@ namespace ProductsApp.Controllers
             HttpResponseMessage response = Request.CreateResponse();
 
             //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -451,8 +447,7 @@ namespace ProductsApp.Controllers
         {
             string state = "0";//状态码0：成功，1：失败
             HttpResponseMessage response = Request.CreateResponse();
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -513,8 +508,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult FollowList(string userID)       //返回关注列表
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -567,8 +561,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult FanList(string user_id)       //返回粉丝列表
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();

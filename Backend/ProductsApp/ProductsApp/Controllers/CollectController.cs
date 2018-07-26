@@ -18,9 +18,7 @@ namespace ProductsApp.Controllers
         {
             //创建返回信息，先假设插入及更新成功
             int status = 0;
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -32,7 +30,7 @@ namespace ProductsApp.Controllers
             OracleCommand cmd = new OracleCommand();
             string currentTime = DateTime.Now.ToString("yyyyMMddhhmmss");
             cmd.CommandText = "insert into COLLECT(MOMENT_ID,FOUNDER_ID,NAME,TIME) " +
-                    "values('" + moment_id + "','" + founder_id + "','" + name + "',TO_TIMESTAMP ('" + currentTime + "','yyyy-mm-dd hh24:mi:ss.ff'))";
+                    "values('" + moment_id + "','" + founder_id + "','" + name + "',TO_DATE('" + currentTime + "','yyyy-mm-dd hh24:mi:ss'))";
             cmd.Connection = conn;
             int result_1 = cmd.ExecuteNonQuery();
             if (result_1 != 1)//插入出现错误
@@ -71,9 +69,7 @@ namespace ProductsApp.Controllers
         {
             //创建返回信息，先假设删除及更新成功
             int status = 0;
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();

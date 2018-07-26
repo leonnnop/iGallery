@@ -20,8 +20,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult Search_user(string user_id,string keyword)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -69,8 +68,7 @@ namespace ProductsApp.Controllers
         public Tuple<List<Follow_Tag>, List<Moment>> Search_all(string user_id,string keyword)
         {
             //连接数据库
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();

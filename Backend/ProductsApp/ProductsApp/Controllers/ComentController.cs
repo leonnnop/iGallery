@@ -20,8 +20,7 @@ namespace ProductsApp.Controllers
         {
 
             //打开数据库连接
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             conn.Open();
 
 
@@ -151,8 +150,7 @@ namespace ProductsApp.Controllers
 
 
             //打开数据库连接
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             conn.Open();
 
 
@@ -175,7 +173,7 @@ namespace ProductsApp.Controllers
             {
                 comment.Type = "1";
             }
-            cmd.CommandText = "insert into COMENT(ID,CONTENT,SEND_TIME,QUOTE_ID,TYPE) values('" + comment.Cid + "','" + comment.Content + "',TO_TIMESTAMP('"+comment.Send_time+"', 'yyyy-mm-dd hh24:mi:ss.ff'),'" + comment.Quote_id + "','"+ comment.Type + "')";
+            cmd.CommandText = "insert into COMENT(ID,CONTENT,SEND_TIME,QUOTE_ID,TYPE) values('" + comment.Cid + "','" + comment.Content + "',TO_DATE('"+comment.Send_time+"', 'yyyy-mm-dd hh24:mi:ss'),'" + comment.Quote_id + "','"+ comment.Type + "')";
             int executeResult = cmd.ExecuteNonQuery();
             if (executeResult != 1)
             {
@@ -214,8 +212,7 @@ namespace ProductsApp.Controllers
             HttpResponseMessage response = new HttpResponseMessage();
 
             //打开数据库连接
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             conn.Open();
 
             var coment = HttpContext.Current.Request.Params;

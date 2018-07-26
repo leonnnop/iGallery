@@ -18,9 +18,7 @@ namespace ProductsApp.Controllers
         {
             //创建返回信息，先假设插入成功
             int status = 0;
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -80,8 +78,7 @@ namespace ProductsApp.Controllers
 
             if(status != 1)
             {
-                string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-                OracleConnection conn = new OracleConnection(connStr);
+                OracleConnection conn = new OracleConnection(DBAccess.connStr);
                 try
                 {
                     conn.Open();
@@ -121,8 +118,7 @@ namespace ProductsApp.Controllers
 
             if(status != 1)
             {
-                string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-                OracleConnection conn = new OracleConnection(connStr);
+                OracleConnection conn = new OracleConnection(DBAccess.connStr);
                 try
                 {
                     conn.Open();
@@ -173,8 +169,7 @@ namespace ProductsApp.Controllers
         {
             int momentNum = 0;
 
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -203,8 +198,7 @@ namespace ProductsApp.Controllers
         //根据动态ID获取该动态第一张图片的ID
         public string GetFirstPicIDbyMomentID(string moment_id)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -235,8 +229,7 @@ namespace ProductsApp.Controllers
         //获取收藏夹中最新加入的一条动态里的第一张图片的ID作为收藏夹封面
         public string ReturnCollectionCoverPicID(string FounderID, string Name)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -270,8 +263,7 @@ namespace ProductsApp.Controllers
         [HttpGet]
         public IHttpActionResult ReturnUserCollections(string user_id)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -309,8 +301,7 @@ namespace ProductsApp.Controllers
         //从数据库中获取某一收藏夹下全部动态的ID(按动态收藏时间由新到旧排序)并以string列表形式返回给前端
         public List<string> ReturnCollectionContentID(string FounderID, string Name)
         {
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
@@ -346,9 +337,7 @@ namespace ProductsApp.Controllers
         {
             //创建返回信息，先假设更新成功
             int status = 0;
-
-            string connStr = @"Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 112.74.55.60)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)));User Id=vector;Password=Mustafa17;Pooling=true";
-            OracleConnection conn = new OracleConnection(connStr);
+            OracleConnection conn = new OracleConnection(DBAccess.connStr);
             try
             {
                 conn.Open();
