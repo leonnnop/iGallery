@@ -66,7 +66,7 @@
 
 <script>
   import qs from 'qs'
-
+  import md5 from 'js-md5';
   export default {
     name: 'ForgetPsw',
     data() {
@@ -94,7 +94,7 @@
         if (value === '') {
           callback(new Error('请输入验证码'));
         } else if (value != this.checkVerifyCode) {
-          console.log('value:'+value+'check:'+this.checkVerifyCode)
+          console.log('value:' + value + 'check:' + this.checkVerifyCode)
           callback(new Error('验证码错误!'));
         } else {
           callback(this.changeBtnVisible());
@@ -159,7 +159,7 @@
           if (valid) {
             this.email = '';
             this.checkVerifyCode = '';
-            this.axios.get('http://10.0.1.8:54468/api/Users/VerifyMail', {
+            this.axios.get('http://192.168.43.249:54468/api/Users/VerifyMail', {
                 params: {
                   email: this.emailForm.email
                 }
@@ -190,10 +190,11 @@
       finishHandler: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('http://10.0.1.8:54468/api/Users/ChangePassword?email='+this.email+'&NewPassword='+this.passwordForm.password            // , {
-            //   email: this.email,
-            //   NewPassword: this.passwordForm.password
-            // }
+            this.axios.put('http://192.168.43.249:54468/api/Users/ChangePassword?email=' + this.email + '&NewPassword=' +
+              md5(this.passwordForm.password).substr(0,20) // , {
+              //   email: this.email,
+              //   NewPassword: this.passwordForm.password
+              // }
             ).
             then((response) => {
                 let result = response.data;

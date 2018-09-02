@@ -14,35 +14,6 @@ export default new Vuex.Store({
         currentUserPassword:'liangchen',
         currentUserBio: '个人简介了解一下',
         currentUserPhoto: '',
-        job: {
-            taskId: '',
-            createTime: null,
-            taskState: -1,
-            sawTaskList: [],
-        },
-
-
-        detailAssigns: [],
-        detailAssign: {
-            taskState: '',
-            sawTaskId: 0,
-            sawId: 0,
-            workType: '',
-            thick: '',
-            inner: '',
-            outer: '',
-            inBox: [],
-            outBox: [],
-            machine: [],
-            mainShaftSpeed: '',
-            feedSpeed: '',
-            name: '',
-            draftid: '',
-            param: '',
-            number: '',
-            costTime: '',
-            taskId: '', //????????/
-        },
     },
     mutations: {
         addCurrentUserId(state, currentId) {
@@ -63,20 +34,5 @@ export default new Vuex.Store({
         addCurrentUserBio(state, bio) {
             state.currentUserBio = bio;
         },
-        deleteAssign(state, index) {
-            state.detailAssigns.splice(index, 1);
-        },
-        deleteAllAssign(state) {
-            console.log('deleteAllAssign');
-            state.detailAssigns.splice(0, state.detailAssigns.length);
-        },
-        beforeJobCommit(state, taskId) {
-            // console.log('beforeJobCommit');
-            // console.log('in beforeJobCommit:' + taskId);
-            state.job.taskId = taskId,
-                state.job.taskState = 0,
-                // console.log('in beforeJobCommit:' + state.detailAssigns);/////??????????????
-                state.job.sawTaskList = state.detailAssigns;
-        }
     }
 })

@@ -7,21 +7,16 @@
 
       <el-card style="width:70%" :body-style="{padding:'0px'}" :class="navBarFixed == true ? 'navBarWrap1' :''" shadow="never">
         <el-row style="background-color:#ffffff;padding-bottom:10px" class="clearfix">
-          <!--el-row>
-           <el-button style="background-color:#c1c4c9" @click="handleSettingClick" size="small">设置<i class="el-icon-setting el-icon--right"></i></el-button>
-         </el-col>
-      </el-row-->
+
           <el-row>
             <el-col :span="6" :offset="1" style="margin:20px;padding-left:30px">
               <el-upload v-if="$route.params.id==$store.state.currentUserId_ID" class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
                 :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-progress="uploadOnProgress">
-                <!-- <img :src="headUrl" class="headImg" alt="头像"> -->
-                <!-- <div class="headImg">点我换头</div> -->
+
                 <div class="moment" :style="{backgroundImage: 'url(' + (headUrl)+'&Rand=' + Math.random() + ')'}">
                   <div class="moment-inner">
                     <div class="icon">
                       <el-row type="flex" justify="center" align="middle">
-                        <!-- <el-col>点我换头</el-col> -->
                         <img src="../image/upload-icon.png" alt="" height="60px">
 
                       </el-row>
@@ -90,8 +85,6 @@
             </el-col>
             <el-col :span="4" style="height:100%">
               <el-row type="flex" align="middle" justify="center" style="height:100%;margin-top:25%">
-                <!-- <el-button round style="width:80px;border-color:#db3579" @click="followClickHandler" v-if="$route.params.id==$store.state.currentUserId_ID">{{this.followword}}</el-button>
-                <el-button round style="width:80px;border-color:#db3579" @click="messageClickHandler" v-if="$route.params.id==$store.state.currentUserId_ID">私信</el-button> -->
                 <el-button v-if="$route.params.id!=$store.state.currentUserId_ID" icon="el-icon-message" style="width:50px;height:50px" @click="messageClickHandler"
                   plain type="primary" circle></el-button>
                 <el-button v-if="$route.params.id!=$store.state.currentUserId_ID" icon="el-icon-view" style="margin-left:15px;width:50px;height:50px;"
@@ -100,7 +93,6 @@
             </el-col>
           </el-row>
         </el-row>
-        <!-- </el-row> -->
         <el-row style="padding:0 10px">
           <el-menu default-active="dynamic" class="el-menu-demo" mode="horizontal" @select="handleSelectTop" active-text-color="#409eff">
             <el-menu-item index="dynamic">我的动态
@@ -117,16 +109,13 @@
 
           <el-col v-for="moment in moments" :key="moment.name" :span="6">
             <el-col>
-              <!--el-card shadow="always" :body-style="{ padding: '0px' }"-->
               <div class="moments" :style="{backgroundImage:'url('+moment.url+'&Rand=' + Math.random() + ')'}" @click="toMoment(moment.momentID)"></div>
-              <!--/el-card-->
             </el-col>
           </el-col>
         </el-row>
         <el-row v-if="isFavors&&$route.params.id==$store.state.currentUserId_ID">
           <el-col :span="5">
             <el-row>
-              <!-- <div slot="title"> -->
               <el-row style="margin:10px">
                 <el-col :span="20" :offset="1">
                   <span style="font-size:18px;color:#bbbbbb">动态收藏</span>
@@ -147,36 +136,9 @@
                   </div>
                 </el-dialog>
               </el-row>
-              <!-- </div> -->
             </el-row>
-            <!-- <el-menu default-active="默认收藏夹" class="el-menu-vertical-demo" @select="handleSelectLeft" collapse-transition="false"> -->
             <el-menu default-active="默认收藏夹" class="el-menu-vertical-demo" @select="handleSelectLeft">
 
-              <!--el-submenu index="1"-->
-              <!-- <el-menu-item index="title">
-              <div slot="title">
-                <el-row>
-                  <el-col :span="21" :offset="0">
-                    <span style="font-size:16px;color:#bbbbbb">动态收藏</span>
-                  </el-col>
-                  <el-col :span="1">
-                    <i class="el-icon-circle-plus-outline" @click="dialogFormVisible=true"></i>
-                  </el-col>
-                  <el-dialog title="" :visible.sync="dialogFormVisible" class="dialog">
-                    <div slot="title">新建收藏夹</div>
-                    <el-form ref="form" :model="ruleform" :rules="rules">
-                      <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname">
-                        <el-input v-model="ruleform.fname" auto-complete="off" style="width:200px" placeholder="最大长度为15个字符"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="finishHandler()" size="middle">确定</el-button>
-                      <el-button @click="this.dialogFormVisible=false;this.ruleform.fname=''" size="middle">取消</el-button>
-                    </div>
-                  </el-dialog>
-                </el-row>
-              </div>
-            </el-menu-item> -->
               <el-menu-item index="默认收藏夹">
                 <el-col :span="18">
                   <el-row>
@@ -206,20 +168,6 @@
                         <el-dropdown-menu slot="dropdown">
                           <el-dropdown-item @click.native="deleteFavor(favor.favorName)">删除</el-dropdown-item>
                           <el-dropdown-item @click.native="editClick()" divided>编辑名称</el-dropdown-item>
-                          <!-- <el-dropdown-item command="deleteFavor(favor.favorName)">删除</el-dropdown-item>
-                        <el-dropdown-item command="edit" divided>编辑名称</el-dropdown-item> -->
-                          <!-- <el-dialog title="" :visible.sync="dialogFormVisible2" class="dialog" :modal-append-to-body="false">
-                            <div slot="title">重命名收藏夹</div>
-                            <el-form ref="form2" :model="ruleform2" :rules="rules2">
-                              <el-form-item label="名称：" :label-width="formLabelWidth" prop="fname2">
-                                <el-input v-model="ruleform2.fname2" auto-complete="off" style="width:200px" :value="favor.favorName"></el-input>
-                              </el-form-item>
-                            </el-form>
-                            <div slot="footer" class="dialog-footer">
-                              <el-button type="primary" @click="finishHandler2(index,favor.favorName)" size="middle">确 定</el-button>
-                              <el-button @click="dialogFormVisible2=false;ruleform2.fname2=''" size="middle">取 消</el-button>
-                            </div>
-                          </el-dialog> -->
                         </el-dropdown-menu>
                       </el-dropdown>
                     </el-col>
@@ -238,8 +186,7 @@
                   </div>
                 </el-dialog>
               </el-row>
-              <!-- <el-menu-item index="set">设置</el-menu-item> -->
-
+             
             </el-menu>
           </el-col>
           <el-col :span="19" style="padding-left:30px;padding-top:15px">
@@ -256,54 +203,6 @@
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item @click.native="deleteCollect(index,collect)">取消收藏</el-dropdown-item>
                       <el-dropdown-item @click.native="dialogFormVisible3=true">移动</el-dropdown-item>
-                      <!-- <el-dialog title="" :visible.sync="dialogFormVisible3" class="checkForm" :modal-append-to-body="false">
-                        <div slot="title">移动</div>
-                        <el-checkbox-group v-model="checkedFavor" :min="1" :max="2">
-                          <div style="padding:10px,10px">
-                            <el-checkbox chcecked="false" key="默认" label="默认">
-                              <span style="font-size:15px">默认收藏夹</span>
-                            </el-checkbox>
-                          </div>
-                          <div v-for="favor in favors" :key="favor.favorName" :label="favor.favorName" style="padding:10px,10px">
-                            <el-checkbox chcecked="false" :label="favor.favorName">
-                              <span style="font-size:15px">{{favor.favorName}}</span>
-                            </el-checkbox>
-                          </div>
-                        </el-checkbox-group>
-                        <div slot="footer" class="dialog-footer">
-                          <el-button type="primary" @click="moveHandler('key')" size="middle">确认</el-button>
-                          <el-button @click="dialogFormVisible3=false" size="middle">取消</el-button>
-                        </div>
-                      </el-dialog> -->
-                      <!-- <el-dialog :visible.sync="dialogFormVisible3" :modal-append-to-body="false" class="checkForm">
-                        <div slot="title">选择所要移动到的收藏夹</div>
-                        <div v-if="favors.length==0">
-                          <span style="color:#aaaaaa;padding-left:5px">* 没有可移动到的收藏夹哦!</span>
-                        </div>
-                        <el-form ref="move" :model="moveForm">
-                          <el-form-item>
-                            <el-radio-group v-model="moveForm.favorName">
-                               <div v-if="defalut-active!='默认收藏夹'" class="move">
-                                <el-radio label="默认收藏夹">
-                                  <span style="font-size:15px">默认收藏夹</span>
-                                </el-radio>
-                              </div> 
-                              <div v-for="item in favors" :key="item">
-                                <div class="move" v-if="item.favorName!=currentSelectLeft">
-                                  <el-radio :label="item">
-                                    <span style="font-size:15px">{{item.favorName}}</span>
-                                  </el-radio>
-                                </div>
-                              </div>
-                            </el-radio-group>
-                          </el-form-item>
-                        </el-form>
-                        <div slot="footer" align="middle">
-                          <el-button type="primary" @click="moveHandler(moveForm.favorName,index,collect)" size="middle">确认</el-button>
-                          <el-button @click="dialogFormVisible3=false;moveForm.favorName=''" size="middle">取消</el-button>
-                        </div>
-                      </el-dialog> -->
-
 
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -341,53 +240,6 @@
 
           </el-col>
         </el-row>
-        <!-- <el-row v-if="isDynamic" style="padding-left:30px;padding-top:15px">
-        <el-col v-for="moment in moments" :key="moment.name" :span="6">
-          <el-col>
-            <div class="moments" :style="{backgroundImage:'url('+moment.url+')'}" @click="toMoment(moment.momentID)"></div>
-          </el-col>
-        </el-col>
-      </el-row> -->
-        <!-- </el-menu> -->
-
-        <!-- <el-col :span="19" style="padding-left:30px;padding-top:15px">
-        <el-col v-for="(collect,index) in collects" :key="index" :span="8">
-          <el-col>
-            <div class="moments" :style="{backgroundImage:'url('+collect.url+')'}" @click="toMoment(collect.momentID)"></div>
-            <el-col :span="2">
-              <el-dropdown>
-                <span class="el-dropdown-link">
-                  <i class="el-icon-more"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="deleteCollect('index')">删除收藏</el-dropdown-item>
-                  <el-dropdown-item @click.native="dialogFormVisible3=true">移动</el-dropdown-item>
-                  <el-dialog title="" :visible.sync="dialogFormVisible3" class="checkForm" :modal-append-to-body="false">
-                    <div slot="title">移动</div>
-                    <el-checkbox-group v-model="checkedFavor" :min="1" :max="2">
-                      <div style="padding:10px,10px">
-                        <el-checkbox chcecked="false" key="默认" label="默认">
-                          <span style="font-size:15px">默认收藏夹</span>
-                        </el-checkbox>
-                      </div>
-                      <div v-for="favor in favors" :key="favor.favorName" :label="favor.favorName" style="padding:10px,10px">
-                        <el-checkbox chcecked="false" :label="favor.favorName">
-                          <span style="font-size:15px">{{favor.favorName}}</span>
-                        </el-checkbox>
-                      </div>
-                    </el-checkbox-group>
-                    <div slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="moveHandler('key')" size="middle">确认</el-button>
-                      <el-button @click="dialogFormVisible3=false" size="middle">取消</el-button>
-                    </div>
-                  </el-dialog>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </el-col>
-          </el-col>
-        </el-col>
-
-      </el-col> -->
       </el-card>
     </el-col>
   </el-container>
@@ -412,7 +264,6 @@
 
   .slide-fade-enter,
   .slide-fade-leave-to
-  /* .slide-fade-leave-active for below version 2.1.8 */
 
     {
     transform: translateX(10px);
@@ -428,7 +279,6 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: white;
-    /* background-size: cover */
   }
 
   .icon {
@@ -450,7 +300,6 @@
     margin: 0 60px 30px 0;
     background-position: center;
     background-size: cover;
-    /* display: inline-block; */
     box-sizing: border-box;
   }
 
@@ -460,7 +309,6 @@
     height: 178px;
     border-radius: 89px;
 
-    /* padding-bottom: 100%; */
     display: none;
     background: rgba(12, 12, 12, 0.5);
     position: relative;
@@ -524,9 +372,6 @@
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 10px;
-    /*
-    top: 200px;
-    z-index: 999;*/
   }
 
   .el-tabs__item {
@@ -887,24 +732,10 @@
       },
       followClickHandler() {
 
-        this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+        this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
             '&followedID=' + this.$route.params.id)
           .then((response) => {
             if (response.data == 0) {
-              // this.$message({
-              //     message: '关注成功',
-              //     type: 'success'
-              // });
-              // if (!this.FollowState) {
-              //   this.followword = '已关注';
-              //   // this.FollowState = 0;
-
-              // } else {
-              //   this.followword = '关注';
-              //   // this.FollowState = 1;
-
-              //   // console.log(this.followState)
-              // }
               if (!this.FollowState) {
                 this.fansNum++;
                 this.messageWebsocketHandler(this.$route.params.id, 0)
@@ -925,7 +756,8 @@
 
       moveHandler(favorName, index, collect) {
         // console.log('favorName',favorName.favorName)
-        this.axios.get(' http://10.0.1.8:54468/api/Collection/MoveMomentToAnotherCollection?moment_id=' + collect.momentID +
+        this.axios.get(' http://192.168.43.249:54468/api/Collection/MoveMomentToAnotherCollection?moment_id=' + collect
+            .momentID +
             '&founder_id=' + this.$store.state.currentUserId_ID +
             '&new_collection_name=' + favorName
           )
@@ -959,12 +791,6 @@
             }
           })
       },
-      // Array:prototype.contains=function(val){
-      //   for(var i=0;i<this.favors.length;i++){
-      //     if(this.favors[i].favoeName==val)
-      //     return i;
-      //   }
-      // },
       uploadOnProgress(e, file) { //开始上传
         // console.log('——————开始上传——————');
         // console.log(file)
@@ -981,7 +807,8 @@
         }; //添加请求头
 
         this.headUrl = file.raw;
-        this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=' + this.$store.state.currentUserId_ID + '&type=2',
+        this.axios.post('http://192.168.43.249:54468/api/Picture/Save?id=' + this.$store.state.currentUserId_ID +
+          '&type=2',
           formdata1,
           config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);
@@ -1024,7 +851,7 @@
         user.FollowState = !user.FollowState;
         console.log(user.FollowState);
 
-        this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+        this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
             '&followedID=' + user.ID)
           .then((response) => {
             if (response.data == 0) {
@@ -1064,17 +891,18 @@
         // if (key == '默认收藏夹') {
         this.currentSelectLeft = key;
         console.log(this.currentSelectLeft)
-        this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state.currentUserId_ID +
+        this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state
+            .currentUserId_ID +
             '&Name=' + key)
           .then((response) => {
             // this.collects = response.data
             // //===============
             // let totalMoments = response.data;
             // totalMoments.foreach((element) => {
-            //   this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
+            //   this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
             //     .then((responsed) => {
             //       Vue.set(element, 'url',
-            //         'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+            //         'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
             //         response.data[0]);
             //     })
             // })
@@ -1085,16 +913,17 @@
             momentIDList.forEach(element => {
               var temp = {}
               temp.momentID = element;
-              this.axios.get('http://10.0.1.8:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' + element)
+              this.axios.get('http://192.168.43.249:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' +
+                  element)
                 .then((response) => {
                   //////////////////////////////
-                  temp.url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
+                  temp.url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
                   this.collects.push(temp)
                 })
             });
             index++;
           }) // } else if (key != 'title') {
-        //   this.$axios.post('http://10.0.1.8:54468/api/Users/ReturnCollectionContentID', {
+        //   this.$axios.post('http://192.168.43.249:54468/api/Users/ReturnCollectionContentID', {
         //       FounderID: this.$store.state.currentUserId_ID,
         //       Name: this.favors[key].favorName
         //     })
@@ -1103,10 +932,10 @@
         //       //===============
         //       let totalMoments = response.data;
         //       totalMoments.foreach((element) => {
-        //         this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
+        //         this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
         //           .then((responsed) => {
         //             Vue.set(element, 'url',
-        //               'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+        //               'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
         //               response.data[0]);
         //           })
         //       })
@@ -1146,7 +975,7 @@
       //删除收藏夹
       deleteFavor: function (index) {
         // this.favors.splice(index, 1);
-        this.axios.get('http://10.0.1.8:54468/api/Collection/DeleteCollection?founder_id=' + this.$store.state.currentUserId_ID +
+        this.axios.get('http://192.168.43.249:54468/api/Collection/DeleteCollection?founder_id=' + this.$store.state.currentUserId_ID +
             '&name=' + index
           )
           .then((response) => {
@@ -1171,7 +1000,7 @@
       ///////////////////////
       deleteCollect: function (index, collect) {
 
-        // this.axios.get('http://10.0.1.8:54468/api/Collection/DeleteCollection?founder_id=' + this.$store.state.currentUserId_ID +
+        // this.axios.get('http://192.168.43.249:54468/api/Collection/DeleteCollection?founder_id=' + this.$store.state.currentUserId_ID +
         //     '&name=' + index
         //   )
         //   .then((response) => {
@@ -1185,7 +1014,7 @@
         //       this.$message.error('删除失败，请重试！');
         //     }
         //   })
-        this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id=' + collect.momentID +
+        this.axios.get('http://192.168.43.249:54468/api/Collect/DeleteCollect?moment_id=' + collect.momentID +
             '&user_id=' + this.$store.state.currentUserId_ID
           )
           .then((response) => {
@@ -1221,7 +1050,7 @@
         console.log(this.favors)
         this.dialogFormVisible = false;
         // this.ruleform.fname = '';
-        this.axios.get('http://10.0.1.8:54468/api/Collection/InsertCollection?name=' + this.ruleform.fname +
+        this.axios.get('http://192.168.43.249:54468/api/Collection/InsertCollection?name=' + this.ruleform.fname +
             '&founder_id=' + this.$store.state.currentUserId_ID
           )
           .then((response) => {
@@ -1253,7 +1082,7 @@
         // this.dialogFormVisible2=true;
         // this.$refs[formName].validate((valid) => {
         //   if (valid) {
-        // this.axios.get('http://10.0.1.8:54468/api/Collection/RenameCollection?founder_id='+ this.$store.state.currentUserId_ID+
+        // this.axios.get('http://192.168.43.249:54468/api/Collection/RenameCollection?founder_id='+ this.$store.state.currentUserId_ID+
         //     '&favorName='+ index+
         //     '&fname2='+ this.ruleform2.fname2
         //   )
@@ -1280,7 +1109,7 @@
 
         // });
 
-        this.axios.get('http://10.0.1.8:54468/api/Collection/RenameCollection?founder_id=' + this.$store.state.currentUserId_ID +
+        this.axios.get('http://192.168.43.249:54468/api/Collection/RenameCollection?founder_id=' + this.$store.state.currentUserId_ID +
             '&original_name=' + name +
             '&new_name=' + this.ruleform2.fname2
           )
@@ -1329,7 +1158,7 @@
       }
     },
     created() {
-      this.axios.get('http://10.0.1.8:54468/api/Users/FollowState?from_id=' + this.$store.state.currentUserId_ID +
+      this.axios.get('http://192.168.43.249:54468/api/Users/FollowState?from_id=' + this.$store.state.currentUserId_ID +
           '&to_id=' + this.$route.params.id)
         .then((response) => {
           if (response.data == 0) {
@@ -1339,12 +1168,12 @@
           }
 
         })
-      this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID?id=' + this.$route.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/Users/GetUserInfobyID?id=' + this.$route.params.id)
         .then((response) => {
           this.username = response.data.Username;
           this.desc = response.data.Bio;
         })
-      this.axios.get('http://10.0.1.8:54468/api/HomePage/GetMyMoments?Sender_id=' + this.$route.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/HomePage/GetMyMoments?Sender_id=' + this.$route.params.id)
         .then((response) => {
           this.moments = response.data;
           console.log(this.moments);
@@ -1354,9 +1183,9 @@
             // index++;
             console.log(this.moments)
             element.momentID = element.ID
-            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
+            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
               .then((response) => {
-                var url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data[0];
+                var url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data[0];
                 Vue.set(element, 'url', url);
               })
           })
@@ -1364,7 +1193,7 @@
       this.followUsers = [];
       this.followNum = this.followUsers.length
 
-      this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$route.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/Users/FollowList?userID=' + this.$route.params.id)
         .then((response) => {
           if (response.data == 'Not found') {
             this.followUsers = [];
@@ -1374,7 +1203,7 @@
           // this.followUsers = response.data;
           this.followNum = this.followUsers.length
           this.followUsers.forEach(element => {
-            element.headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+            element.headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
               element.ID +
               '&type=2';
             // 等待修改
@@ -1393,7 +1222,7 @@
 
       this.fanUsers = [];
       this.fansNum = this.fanUsers.length;
-      this.axios.get('http://10.0.1.8:54468/api/Users/FanList?user_id=' + this.$route.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/Users/FanList?user_id=' + this.$route.params.id)
         .then((response) => {
           if (response.data == 'Not found') {
             this.fanUsers = [];
@@ -1403,7 +1232,7 @@
 
           this.fansNum = this.fanUsers.length;
           this.fanUsers.forEach(element => {
-            var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+            var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
               element.ID +
               '&type=2';
             Vue.set(element, 'headImg', headImg)
@@ -1419,7 +1248,7 @@
           });
         })
       this.favors = []
-      this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId_ID)
+      this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId_ID)
         .then((response) => {
           // this.favors.favorName = response.data.NAME;
           let totalFavorName = response.data;
@@ -1437,7 +1266,8 @@
             var temp = {}
             temp.favorName = element.Name;
 
-            this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
+            this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' +
+                this
                 .$store.state.currentUserId_ID + '&name=' + element.Name)
               .then((response) => {
                 temp.collectNum = response.data
@@ -1446,7 +1276,8 @@
             // index++;
           })
 
-          this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this.$store
+          this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
+              .$store
               .state.currentUserId_ID +
               '&name=' + '默认收藏夹')
             .then((response) => {
@@ -1457,7 +1288,7 @@
           console.log(error);
         });
 
-      var headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+      var headUrl = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
         this.$route.params.id +
         '&type=2';
       Vue.set(this, 'headUrl', headUrl)
@@ -1467,7 +1298,8 @@
       // this.desc = this.$store.state.currentUserBio;
 
 
-      this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state.currentUserId_ID +
+      this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state
+          .currentUserId_ID +
           '&Name=' + '默认收藏夹')
         .then((response) => {
           var momentIDList = response.data;
@@ -1483,11 +1315,12 @@
             var temp = {}
             // this.collects[index].momentID = element;
             temp.momentID = element;
-            this.axios.get('http://10.0.1.8:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' + element)
+            this.axios.get('http://192.168.43.249:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' +
+                element)
               .then((response) => {
                 //////////////////////////////
-                // this.collects[index].url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
-                var url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
+                // this.collects[index].url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
+                var url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
                 // Vue.set(this.collects[index], 'url', url)
                 Vue.set(temp, 'url', url)
                 this.collects.push(temp)
@@ -1498,7 +1331,7 @@
       //this.fname2=this.$store.state.;
       /*
 
-            //     this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection', {
+            //     this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection', {
             //         founder_id: this.$store.state.currentUserId_ID,
             //         name: '默认收藏夹',
             //       })
@@ -1510,7 +1343,7 @@
             //     console.log(error);
             //   });
 
-            this.headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID + '&type=2';
+            this.headUrl = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID + '&type=2';
             // //this.fansNum=this.$store.state.;
             // //this.followNum=this.$store.state.;
             this.username = this.$store.state.currentUsername;
@@ -1526,10 +1359,10 @@
 
 
                   function getFavorList(){
-                    return this.axios.get('http://10.0.1.8:54468/api/ReturnUserCollections',{user_id:this.$store.state.currentUserId_ID});
+                    return this.axios.get('http://192.168.43.249:54468/api/ReturnUserCollections',{user_id:this.$store.state.currentUserId_ID});
                   }
                   function getCollectNum(){
-                    return axios.get('http://10.0.1.8:54468/api/ReturnMomentNumInACollection',{
+                    return axios.get('http://192.168.43.249:54468/api/ReturnMomentNumInACollection',{
                       founder_id:this.$store.state.currentUserId_ID,
                       //=====================================================
                       });
@@ -1590,7 +1423,7 @@
     beforeRouteUpdate(to, from, next) {
       this.followListVisible = false;
       this.fanListVisible = false;
-      this.axios.get('http://10.0.1.8:54468/api/Users/FollowState?from_id=' + this.$store.state.currentUserId_ID +
+      this.axios.get('http://192.168.43.249:54468/api/Users/FollowState?from_id=' + this.$store.state.currentUserId_ID +
           '&to_id=' + to.params.id)
         .then((response) => {
           if (response.data = 0) {
@@ -1600,12 +1433,12 @@
           }
 
         })
-      this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID?id=' + to.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/Users/GetUserInfobyID?id=' + to.params.id)
         .then((response) => {
           this.username = response.data.Username;
           this.desc = response.data.Bio;
         })
-      this.axios.get('http://10.0.1.8:54468/api/HomePage/GetMyMoments?Sender_id=' + to.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/HomePage/GetMyMoments?Sender_id=' + to.params.id)
         .then((response) => {
           this.moments = response.data;
           console.log(this.moments);
@@ -1615,9 +1448,9 @@
             // index++;
             console.log(this.moments)
             element.momentID = element.ID
-            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
+            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.momentID + '&type=1')
               .then((response) => {
-                var url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data[0];
+                var url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data[0];
                 Vue.set(element, 'url', url);
               })
           })
@@ -1625,7 +1458,7 @@
       this.followUsers = [];
       this.followNum = this.followUsers.length
 
-      this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + to.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/Users/FollowList?userID=' + to.params.id)
         .then((response) => {
           if (response.data == 'Not found') {
             this.followUsers = [];
@@ -1635,7 +1468,7 @@
           // this.followUsers = response.data;
           this.followNum = this.followUsers.length
           this.followUsers.forEach(element => {
-            element.headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+            element.headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
               element.ID +
               '&type=2';
             // 等待修改
@@ -1654,7 +1487,7 @@
 
       this.fanUsers = [];
       this.fansNum = this.fanUsers.length;
-      this.axios.get('http://10.0.1.8:54468/api/Users/FanList?user_id=' + to.params.id)
+      this.axios.get('http://192.168.43.249:54468/api/Users/FanList?user_id=' + to.params.id)
         .then((response) => {
           if (response.data == 'Not found') {
             this.fanUsers = [];
@@ -1664,7 +1497,7 @@
 
           this.fansNum = this.fanUsers.length;
           this.fanUsers.forEach(element => {
-            var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+            var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
               element.ID +
               '&type=2';
             Vue.set(element, 'headImg', headImg)
@@ -1680,7 +1513,7 @@
           });
         })
       this.favors = []
-      this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId_ID)
+      this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnUserCollections?user_id=' + this.$store.state.currentUserId_ID)
         .then((response) => {
           // this.favors.favorName = response.data.NAME;
           let totalFavorName = response.data;
@@ -1698,7 +1531,8 @@
             var temp = {}
             temp.favorName = element.Name;
 
-            this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
+            this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' +
+                this
                 .$store.state.currentUserId_ID + '&name=' + element.Name)
               .then((response) => {
                 temp.collectNum = response.data
@@ -1707,7 +1541,8 @@
             // index++;
           })
 
-          this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this.$store
+          this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnMomentNumInACollection?founder_id=' + this
+              .$store
               .state.currentUserId_ID +
               '&name=' + '默认收藏夹')
             .then((response) => {
@@ -1718,7 +1553,7 @@
           console.log(error);
         });
 
-      this.headUrl = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+      this.headUrl = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
         to.params.id +
         '&type=2';
       // Vue.set(this, 'headUrl', headUrl)
@@ -1728,7 +1563,8 @@
       // this.desc = this.$store.state.currentUserBio;
 
 
-      this.axios.get('http://10.0.1.8:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state.currentUserId_ID +
+      this.axios.get('http://192.168.43.249:54468/api/Collection/ReturnCollectionContentID?FounderID=' + this.$store.state
+          .currentUserId_ID +
           '&Name=' + '默认收藏夹')
         .then((response) => {
           var momentIDList = response.data;
@@ -1744,11 +1580,12 @@
             var temp = {}
             // this.collects[index].momentID = element;
             temp.momentID = element;
-            this.axios.get('http://10.0.1.8:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' + element)
+            this.axios.get('http://192.168.43.249:54468/api/Collection/GetFirstPicIDbyMomentID?moment_id=' +
+                element)
               .then((response) => {
                 //////////////////////////////
-                // this.collects[index].url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
-                var url = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + response.data;
+                // this.collects[index].url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
+                var url = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + response.data;
                 // Vue.set(this.collects[index], 'url', url)
                 Vue.set(temp, 'url', url)
                 this.collects.push(temp)

@@ -428,10 +428,10 @@
         beforeRouterEnter(to, from, next) {
             //用户
             next(vm => {
-                vm.axios.all([vm.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + vm.$route
+                vm.axios.all([vm.axios.get('http://192.168.43.249:54468/api/Search/Search_user?keyword=' + vm.$route
                             .params
                             .keyword + '&user_id=' + vm.$store.state.currentUserId_ID),
-                        vm.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword=' + vm.$route
+                        vm.axios.get('http://192.168.43.249:54468/api/Search/Search_all?keyword=' + vm.$route
                             .params.keyword +
                             '&user_id=' + vm.$store.state.currentUserId_ID)
                     ])
@@ -452,7 +452,8 @@
                                     }
                                 }
 
-                                var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                var photo =
+                                    'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
                                     element.ID +
                                     '&type=2';
                                 Vue.set(element, 'Photo', photo)
@@ -481,12 +482,13 @@
 
                             moments.forEach(element => {
                                 Vue.set(element, 'LikeNum', element.LikeNum)
-                                vm.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                vm.axios.get(
+                                        'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
                                         element.ID +
                                         '&type=1')
                                     .then((response) => {
                                         Vue.set(element, 'src',
-                                            'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                            'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                             response.data[0]);
                                     })
                             })
@@ -507,7 +509,7 @@
                                 } else {
                                     Vue.set(element, 'followWord', '关注');
                                 }
-                                var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                var Pic = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                     element.Pic;
                                 Vue.set(element, 'Pic', Pic)
                             })
@@ -534,9 +536,10 @@
         },
         created() {
             //用户
-            this.axios.all([this.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + this.$route.params
+            this.axios.all([this.axios.get('http://192.168.43.249:54468/api/Search/Search_user?keyword=' + this.$route.params
                         .keyword + '&user_id=' + this.$store.state.currentUserId_ID),
-                    this.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword=' + this.$route.params.keyword +
+                    this.axios.get('http://192.168.43.249:54468/api/Search/Search_all?keyword=' + this.$route.params
+                        .keyword +
                         '&user_id=' + this.$store.state.currentUserId_ID)
                 ])
                 .then(this.axios.spread((res1, res2) => {
@@ -556,7 +559,8 @@
                                 }
                             }
 
-                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                            var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo)
                         });
@@ -584,11 +588,12 @@
 
                         this.moments.forEach(element => {
                             Vue.set(element, 'LikeNum', element.LikeNum)
-                            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                    element.ID +
                                     '&type=1')
                                 .then((response) => {
                                     Vue.set(element, 'src',
-                                        'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                        'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                         response.data[0]);
                                 })
                         })
@@ -609,7 +614,7 @@
                             } else {
                                 Vue.set(element, 'followWord', '关注');
                             }
-                            var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + element.Pic;
+                            var Pic = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + element.Pic;
                             Vue.set(element, 'Pic', Pic)
                         })
                     } else {
@@ -633,7 +638,7 @@
         },
         methods: {
             followUserHandler: function (user) {
-                this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -652,7 +657,7 @@
                     });
             },
             followTagHandler: function (tag) {
-                this.axios.put('http://10.0.1.8:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
+                this.axios.put('http://192.168.43.249:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
                         '&tag=' + tag)
                     .then((response) => {
                         if (response.data) {
@@ -744,14 +749,7 @@
         },
         mounted: function () {
             this.$nextTick(function () {
-                // Code that will run only after the
-                // entire view has been rendered
-                // console.log('mouted')
-                // setTimeout("backgroundHandler()", 1000);
                 var self = this;
-                // this.toastrVal = inVal;
-                // this.loadState = true;
-                // this.noBg = bgState;
                 setTimeout(function () {
                     self.loadingPage = false;
                 }, 1700);
@@ -764,18 +762,9 @@
             next(vm => {
                 var self = vm;
                 vm.$nextTick(function () {
-
-                    // this.toastrVal = inVal;
-                    // this.loadState = true;
-                    // this.noBg = bgState;
                     setTimeout(function () {
                         self.loadingPage = false;
                     }, 1500)
-
-                    // Code that will run only after the
-                    // entire view has been rendered
-                    // console.log('mouted')
-                    // window.setTimeout("this.backgroundHandler()", 1000);
                 })
             })
         },
@@ -785,9 +774,9 @@
             setTimeout(function () {
                 self.loadingPage = false;
             }, 1500)
-            this.axios.all([this.axios.get('http://10.0.1.8:54468/api/Search/Search_user?keyword=' + to.params
+            this.axios.all([this.axios.get('http://192.168.43.249:54468/api/Search/Search_user?keyword=' + to.params
                         .keyword + '&user_id=' + this.$store.state.currentUserId_ID),
-                    this.axios.get('http://10.0.1.8:54468/api/Search/Search_all?keyword=' + to.params.keyword +
+                    this.axios.get('http://192.168.43.249:54468/api/Search/Search_all?keyword=' + to.params.keyword +
                         '&user_id=' + this.$store.state.currentUserId_ID)
                 ])
                 .then(this.axios.spread((res1, res2) => {
@@ -807,7 +796,8 @@
                                 }
                             }
 
-                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                            var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo)
                         });
@@ -835,11 +825,12 @@
 
                         this.moments.forEach(element => {
                             Vue.set(element, 'LikeNum', element.LikeNum)
-                            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                    element.ID +
                                     '&type=1')
                                 .then((response) => {
                                     Vue.set(element, 'src',
-                                        'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                        'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                         response.data[0]);
                                 })
                         })
@@ -860,7 +851,7 @@
                             } else {
                                 Vue.set(element, 'followWord', '关注');
                             }
-                            var Pic = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + element.Pic;
+                            var Pic = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + element.Pic;
                             Vue.set(element, 'Pic', Pic)
                         })
                     } else {

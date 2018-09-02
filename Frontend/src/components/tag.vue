@@ -22,13 +22,12 @@
                     </el-col>
                     <el-col style="margin-left:0%">
                         <el-button round style="width:30%;border-color:#db3579" @click="followClickHandler">{{this.followword}}</el-button>
-                        <!-- <el-button type="primary" plain style="width:50%">主要按钮</el-button> -->
                     </el-col>
                 </el-row>
                 <el-row style="width:100%" type="flex" justify="center">
                     <el-row :gutter="40" style="width:70%;margin:30px;">
                         <el-col :span="8">
-                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_1">
+                            <el-card :body-style="{ padding: '0px' }" class="box-card" :key="item.ID" v-for="item in items_col_1">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src+'&Rand=' + Math.random()" alt="hex" height="40px" width="40px" @click="jumpToUser(item.SenderID)">
@@ -37,18 +36,18 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.ID)" alt="hex" width="300px;" style="margin:-20px">
+                                    <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.ID)" alt="hex" width="100%">
                                 </el-row>
-                                <el-row style="margin-top:10%">
+                                <el-row style="margin-left:5%">
                                     {{item.Content}}
                                 </el-row>
-                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin:5%">
                                     <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col>
                         <el-col :span="8">
-                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_2">
+                            <el-card :body-style="{ padding: '0px' }" class="box-card" :key="item.ID" v-for="item in items_col_2">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src+'&Rand=' + Math.random()" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
@@ -57,18 +56,18 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.ID)" alt="hex" width="300px;" style="margin:-20px">
+                                    <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.ID)" alt="hex" width="100%">
                                 </el-row>
-                                <el-row style="margin-top:10%">
+                                <el-row style="margin-left:5%">
                                     {{item.Content}}
                                 </el-row>
-                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin:5%">
                                     <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col>
                         <el-col :span="8">
-                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_3">
+                            <el-card :body-style="{ padding: '0px' }" class="box-card" :key="item.ID" v-for="item in items_col_3">
                                 <div slot="header" class="clearfix">
                                     <el-row type="flex" align="middle" justify="space-between">
                                         <img :src="item.src+'&Rand=' + Math.random()" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
@@ -77,36 +76,16 @@
                                     </el-row>
                                 </div>
                                 <el-row>
-                                    <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.ID)" alt="hex" width="300px;" style="margin:-20px">
+                                    <img :src="item.contentSrc+'&Rand=' + Math.random()" @click="jumpToMoment(item.ID)" alt="hex" width="100%">
                                 </el-row>
-                                <el-row style="margin-top:10%">
+                                <el-row style="margin-left:5%">
                                     {{item.Content}}
                                 </el-row>
-                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
+                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin:5%">
                                     <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
                                 </el-row>
                             </el-card>
                         </el-col>
-                        <!-- <el-col :span="6">
-                            <el-card class="box-card" :key="item.ID" v-for="item in items_col_4">
-                                <div slot="header" class="clearfix">
-                                    <el-row type="flex" align="middle" justify="space-between">
-                                        <img :src="item.src" @click="jumpToUser(item.SenderID)" alt="hex" height="40px" width="40px">
-                                        <span style="margin-left:-30%; font-size:18px" @click="jumpToUser(item.SenderID)">{{item.userName}}</span>
-                                        <img :src="item.likeIMG" @click="handleLikeClick(item)" alt="like" height="30px" width="30px" style="float: right; padding: 3px 0">
-                                    </el-row>
-                                </div>
-                                <el-row>
-                                    <img :src="item.contentSrc" @click="jumpToMoment(item.ID)" alt="hex" width="280px;" style="margin:-20px">
-                                </el-row>
-                                <el-row style="margin-top:10%">
-                                    {{item.Content}}
-                                </el-row>
-                                <el-row type="flex" align="middle" style="color:#a2a2a2;margin-top:5%">
-                                    <img src="../image/bluelike.png" alt="bottomlike" height="30px" width="30px" style="margin-right:5%"> {{item.LikeNum}}人喜欢
-                                </el-row>
-                            </el-card>
-                        </el-col> -->
                     </el-row>
                 </el-row>
             </el-col>
@@ -129,8 +108,6 @@
         background: linear-gradient(45deg, #f9a357, #db3579 40%, #c73894 95%);
         background-clip: padding-box;
         padding: 6px;
-        /* just to show box-shadow still works fine */
-        /* box-shadow: 0 3px 9px black, inset 0 0 9px white; */
     }
 
     .img-border {
@@ -178,9 +155,6 @@
         height: 300px;
     }
 
-    /* 可以设置不同的进入和离开动画 */
-
-    /* 设置持续时间和动画函数 */
 
     .slide-fade-enter-active {
         transition: all .3s ease;
@@ -191,10 +165,7 @@
     }
 
     .slide-fade-enter,
-    .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-
-        {
+    .slide-fade-leave-to {
         transform: translateX(10px);
         opacity: 0;
     }
@@ -208,7 +179,6 @@
         background-repeat: no-repeat;
         background-position: center;
         background-color: white;
-        /* background-size: cover */
     }
 </style>
 
@@ -320,7 +290,7 @@
         },
 
         created() {
-            this.axios.get('http://10.0.1.8:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
+            this.axios.get('http://192.168.43.249:54468/api/Moment_Tag/Followers?Page=1' + '&PageSize=10' +
                     '&TagContent=' +
                     this.$route.params.id + '&Email=' + this.$store.state.currentUserId)
                 .then((response) => {
@@ -341,33 +311,19 @@
                         } else {
                             element.likeIMG = require('../image/unlike.png');
                         }
-                        // 更新后删除
                         element.likeState = false;
-                        // element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
-                        // '&type=2'
-
                         element.userName = response.data.m_Item4[index]
                         index++;
-                        element.src = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.SenderID +
+                        element.src = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.SenderID +
                             '&type=2'
-                        this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                        this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.ID +
                                 '&type=1')
                             .then((response) => {
-                                // this.axios.get('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-                                //         response.data[0], {
-                                //             responseType: 'blob'
-                                //         })
-                                //     .then((response) => {
-                                //         element.contentSrc = response.data
-                                //     })
-                                this.tagImg = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                this.tagImg = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                     response.data[0];
                                 Vue.set(element, 'contentSrc',
-                                    'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                                    'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                     response.data[0]);
-                                // element.contentSrc = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-                                //     response.data[0]
-                                // console.log(element)
                             })
                     });
                     let momentNum = totalMoments.length;
@@ -375,8 +331,6 @@
                     this.items_col_2 = totalMoments.slice(Math.floor(momentNum / 3), Math.floor(2 * momentNum /
                         3));
                     this.items_col_3 = totalMoments.slice(Math.floor(2 * momentNum / 3));
-                    // console.log('totalmoments:')
-                    // console.log(totalMoments)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -385,11 +339,10 @@
 
         methods: {
             jumpToMoment: function (momentId) {
-                // console.log(momentId);
                 this.$router.push('/main/momentDetail/' + momentId);
             },
             followClickHandler() {
-                this.axios.put('http://10.0.1.8:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
+                this.axios.put('http://192.168.43.249:54468/api/Follow_Tag/FollowTag?Email=' + this.$store.state.currentUserId +
                         '&tag=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data) {
@@ -423,14 +376,9 @@
                 return aIntNum.join(".");
             },
             handleLikeClick(item) {
-
-                // console.log(item)
-                this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+                this.axios.put('http://192.168.43.249:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
+                    .currentUserId +
                     '&moment_id=' + item.ID
-                    // , {
-                    //     email: this.$store.state.currentUserId,
-                    //     moment_id: item.MomentId
-                    //   }
                 ).then((response) => {
                     console.log(item.LikeState);
 
@@ -448,23 +396,16 @@
                 })
             },
             jumpToUser: function (ID) {
-                console.log('ge')
-                // if (ID == this.$store.state.currentUserId_ID) {
-                //     this.$router.push('/main/personalpage/');
-                // } else {
                 this.$router.push('/main/personalpage/' + ID);
-                // }
             },
             getNaturalWidth(id) {
                 var image = new Image()
-                // image.src = img.src
                 let img = document.getElementById(id)
                 image.src = img.src
                 var naturalWidth = image.width
                 return naturalWidth
             },
             rnd(id, start, end) {
-                // this.imgValue = this.imgValue + 1
                 console.log(this.getNaturalWidth(id))
                 console.log(id)
                 return Math.floor(Math.random() * (end - start) + start);
@@ -479,7 +420,6 @@
                     cancelButtonContent: '点错了',
                     type: 'info'
                 }).then(() => {
-                    // for 循环
                     var length = this.cards.length;
                     for (var i = 0; i < length; i++) {
                         if (this.cards[i].index == index) {
@@ -500,28 +440,6 @@
             }
         },
 
-        // beforeRouteEnter(to, from, next) {
-        //     // 处理无法访问的情况
-        //     next((vm) => {
-        //         vm.axios.get('http://192.168.0.37:5000/feed/sss')
-        //             .then((response) => {
-        //                 for (let index = 0; index < response.length; index++) {
-        //                     let responce = response[index].data;
-        //                     let card = {};
-        //                     let author = responce.author;
-        //                     card.index = index;
-        //                     card.authorName = author.name;
-        //                     card.authorURL = author.url;
-        //                     card.url = responce.url;
-        //                     card.title = responce.title;
-        //                     card.excerpt = responce.excerpt;
-
-        //                     this.cards.push(card);
-        //                 }
-        //             })
-        //             .catch();
-        //     });
-        // },
         beforeRouteLeave(to, from, next) {
             this.cards = [];
             this.tableData = [];
@@ -529,14 +447,7 @@
         },
         mounted: function () {
             this.$nextTick(function () {
-                // Code that will run only after the
-                // entire view has been rendered
-                // console.log('mouted')
-                // setTimeout("backgroundHandler()", 1000);
                 var self = this;
-                // this.toastrVal = inVal;
-                // this.loadState = true;
-                // this.noBg = bgState;
                 setTimeout(function () {
                     self.loadingPage = false;
                 }, 2000);
@@ -548,17 +459,11 @@
             next(vm => {
                 vm.$nextTick(function () {
                     var self = vm;
-                    // this.toastrVal = inVal;
-                    // this.loadState = true;
-                    // this.noBg = bgState;
+
                     setTimeout(function () {
                         self.loadingPage = false;
                     }, 1500)
 
-                    // Code that will run only after the
-                    // entire view has been rendered
-                    // console.log('mouted')
-                    // window.setTimeout("this.backgroundHandler()", 1000);
                 })
             })
         }

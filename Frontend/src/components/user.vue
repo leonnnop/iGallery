@@ -11,7 +11,7 @@
           <el-row class="usr" type="flex" align="middle">
             <el-col>
               <div class="user-img border">
-                <img class="user-img img-border hover-cursor" :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                <img class="user-img img-border hover-cursor" :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
               '&type=2'+'&Rand=' + Math.random()" alt="头像" @click="jumpToUser($store.state.currentUserId_ID)" />
               </div>
             </el-col>
@@ -28,11 +28,6 @@
           </el-row>
           <!-- </div> -->
           <hr class="hr" />
-          <!-- <div style="font-weight:bold;font-size: 10px;">简介：</div>
-          <div>这个用户很懒，</div>
-          <div>但能吃。</div>
-          <div> </div>
-          <div> </div> -->
           <el-row style="color:#999999;font-weight:bold;margin-bottom:10px;width:280px;">
             关注用户
           </el-row>
@@ -102,7 +97,7 @@
               </span>
             </el-row>
             <el-row>
-              <el-carousel :height="carouselHeight[index]" :interval="0" indicator-position="outside" :arrow="showArrow(moment)">
+              <el-carousel :height="autoHeight(moment.moment.ID)" :interval="0" indicator-position="outside" :arrow="showArrow(moment)">
                 <el-carousel-item v-for="(img,index) in moment.moment.imgList" :key="index">
                   <div class="pic">
                     <img :src="img" alt="movementImg">
@@ -252,8 +247,6 @@
     background: linear-gradient(45deg, #f9a357, #db3579 40%, #c73894 95%);
     background-clip: padding-box;
     padding: 4px;
-    /* just to show box-shadow still works fine */
-    /* box-shadow: 0 3px 9px black, inset 0 0 9px white; */
   }
 
   .img-border {
@@ -370,20 +363,6 @@
 
 <script>
   import Vue from 'vue'
-  // window.onscroll = ()=> {
-  //   //监听事件内容
-  //   // console.log(getDocumentTop())
-  //   // console.log(getWindowHeight())
-  //   // console.log(getScrollHeight())
-  //   if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
-  //     //当滚动条到底时,这里是触发内容
-  //     //异步请求数据,局部刷新dom
-  //     // ajax_function()
-  //     console.log('请求')
-  //     this.currentPage++;
-  //     this.requestHandler(this.currentPage);
-  //   }
-  // }
   //文档高度
   function getDocumentTop() {
     var scrollTop = 0,
@@ -475,63 +454,18 @@
     return Dictionary;
   })();
 
-  var dic = new Dictionary();
-  dic.set('/static/img/ins1.20711e9.png', 748);
-  dic.set('/static/img/ins2.cbee6d5.png', 748);
-  dic.set('/static/img/ins3.31b3f70.png', 398);
-
+  
   export default {
     data() {
       return {
-        carouselHeight:[],
-        loadingPage: true,
 
+        carouselHeight: [],
+        loadingPage: true,
+        dic: new Dictionary(),
         flag: true,
         bottomHint: '动态加载中，耐心等待啦！( •̀ .̫ •́ )✧',
         currentPage: 1,
         followings: [
-          // {
-          //     ID: '',
-          //     Username: 'leonnnop',
-          //     Bio: 'self introduction self introduction self introduction self introduction',
-          //     Email: '',
-          //     Photo: require('../image/a.jpg')
-          //   },
-          //   {
-          //     ID: '',
-          //     Username: 'leonnnop',
-          //     Bio: 'self introduction',
-          //     Email: '',
-          //     Photo: require('../image/a.jpg')
-          //   },
-          //   {
-          //     ID: '',
-          //     Username: 'leonnnop',
-          //     Bio: 'self introduction',
-          //     Email: '',
-          //     Photo: require('../image/a.jpg')
-          //   },
-          //   {
-          //     ID: '',
-          //     Username: 'leonnnop',
-          //     Bio: 'self introduction',
-          //     Email: '',
-          //     Photo: require('../image/a.jpg')
-          //   },
-          //   {
-          //     ID: '',
-          //     Username: 'leonnnop',
-          //     Bio: 'self introduction',
-          //     Email: '',
-          //     Photo: require('../image/a.jpg')
-          //   },
-          //   {
-          //     ID: '',
-          //     Username: 'leonnnop',
-          //     Bio: 'self introduction',
-          //     Email: '',
-          //     Photo: require('../image/a.jpg')
-          //   },
         ],
 
         totalMoments: [{
@@ -647,45 +581,30 @@
     destroyed() {
       window.removeEventListener('scroll', this.handleScroll)
     },
-    beforeCreate(){
-     
+    beforeCreate() {
+
       console.log('beforecreate');
     },
     created() {
-      this.bodyWidth=window.screen.width;
-        console.log('------------------------------------------body');
-        console.log(this.bodyWidth);
-      //请求动态
-      // window.onscroll = () => {
-      //   //监听事件内容
-      //   // console.log(getDocumentTop())
-      //   // console.log(getWindowHeight())
-      //   // console.log(getScrollHeight())
-      //   if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
-      //     //当滚动条到底时,这里是触发内容
-      //     //异步请求数据,局部刷新dom
-      //     // ajax_function()
-      //     console.log('请求')
-      //     this.currentPage++;
-      //     this.requestHandler(this.currentPage);
-      //   }
+      this.dic = new Dictionary();
+      this.bodyWidth = window.screen.width;
+      console.log('------------------------------------------body');
+      console.log(this.bodyWidth);
       var self = this;
       setTimeout(function () {
         self.loadingPage = false;
       }, 1000)
       // }
       //监听滚动条，到底时请求动态...
-      this.axios.all([this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
+      this.axios.all([this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/Followings', {
             params: {
               Email: this.$store.state.currentUserId,
               Page: 1,
             }
           }),
-          this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+          this.axios.get('http://192.168.43.249:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
         ])
         .then(this.axios.spread((res1, res2) => {
-          // console.log(res1)
-          // console.log(res2)
           this.totalMoments = res1.data;
 
           if (this.totalMoments.length < 1) {
@@ -713,7 +632,7 @@
             }
 
             //请求图片
-            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
+            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
               .then((response) => {
                 let list = response.data;
                 //将id数组变为url数组
@@ -721,10 +640,10 @@
                 var imgList = []
                 list.forEach(ele => {
                   // element.moment.imgList.push({
-                  imgList.push('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                  imgList.push('http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                     ele
                   )
-                  // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
+                  // ele = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + ele;
                 });
                 Vue.set(element.moment, 'imgList', imgList);
                 this.loadingPage = false;
@@ -735,14 +654,14 @@
               });
             element.newComment = '';
 
-            var Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
+            var Photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
               '&type=2';
             Vue.set(element, 'Photo', Photo)
             console.log(this.totalMoments)
 
             if (res2.data != 'Not found') {
               res2.data.forEach(element => {
-                let Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
+                let Photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
                 Vue.set(element, 'Photo', Photo)
               });
               this.followings = res2.data;
@@ -751,97 +670,32 @@
               this.followings = [];
             }
 
-            let carouselWidth=this.bodyWidth*0.41;
-              this.axios.get('http://10.0.1.8:54468/api/Picture/GetSz?mid='+element.moment.ID)
+            let carouselWidth = this.bodyWidth * 0.41;
+            this.axios.get('http://192.168.43.249:54468/api/Picture/GetSz?mid=' + element.moment.ID)
               .then((response) => {
-                if(response.data!=null){
-                  var width=response.data.width;
-                  var height=response.data.height;
-                  var rate=height/width;
-                  var height=carouselWidth*rate;
+                if (response.data != null) {
+                  var width = response.data.width;
+                  var height = response.data.height;
+                  var rate = height / width;
+                  var height = carouselWidth * rate;
 
-                  this.carouselHeight.push(height+'px');
-          }
-          
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+                  this.dic.set(element.moment.ID, height + 'px');
+                }
+                // console.log(this.dic.getItems())
+
+              })
+              .catch((error) => {
+                console.log(error);
+              });
 
           });
         }))
-      // this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
-      //     params: {
-      //       Email: this.$store.state.currentUserId,
-      //       Begin: 1 + 10 * this.askNum,
-      //       End: 10 + 10 * this.askNum
-      //     }
-      //   })
-      //   .then((response) => {
-      //     this.totalMoments = response.data;
-
-      //     this.totalMoments.forEach(element => {
-      //       //点赞状态
-      //       if (element.liked) {
-      //         element.likeImg = require('../image/comment-like.png');
-      //       } else {
-      //         element.likeImg = require('../image/comment-unlike.png');
-      //       }
-      //       //收藏状态
-      //       if (element.collected) {
-      //         element.collectImg = require('../image/collect.png');
-      //       } else {
-      //         element.collectImg = require('../image/uncollect.png');
-      //       }
-
-      //       //请求图片
-      //       this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
-      //         .then((response) => {
-      //           let list = response.data;
-      //           //将id数组变为url数组
-      //           // element.moment.imgList = [];
-      //           var imgList = []
-      //           list.forEach(ele => {
-      //             // element.moment.imgList.push({
-      //             imgList.push('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
-      //               ele
-      //             )
-      //             // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
-      //           });
-      //           Vue.set(element.moment, 'imgList', imgList);
-      //         })
-      //         .catch((error) => {
-      //           console.log(error);
-      //         });
-      //       element.newComment = '';
-      //       element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
-      //         '&type=2';
-      //       console.log(this.totalMoments)
-
-      //     });
-
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-      //请求关注列表
-      // this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
-      //   .then((response) => {
-      //     if (response.data != 'Not found') {
-      //       response.data.forEach(element => {
-      //         element.Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID + '&type=2';
-      //       });
-      //       this.followings = response.data;
-      //       console.log(this.followings)
-      //     } else {
-      //       this.followings = [];
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-    },
+   },
     methods: {
+      autoHeight(ID) {
+        console.log(this.dic.get(ID))
+        return this.dic.get(ID)
+      },
       handleScroll() {
         if (getScrollHeight() == getWindowHeight() + getDocumentTop()) {
           //当滚动条到底时,这里是触发内容
@@ -876,7 +730,7 @@
           moment.liked = 0
         }
         console.log(moment)
-        this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+        this.axios.put('http://192.168.43.249:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
             '&moment_id=' + moment.moment.ID)
           .then((response) => {
             if (response.data == 0) {
@@ -893,7 +747,7 @@
       },
       collectHandler: function (moment) {
         if (moment.collected == 0) {
-          this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id=' + moment.moment.ID +
+          this.axios.get('http://192.168.43.249:54468/api/Collect/DeleteCollect?moment_id=' + moment.moment.ID +
               '&user_id=' + this.$store.state.currentUserId_ID
             )
             .then((response) => {
@@ -909,7 +763,7 @@
             });
           // moment.collected = 1
         } else {
-          this.axios.get('http://10.0.1.8:54468/api/Collect/InsertCollect?moment_id=' + moment.moment.ID +
+          this.axios.get('http://192.168.43.249:54468/api/Collect/InsertCollect?moment_id=' + moment.moment.ID +
               '&founder_id=' + this.$store.state.currentUserId_ID +
               '&name=' + '默认收藏夹'
             )
@@ -933,7 +787,7 @@
             cancelButtonText: '取消',
             center: true
           }).then(() => {
-            this.axios.post('http://10.0.1.8:54468/api/Moment/ForwardMoment', {
+            this.axios.post('http://192.168.43.249:54468/api/Moment/ForwardMoment', {
                 User_ID: this.$store.state.currentUserId_ID,
                 Moment_ID: moment.moment.ID
               })
@@ -981,7 +835,7 @@
             'Content-Type': 'multipart/form-data'
           }
         };
-        this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
+        this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
           .then((response) => {
             // if (response.data == 'OK') {
             if (true) {
@@ -1062,7 +916,7 @@
         if (!this.flag) {
           return;
         }
-        this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Followings', {
+        this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/Followings', {
             params: {
               Email: this.$store.state.currentUserId,
               Page: page,
@@ -1096,7 +950,7 @@
               }
 
               //请求图片
-              this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
+              this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.ID + '&type=1')
                 .then((response) => {
                   let list = response.data;
                   //将id数组变为url数组
@@ -1104,10 +958,10 @@
                   var imgList = []
                   list.forEach(ele => {
                     // element.moment.imgList.push({
-                    imgList.push('http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                    imgList.push('http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                       ele
                     )
-                    // ele = 'http://10.0.1.8:54468/api/Picture/Gets?pid=' + ele;
+                    // ele = 'http://192.168.43.249:54468/api/Picture/Gets?pid=' + ele;
                   });
                   Vue.set(element.moment, 'imgList', imgList);
                 })
@@ -1116,7 +970,7 @@
                 });
               element.newComment = '';
 
-              var Photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
+              var Photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.moment.SenderID +
                 '&type=2';
               Vue.set(element, 'Photo', Photo)
               console.log(newTotalMoments)

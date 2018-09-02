@@ -5,7 +5,7 @@
         </transition>
         <el-row>
             <el-col :span="10" :offset="4">
-                <el-carousel v-if="hackReset" height="500px" :interval="0" indicator-position="outside">
+                <el-carousel v-if="hackReset" :height="carouselHeight" :interval="0" indicator-position="outside">
                     <el-carousel-item v-for="(img,index) in imgList" :key="index">
                         <div class="pic">
                             <img :src="img.url+'&Rand=' + Math.random()" alt="movementImg">
@@ -70,23 +70,18 @@
                         <!-- 顶部评论区 -->
                         <el-row type="flex" justify="center">
                             <el-col :span="2">
-                                <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                                <img :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
                         '&type=2'+'&Rand=' + Math.random()" alt="" style="width:40px;height:40px;border-radius:40px;">
                             </el-col>
                             <el-col :span="21" :offset="1">
                                 <el-form ref="blogComment" :model="blogComment" :inline="true">
-                                    <!-- <el-row> -->
                                     <el-form-item style="width:80%;">
                                         <el-input type="textarea" v-model="blogComment.comment" placeholder="评论（不超过120个字符）" size="medium" resize="none" autosize
                                             maxlength="120" style="width:370px;"></el-input>
                                     </el-form-item>
-                                    <!-- </el-row> -->
-                                    <!-- <el-row type="flex" justify="end" style="margin-top:-59px"> -->
-                                    <!-- <el-row type="flex" justify="end"> -->
                                     <el-form-item>
                                         <el-button type="primary" @click="submitBlogComment" plain size="small">评论</el-button>
                                     </el-form-item>
-                                    <!-- </el-row> -->
                                 </el-form>
                             </el-col>
                         </el-row>
@@ -96,7 +91,7 @@
                                 <el-col :span="3">
                                     <img :src="comment.headImg+'&Rand=' + Math.random()" alt="" class="show-comment-img hover-cursor" @click="jumpToUser(comment.Sender_id)">
                                 </el-col>
-                                <el-col :span="3">
+                                <el-col :span="5">
                                     <span class="hover-cursor" @click="jumpToUser(comment.Sender_id)">{{comment.Username}}</span>
                                 </el-col>
                             </el-row>
@@ -131,7 +126,6 @@
                                                 <el-form-item>
                                                     <el-row>
                                                         <el-input type="textarea" v-model="commentComment.comment" placeholder="评论（不超过120个字符）" resize="none" autosize maxlength="120"></el-input>
-                                                        <!-- <el-button type="primary" @click="submitCommentComment(comment)" plain size="small" style="margin-top:8px">评论</el-button> -->
                                                     </el-row>
                                                 </el-form-item>
                                             </el-col>
@@ -152,11 +146,12 @@
                 </el-row>
             </el-col>
             <el-col :span="6" :offset="0">
-                <el-card class="aside" shadow="never">
+                <el-card class="aside" shadow="never" :style="{height:carouselHeight}">
                     <div slot="header" class="clearfix">
                         <el-row type="flex" align="middle">
                             <el-col :span="6" :offset="1">
-                                <img :src="userHeadImg+'&Rand=' + Math.random()" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor" @click="jumpToUser(moment.SenderID)">
+                                <img :src="userHeadImg+'&Rand=' + Math.random()" alt="头像" style="width:80px;height:80px;border-radius:80px;" class="hover-cursor"
+                                    @click="jumpToUser(moment.SenderID)">
                             </el-col>
                             <el-col :span="16">
                                 <el-row type="flex" align="middle">
@@ -166,7 +161,6 @@
                                     <el-col :span="4" :offset="4">
                                         <el-button v-if="moment.SenderID!=$store.state.currentUserId_ID" plain size="small" @click="followHandler(moment,moment.FollowState)"
                                             :class="{followed:moment.FollowState}">{{moment.followState}}</el-button>
-                                        <!-- <i v-if="moment.SenderID==$store.state.currentUserId_ID" class="el-icon-edit"></i> -->
                                         <el-row type="flex" align="middle">
                                             <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-edit" circle style="margin-left:0px" @click="modifyClickHandler"></el-button>
                                             <el-button v-if="moment.SenderID==$store.state.currentUserId_ID" icon="el-icon-delete" circle style="margin-left:10px" @click="deleteClickHandler"></el-button>
@@ -197,7 +191,7 @@
                 <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
                     <el-row>
                         <el-col :span="3" :offset="0">
-                            <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
+                            <img :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'" alt="headImg"
                                 style="width:80px;height:80px;border-radius:80px;">
                         </el-col>
                         <el-col :span="18" :offset="0">
@@ -211,9 +205,8 @@
                                         <el-col :span="6" v-show="showUploadArea"></el-col>
                                         <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
 
-                                            <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
-                                            <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
-                                                :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
+                                            <el-upload ref="upload" action="http://192.168.43.249:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove"
+                                                :file-list="uploadImgs" :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
                                                 :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress"
                                                 :on-exceed="upLoadOnExceed" :show-file-list="true" :limit="9" :multiple="true"
                                                 class="upload" :data="pictureObj">
@@ -270,10 +263,9 @@
         name: 'MomentDetail',
         data() {
             return {
-                // sendText:'',
                 displayDelete: false,
                 loadingPage: true,
-
+                carouselHeight: 0,
                 sendMomentImgNum: 0,
                 userHeadImg: '',
                 hackReset: false,
@@ -290,17 +282,7 @@
                 showTextArea: false,
                 sendText: '',
                 uploadImgs2: [],
-                uploadImgs: [
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                    // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-                ],
+                uploadImgs: [],
                 ableToUpload: true,
                 tags: [],
                 tagsInputVisible: false,
@@ -380,8 +362,7 @@
                 commentComment: {
                     comment: ''
                 },
-                imgList: [
-                ],
+                imgList: [],
                 moment: {
 
                     ID: '111',
@@ -444,9 +425,8 @@
         },
         methods: {
             deleteClickHandler() {
-                // this.$router.push('/main/personalpage');
 
-                this.axios.put('http://10.0.1.8:54468/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
+                this.axios.put('http://192.168.43.249:54468/api/ModifyMoment/DeleteMoment?email=' + this.$store.state.currentUserId +
                         '&moment_id=' + this.$route.params.id)
                     .then((response) => {
                         if (response.data == 0) {
@@ -479,33 +459,22 @@
                 return "";
             },
             deleteAComment(comment) {
-                //////////////api/Coment/DelCmt
                 var formdata = new FormData();
                 formdata.append('Cid', comment.ID);
                 console.log(comment.ID)
-                // formdata.append('Sender_id', this.$store.state.currentUserId_ID);
-                // formdata.append('Content', moment.newComment);
-                // formdata.append('Send_time', '');
-                // formdata.append('Quote_comment_id', '');
                 let config = {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 };
-                this.axios.post('http://10.0.1.8:54468/api/Coment/DelCmt', formdata, config)
+                this.axios.post('http://192.168.43.249:54468/api/Coment/DelCmt', formdata, config)
                     .then((response) => {
-                        // if (response.data == 'OK') {
-                        if (true) {
-                            this.$message({
-                                message: '评论删除成功！',
-                                type: 'success'
-                            });
-                            // this.$router.push('/main/momentDetail/' + this.$route.params.id);
-                            setTimeout(this.refresh(), 3000)
+                        this.$message({
+                            message: '评论删除成功！',
+                            type: 'success'
+                        });
+                        setTimeout(this.refresh(), 3000)
 
-                        }
-                        // location.reload();
-                        //////////////
                     })
                     .catch((error) => {
                         console.log(error);
@@ -521,8 +490,6 @@
                 this.showTextArea = true;
             },
             sendLastHandler: function () {
-                // this.showUploadArea = true;
-                // this.showTextArea = false;
                 this.uploadImgs2 = [];
                 this.tags = [];
                 this.sendText = '';
@@ -534,10 +501,9 @@
             },
             sendMomentHandler: function () {
                 console.log('————发布内容————');
-                // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
                 this.$refs.upload.submit(); //上传图片
 
-                this.axios.put('http://10.0.1.8:54468/api/ModifyMoment/ModifyMoment', {
+                this.axios.put('http://192.168.43.249:54468/api/ModifyMoment/ModifyMoment', {
                         email: this.$store.state.currentUserId,
                         moment_id: this.$route.params.id,
                         content: this.moment.Content
@@ -573,19 +539,18 @@
                     })
 
                 if (this.moment.tags.length > 0) {
-                    // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-                    this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.$route.params.id + '&', {
-                        params: {
-                            TagNames: this.moment.tags,
-                            // Moment_Id: this.$route.params.id
-                        },
-                        paramsSerializer: function (params) {
-                            var Qs = require('qs');
-                            return Qs.stringify(params, {
-                                arrayFormat: 'repeat'
-                            })
-                        }
-                    })
+                    this.axios.get('http://192.168.43.249:54468/api/Tag/AddTag?Moment_Id=' + this.$route.params.id +
+                        '&', {
+                            params: {
+                                TagNames: this.moment.tags,
+                            },
+                            paramsSerializer: function (params) {
+                                var Qs = require('qs');
+                                return Qs.stringify(params, {
+                                    arrayFormat: 'repeat'
+                                })
+                            }
+                        })
                 }
 
             },
@@ -603,30 +568,23 @@
                 return size;
             },
             uploadOnProgress(e, file) { //开始上传
-                // console.log('——————开始上传——————');
-                // console.log(file)
-                // var file = document.getElementById("upload_file").files[0];
                 var oneFile = file.raw;
                 var formdata1 = new FormData(); // 创建form对象
                 formdata1.append('file', oneFile); // 通
-                // formdata1.append('id', 2); // 通
-                // formdata1.append('type', 2); // 通
                 let config = {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 }; //添加请求头
-                this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((response) => { //这里的/xapi/upimage为接口
+                this.axios.post('http://192.168.43.249:54468/api/Picture/Save?id=2&type=1', formdata1, config).then((
+                    response) => { //这里的/xapi/upimage为接口
                     console.log(response.data);
                 })
 
             },
             uploadOnChange(file, fileList) {
-                //console.log("——————————change——————————")
-                // console.log(file)
                 if (file.status == 'ready') {
                     this.uploadImgs2.push(file);
-                    //console.log("ready")
                 } else if (file.status == 'fail') {
                     this.$message.error("图片上传出错，请刷新重试！")
                 }
@@ -635,22 +593,16 @@
                 }
             },
             uploadOnSuccess(e, file, fileList) { //上传附件
-                // console.log("——————————success——————————")
-                // console.log(fileList);
             },
             upLoadOnExceed: function (files, fileList) {
                 this.$message.error('exceed');
                 this.$message.warning(
                     `最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
             },
-            uploadOnError(e, file) {
-                // console.log("——————————error——————————");
-                // console.log(e);
-            },
+            uploadOnError(e, file) {},
 
             handleTagClose(tag) {
                 this.moment.tags.splice(this.moment.tags.indexOf(tag), 1);
-                // console.log(this.moment.tags)
                 if (this.moment.tags.length <= 4) {
                     this.ableToAddTag = true;
                 }
@@ -677,24 +629,20 @@
             modifyClickHandler() {
                 this.sendMomentVisible = true;
                 this.showUpload = true;
-                // this.showTextArea = true;
                 this.sendNextHandler();
             },
             likeListHandler() {
                 this.likeListVisible = true
-                this.axios.get('http://10.0.1.8:54468/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
+                this.axios.get('http://192.168.43.249:54468/api/DisplayLikeList/GetLikeList?&moment_id=' + this.$route.params
                         .id + '&email=' + this.$store.state.currentUserId)
                     .then(((response) => {
                         this.likeUsers = response.data;
                         this.likeUsers.forEach(element => {
-                            // element.headImg = require('../image/a.jpg');
-                            var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                            var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
                                 element.ID +
                                 '&type=2';
                             Vue.set(element, 'headImg', headImg)
                             console.log(element)
-                            // 等待修改
-                            // element.FollowState = true;
                             if (element.FollowState == 'true') {
                                 element.FollowState = true
                                 element.followState = '已关注'
@@ -718,7 +666,8 @@
             },
             collectHandler: function () {
                 if (!this.moment.collectState) {
-                    this.axios.get('http://10.0.1.8:54468/api/Collect/InsertCollect?moment_id=' + this.moment.ID +
+                    this.axios.get('http://192.168.43.249:54468/api/Collect/InsertCollect?moment_id=' + this.moment
+                            .ID +
                             '&founder_id=' + this.$store.state.currentUserId_ID +
                             '&name=' + '默认收藏夹'
                         )
@@ -735,10 +684,9 @@
                         .catch((error) => {
                             console.log(error);
                         });
-                    // this.collectSrc = require('../image/collect.png');
-                    // this.moment.CollectNum++;
                 } else {
-                    this.axios.get('http://10.0.1.8:54468/api/Collect/DeleteCollect?moment_id=' + this.moment.ID +
+                    this.axios.get('http://192.168.43.249:54468/api/Collect/DeleteCollect?moment_id=' + this.moment
+                            .ID +
                             '&user_id=' + this.$store.state.currentUserId_ID
                         )
                         .then((response) => {
@@ -761,12 +709,9 @@
             },
             likeHandler: function () {
                 // console.log(item)
-                this.axios.put('http://10.0.1.8:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state.currentUserId +
+                this.axios.put('http://192.168.43.249:54468/api/DiscoverMoment/UpdateLiking?email=' + this.$store.state
+                    .currentUserId +
                     '&moment_id=' + this.moment.ID
-                    // , {
-                    //     email: this.$store.state.currentUserId,
-                    //     moment_id: item.MomentId
-                    //   }
                 )
 
                 console.log(this.moment.LikeState)
@@ -801,7 +746,7 @@
                         cancelButtonText: '取消',
                         center: true
                     }).then(() => {
-                        this.axios.post('http://10.0.1.8:54468/api/Moment/ForwardMoment', {
+                        this.axios.post('http://192.168.43.249:54468/api/Moment/ForwardMoment', {
                                 User_ID: this.$store.state.currentUserId_ID,
                                 Moment_ID: this.moment.ID
                             })
@@ -830,7 +775,7 @@
             },
             likeFollowHandler: function (user, FollowState) {
 
-                this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.ID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -869,7 +814,7 @@
                 user.FollowState = !user.FollowState;
                 console.log(user.FollowState);
 
-                this.axios.get('http://10.0.1.8:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
+                this.axios.get('http://192.168.43.249:54468/api/Users/Follow?followID=' + this.$store.state.currentUserId_ID +
                         '&followedID=' + user.SenderID)
                     .then((response) => {
                         if (response.data == 0) {
@@ -915,7 +860,8 @@
             submitBlogComment: function () {
                 if (this.blogComment.comment) {
                     this.comments.unshift({
-                        headImg: 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                        headImg: 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state
+                            .currentUserId_ID +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
                         userPage: '',
@@ -927,26 +873,7 @@
                         }
                     });
                     this.moment.CommentNum++;
-                    // this.$message('评论成功！');
-                    // this.blogComment.comment = '';
 
-                    //////////////
-                    // this.axios.post('/moment', {
-                    //         CommentNum: this.moment.CommentNum,
-                    //         comment: this.comments[0]
-                    //     })
-                    //     .then((response) => {
-                    //         if (response.data.code) {
-                    //             this.$message('评论成功！');
-                    //             this.blogComment.comment = '';
-                    //         } else {
-                    //             this.$message.error('评论失败，请重试！');
-                    //         }
-
-                    //     })
-                    //     .catch((error) => {
-                    //         console.log(error);
-                    //     });
 
                     var formdata = new FormData();
                     formdata.append('Mid', this.$route.params.id);
@@ -960,19 +887,14 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     };
-                    this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
+                    this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
-                            // if (response.data == 'OK') {
-                            // if (true) {
                             this.$message({
                                 message: '评论成功！',
                                 type: 'success'
                             });
                             this.blogComment.comment = '';
                             this.messageWebsocketHandler(this.moment.SenderID, 2, this.blogComment.comment)
-                            // } else {
-                            //     this.$message.error('评论失败，请稍后重试！');
-                            // }
                         })
                         .catch((error) => {
                             console.log(error);
@@ -988,7 +910,8 @@
             submitCommentComment: function (comment) {
                 if (this.commentComment.comment) {
                     this.comments.unshift({
-                        headImg: 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+                        headImg: 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state
+                            .currentUserId_ID +
                             '&type=2',
                         Username: this.$store.state.currentUsername,
                         userPage: '',
@@ -1002,25 +925,7 @@
                         }
                     });
                     this.moment.CommentNum++;
-                    // this.$message('评论成功！');
-                    // this.commentComment.comment = '';
                     this.commentAComment(comment);
-                    //////////////
-                    // this.$axios.post('/moment', {
-                    //         CommentNum: this.moment.CommentNum,
-                    //         comment: this.comments[0]
-                    //     })
-                    //     .then((response) => {
-                    //         if (response.data.code) {
-                    //             this.$message('评论成功！');
-                    //             this.commentComment.comment = '';
-                    //         } else {
-                    //             this.$message.error('评论失败，请重试！');
-                    //         }
-                    //     })
-                    //     .catch((error) => {
-                    //         console.log(error);
-                    //     });
                     var formdata = new FormData();
                     formdata.append('Mid', this.$route.params.id);
                     formdata.append('Sender_id', this.$store.state.currentUserId_ID);
@@ -1033,19 +938,14 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     };
-                    this.axios.post('http://10.0.1.8:54468/api/Coment/SvCmt', formdata, config)
+                    this.axios.post('http://192.168.43.249:54468/api/Coment/SvCmt', formdata, config)
                         .then((response) => {
-                            // if (response.data == 'OK') {
-                            // if (true) {
-                                this.$message({
-                                    message: '评论成功！',
-                                    type: 'success'
-                                });
-                                this.messageWebsocketHandler(this.moment.SenderID, 2, this.commentComment.comment)
-                                this.commentComment.comment = '';
-                            // } else {
-                            //     this.$message.error('评论失败，请稍后重试！');
-                            // }
+                            this.$message({
+                                message: '评论成功！',
+                                type: 'success'
+                            });
+                            this.messageWebsocketHandler(this.moment.SenderID, 2, this.commentComment.comment)
+                            this.commentComment.comment = '';
                         })
                         .catch((error) => {
                             console.log(error);
@@ -1067,8 +967,8 @@
             this.$nextTick(() => {
                 this.hackReset = true
             })
-            console.log('route.params',this.$route.params.id)
-            this.axios.get('http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$route.params.id +
+            console.log('route.params', this.$route.params.id)
+            this.axios.get('http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$route.params.id +
                     '&type=1')
                 .then((response) => {
                     this.imgList = [];
@@ -1076,14 +976,31 @@
                     response.data.forEach(element => {
                         console.log('gege')
                         this.imgList.push({
-                            url: 'http://10.0.1.8:54468/api/Picture/Gets?pid=' +
+                            url: 'http://192.168.43.249:54468/api/Picture/Gets?pid=' +
                                 element
                         })
                         console.log(this.imgList)
                     });
+                });
+
+            this.axios.get('http://192.168.43.249:54468/api/Picture/GetSz?mid=' + this.$route.params.id)
+                .then((response) => {
+                    if (response.data != null) {
+                        var width = response.data.width;
+                        var height = response.data.height;
+                        var rate = height / width;
+                        var carouselWidth = window.screen.width * 10 / 24;
+                        var height = carouselWidth * rate;
+                        console.log('-------height---------' + height)
+                        this.carouselHeight = height + 'px';
+                    }
+
                 })
+                .catch((error) => {
+                    console.log(error);
+                });
             //
-            this.axios.get('http://10.0.1.8:54468/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
+            this.axios.get('http://192.168.43.249:54468/api/DisplayMoments/Detail?UserID=' + this.$store.state.currentUserId_ID +
                     '&MomentID=' + this.$route.params.id)
                 .then((response) => {
 
@@ -1091,9 +1008,9 @@
                     this.moment.Username = response.data.user_username;
                     // this.moment.displayDelete = 
 
-                    this.userHeadImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
+                    this.userHeadImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.moment.SenderID +
                         '&type=2';
-                   
+
 
                     if (response.data.FollowState == 0) {
                         this.moment.FollowState = true
@@ -1140,12 +1057,12 @@
                     console.log(error);
                 });
 
-            this.axios.get('http://10.0.1.8:54468/api/Coment/LdCmt?Mid=' + this.$route.params.id)
+            this.axios.get('http://192.168.43.249:54468/api/Coment/LdCmt?Mid=' + this.$route.params.id)
                 .then((response) => {
                     this.comments = [];
                     response.data.forEach(element => {
                         var comment = {};
-                        var headImg = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.Sender_id +
+                        var headImg = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + element.Sender_id +
                             '&type=2';
 
                         Vue.set(comment, 'headImg', headImg)
@@ -1270,12 +1187,10 @@
     }
 
     .pic img {
-        vertical-align: middle;
         width: 100%;
     }
 
     .aside {
-        height: 500px;
         position: relative;
     }
 

@@ -2,7 +2,7 @@
 
 ——by 孙晓青
 
-## 1. InsertCollection
+## 1. InsertCollection Finished
 
 功能说明：创建收藏夹
 
@@ -29,7 +29,7 @@
 
 
 
-## 2. DeleteCollection
+## 2. DeleteCollection Finished
 
 功能说明：删除收藏夹（收藏夹下原有的所有动态也被取消收藏）
 
@@ -54,9 +54,11 @@
 | 1      | name = “默认收藏夹”——>无法执行删除操作 |
 | 2      | ....删除失败                           |
 
+http://10.0.1.8:54468/api/Collection/ReturnCollectionContentID?FounderID=16&Name=%E9%BB%98%E8%AE%A4%E6%94%B6%E8%97%8F%E5%A4%B9
 
+http://10.0.1.8:54468/api/Users/ReturnCollectionContentID?FounderID=16&Name=%E8%AF%95%E8%AF%95
 
-## 3. RenameCollection
+## 3. RenameCollection Finished
 
 功能说明：重命名收藏夹（新名字不可与同一用户的其他现有收藏夹重复）
 
@@ -85,7 +87,7 @@
 
 
 
-## 4. ReturnMomentNumInACollection
+## 4. ReturnMomentNumInACollection Finished
 
 功能说明：统计某一收藏夹下的动态总数
 
@@ -102,7 +104,7 @@
 
 
 
-## 5. GetFirstPicIDbyMomentID
+## 5. GetFirstPicIDbyMomentID Finished
 
 功能说明：根据动态ID获取该动态第一张图片的ID
 
@@ -118,7 +120,7 @@
 
 
 
-## 6. ReturnCollectionCoverPicID
+## 6. ReturnCollectionCoverPicID 无用
 
 功能说明：
 
@@ -137,7 +139,7 @@
 
 
 
-## 7. ReturnUserCollections
+## 7. ReturnUserCollections Finished
 
 功能说明：
 
@@ -161,7 +163,7 @@
 
 
 
-## 8. ReturnCollectionContentID
+## 8. ReturnCollectionContentID Finished
 
 功能说明：
 
@@ -171,10 +173,10 @@
 
 输入参数：
 
-| 参数名称 | 参数类型 | 说明                 |
-| -------- | -------- | -------------------- |
-| FounerID | string   | 收藏夹所有者的用户ID |
-| Name     | string   | 收藏夹名称           |
+| 参数名称  | 参数类型 | 说明                 |
+| --------- | -------- | -------------------- |
+| FounderID | string   | 收藏夹所有者的用户ID |
+| Name      | string   | 收藏夹名称           |
 
 返回值类型：List<string>     （动态ID的列表）
 

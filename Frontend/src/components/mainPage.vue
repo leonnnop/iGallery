@@ -1,25 +1,18 @@
 <template>
   <el-container class="container-back">
     <div class="container-background"></div>
-    <!-- <div :class="{loadingbackground:loadingPage}"></div> -->
     <el-col>
       <el-row type="flex" id="topBar" align="middle" :class="navBarFixed == true ? 'navBarWraps' :''" style="background-color:white; width: 100%;font-size: 18px; height:55px; padding-top:5px">
         <el-col :span="1" :offset="1">
           <img src="../image/logo.png" alt="logo" height="30">
         </el-col>
         <el-col :span="3">
-          <!-- <span>iGallery</span> -->
           <img src="../image/iga_exa.png" alt="example pic" height="35">
         </el-col>
         <el-col :span="5">
           <el-menu :default-active="topBarActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleTopBarSelect" style="margin-top:-12px;border-bottom:0">
             <el-menu-item index="user">首页</el-menu-item>
-            <!-- <el-submenu index="recommend">
-              <template slot="title">个人主页</template>
-              <el-menu-item index="blogs">博文</el-menu-item>
-              <el-menu-item index="users">用户</el-menu-item>
-              <el-menu-item index="topic">话题</el-menu-item>
-            </el-submenu> -->
+
             <el-menu-item index="personalpage">我的主页</el-menu-item>
 
             <el-menu-item index="photoWall">发现</el-menu-item>
@@ -34,7 +27,6 @@
         </el-col>
         <el-col :span="1">
           <el-badge :is-dot="bellDot" class="item_bell" style="margin-top:-4px">
-            <!-- <el-button class="share-button" icon="el-icon-share" type="primary"></el-button> -->
             <i class="el-icon-bell" @click="bellClickHandler"></i>
           </el-badge>
         </el-col>
@@ -57,7 +49,7 @@
     <el-dialog title="" :visible.sync="sendMomentVisible" width="50%" custom-class="sends" :show-close="false" top="10px">
       <el-row>
         <el-col :span="3" :offset="0">
-          <img :src="'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()"
+          <img :src="'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +this.$store.state.currentUserId_ID +'&type=2'+'&Rand=' + Math.random()"
             alt="headImg" style="width:80px;height:80px;border-radius:80px;">
         </el-col>
         <el-col :span="18" :offset="0">
@@ -71,11 +63,10 @@
                 <el-col :span="6" v-show="showUploadArea"></el-col>
                 <el-col :span="18" v-show="showUploadArea" v-if="showUpload">
 
-                  <!-- <el-upload ref="upload" action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-remove="handleRemove" -->
-                  <el-upload ref="upload" action="http://10.0.1.8:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove" :file-list="uploadImgs"
-                    :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange" :on-success="uploadOnSuccess"
-                    :on-error="uploadOnError" :on-progress="uploadOnProgress" :on-exceed="upLoadOnExceed" :show-file-list="true"
-                    :limit="9" :multiple="true" class="upload" :data="pictureObj">
+                  <el-upload ref="upload" action="http://192.168.43.249:54468/api/Picture" list-type="picture-card" :on-remove="handleRemove"
+                    :file-list="uploadImgs" :auto-upload="false" :before-upload="beforeUpload" :on-change="uploadOnChange"
+                    :on-success="uploadOnSuccess" :on-error="uploadOnError" :on-progress="uploadOnProgress" :on-exceed="upLoadOnExceed"
+                    :show-file-list="true" :limit="9" :multiple="true" class="upload" :data="pictureObj">
                     <i class="el-icon-plus"></i>
                   </el-upload>
 
@@ -100,7 +91,6 @@
             <el-row type="flex" justify="space-between" align="middle" style="margin-top:10px" v-if="showUploadArea&&!showTextArea">
               <el-col :span="12" :offset="4" v-if="!showTextArea">已选择{{sendMomentImgNum}}张图片，最多可选择9张图片</el-col>
               <el-col :span="4">
-                <img src="../image/arrow-left.png" alt="" @click="sendLastHandler" class="sendMomentBtn">
               </el-col>
               <el-col :span="4">
                 <img src="../image/send-moment.png" @click="sendMomentHandler" v-if="showNextBtn" class="sendMomentBtn">
@@ -110,9 +100,6 @@
               <el-col :span="4">
                 <img src="../image/arrow-right.png" @click="sendNextHandler" class="sendMomentBtn">
               </el-col>
-              <!-- <el-col :span="4">
-                      <img src="../image/send-moment.png" @click="sendMomentHandler" class="sendMomentBtn">
-                    </el-col> -->
             </el-row>
           </div>
 
@@ -125,26 +112,15 @@
 </template>
 
 <style>
-  /* .loadingbackground {
-    position: fixed;
-    z-index: 1000;
-    height: 100%;
-    width: 100%;
-    background-image: url(../image/slash.png);
-    background-repeat: repeat;
-  } */
-
   .item_bell {
     margin-top: 10px;
     margin-right: 40px;
   }
 
   .container-back {
-    /* background-color: #fafafa; */
     background-image: url(../image/slash.png);
     background-repeat: repeat;
     background-size: 100% 100%
-    /* background- */
   }
 
   .container-background {
@@ -172,8 +148,6 @@
     position: relative;
     -webkit-box-shadow: 0 0;
     box-shadow: 0 0;
-    /* opacity: 0; */
-    /* background-color: aqua */
   }
 
   .sendsContent {
@@ -258,17 +232,7 @@
         showTextArea: false,
         sendText: '',
         uploadImgs2: [],
-        uploadImgs: [
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-          // {name: 'pic1', url:'http://streetwill.co/uploads/post/photo/266/show_l3Qk6zzdADiMWz3c3sQXEGHIrgNBsF5L7Jahp0dN6kY.jpg'},
-        ],
+        uploadImgs: [],
         ableToUpload: true,
         tags: [],
         tagsInputVisible: false,
@@ -298,14 +262,12 @@
         this.$router.push('/main/message/self');
         this.topBarActiveIndex = '0'
         this.bellDot = false;
-        // this.$router.push('/main/leaderboard');
       },
       handleTopBarSelect(key, keyPath) {
         console.log('/' + key);
 
         if (key == 'user') {
           key = 'user/' + this.$store.state.currentUserId;
-          // console.log(key)
         } else if (key == 'personalpage') {
           key = 'personalpage/' + this.$store.state.currentUserId_ID;
         }
@@ -320,15 +282,13 @@
         } else {
           this.navBarFixed = false
         }
-        // console.log(scrollTop)
       },
       sendMomentInit: function () {
         this.sendMomentVisible = true;
         this.showUpload = true;
-        // this.showTextArea = true;
         this.sendLastHandler();
 
-        this.axios.get('http://10.0.1.8:54468/api/Moment/NextMomentID')
+        this.axios.get('http://192.168.43.249:54468/api/Moment/NextMomentID')
           .then((response) => {
             this.currentMomentID = response.data;
           })
@@ -337,7 +297,7 @@
         this.showUploadArea = true;
         this.showTextArea = false;
 
-        this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
+        this.axios.post('http://192.168.43.249:54468/api/Moment/InsertMoment', {
             ID: this.currentMomentID,
             SenderID: this.$store.state.currentUserId_ID,
             Content: this.sendText,
@@ -349,11 +309,20 @@
           })
           .then((response) => {
             if (response.data == 0) {
-              // this.$message({
-              //   message: '发布成功！',
-              //   type: 'success'
-              // });
-              // this.myre
+
+              if (this.tags.length > 0) {
+                this.axios.get('http://192.168.43.249:54468/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
+                  params: {
+                    TagNames: this.tags,
+                  },
+                  paramsSerializer: function (params) {
+                    var Qs = require('qs');
+                    return Qs.stringify(params, {
+                      arrayFormat: 'repeat'
+                    })
+                  }
+                })
+              }
             } else {
               this.$message.error('本次发布失败，服务器内部错误，请重试。');
               this.uploadImgs2 = [];
@@ -369,21 +338,7 @@
 
         console.log(this.tags)
 
-        if (this.tags.length > 0) {
-          // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-          this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=' + this.currentMomentID + '&', {
-            params: {
-              TagNames: this.tags,
-              // Moment_Id: this.$route.params.id
-            },
-            paramsSerializer: function (params) {
-              var Qs = require('qs');
-              return Qs.stringify(params, {
-                arrayFormat: 'repeat'
-              })
-            }
-          })
-        }
+
       },
       sendLastHandler: function () {
         this.showUploadArea = false;
@@ -397,8 +352,6 @@
         this.$store.commit('addCurrentUserPhoto', this.getCookie(Photo));
       },
       sendMomentHandler: function () {
-        // console.log('————发布内容————');
-        // this.pictureURL = 'http://10.0.1.8:54468/api/Picture?id=2&type=2';
         this.$refs.upload.submit(); //上传图片
 
         this.uploadImgs2 = [];
@@ -410,75 +363,7 @@
         this.showTextArea = false;
         this.showUpload = false;
 
-        // this.$message({
-        //   message: '发布成功！',
-        //   type: 'success'
-        // })
 
-        // setTimeout(this.refresh(), 4000)
-
-        // location.reload();
-
-        // this.axios.post('http://10.0.1.8:54468/api/Moment/InsertMoment', {
-        //     ID: this.currentMomentID,
-        //     SenderID: this.$store.state.currentUserId_ID,
-        //     Content: this.sendText,
-        //     LikeNum: 0,
-        //     ForwardNum: 0,
-        //     CollectNum: 0,
-        //     CommentNum: 0,
-        //     Time: '',
-        //   })
-        //   .then((response) => {
-        //     if (response.data == 0) {
-        //       this.$message({
-        //         message: '发布成功！',
-        //         type: 'success'
-        //       });
-        //     } else {
-        //       this.$message.error('发表失败，服务器内部错误，请重试。');
-        //     }
-
-        //     this.uploadImgs2 = [];
-        //     this.tags = [];
-        //     this.sendText = '';
-        //     this.sendMomentVisible = false;
-        //     this.showUploadArea = true;
-        //     this.showNextBtn = false;
-        //     this.showTextArea = false;
-        //     this.showUpload = false;
-        //   });
-        // if (tags.length > 0) {
-        //   this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag', {
-        //     params: {
-        //       'TagNames[]': tags,
-        //       Moment_Id: this.$route.params.id
-        //     },
-        //     paramsSerializer: function (params) {
-        //       return Qs.stringify(params, {
-        //         arrayFormat: 'repeat'
-        //       })
-        //     }
-        //   })
-        // }
-
-        // console.log(this.tags)
-
-        // if (this.tags.length > 0) {
-        //   // this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id='+this.currentMomentID+'&', {
-        //   this.axios.get('http://10.0.1.8:54468/api/Tag/AddTag?Moment_Id=4&', {
-        //     params: {
-        //       TagNames: this.tags,
-        //       // Moment_Id: this.$route.params.id
-        //     },
-        //     paramsSerializer: function (params) {
-        //       var Qs = require('qs');
-        //       return Qs.stringify(params, {
-        //         arrayFormat: 'repeat'
-        //       })
-        //     }
-        //   })
-        // }
       },
       //上传组件
       getCookie(name) {
@@ -497,28 +382,18 @@
         }
       },
       beforeUpload: function (file) {
-        const size = file.size / 1024 / 1024 < 3;
-        if (!size) {
-          this.$message.error('上传图片大小不能超过 3MB!');
-        }
-        return size;
+
       },
       myfresh() {
         this.$router.push('/main/leaderboard');
-        // this.$router.push('/main/personalpage/' + email);
       },
       uploadOnProgress(e, file, fileList) { //开始上传
-        // console.log('——————开始上传——————');
-        // console.log(file)
-        // var file = document.getElementById("upload_file").files[0];
 
-        // console.log(fileList)
 
         var oneFile = file.raw;
         var formdata1 = new FormData(); // 创建form对象
         formdata1.append('file', oneFile); // 通
-        // formdata1.append('id', 2); // 通
-        // formdata1.append('type', 2); // 通
+
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -526,7 +401,8 @@
         }; //添加请求头
 
 
-        this.axios.post('http://10.0.1.8:54468/api/Picture/Save?id=' + this.currentMomentID + '&type=1', formdata1,
+        this.axios.post('http://192.168.43.249:54468/api/Picture/Save?id=' + this.currentMomentID + '&type=1',
+          formdata1,
           config).then((response) => { //这里的/xapi/upimage为接口
           console.log(response.data);
           console.log('啊哈哈', this.fileListLength)
@@ -535,21 +411,13 @@
             this.myfresh()
           }
         })
-        // if (this.fileListLength == 1) {
-        //   this.myfresh()
-        // }
 
 
       },
       uploadOnChange(file, fileList) {
-        //console.log("——————————change——————————")
-        // console.log(file)
         if (file.status == 'ready') {
           this.uploadImgs2.push(file);
-          //console.log("ready")
-        } else if (file.status == 'fail') {
-          // this.$message.error("图片上传出错，请刷新重试！")
-        }
+        } else if (file.status == 'fail') {}
         if (fileList.length) {
           this.showNextBtn = true;
         }
@@ -558,17 +426,12 @@
 
       },
       uploadOnSuccess(e, file, fileList) { //上传附件
-        // console.log("——————————success——————————")
-        // console.log(fileList);
       },
       upLoadOnExceed: function (files, fileList) {
         this.$message.error('exceed');
         this.$message.warning(`最多可选 9 张图片，本次选择了 ${files.length} 张图片，共选择了 ${files.length + fileList.length} 张图片`);
       },
-      uploadOnError(e, file) {
-        // console.log("——————————error——————————");
-        // console.log(e);
-      },
+      uploadOnError(e, file) {},
 
       handleTagClose(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
@@ -610,17 +473,13 @@
       }
     },
     created() {
-      // window.addEventListener('onload', start)
-      // window.addEventListener('onload', myHollowClick)
       var that = this;
       var start = () => {
         var wsImpl = window.WebSocket || window.MozWebSocket;
         console.log('websocket', that.$store.state.currentUserId_ID)
 
-        // 创建新的websocket新连接端口为7181
-        window.ws = new wsImpl('ws://10.0.1.84:8181/' + that.$store.state.currentUserId_ID)
+        window.ws = new wsImpl('ws://192.168.43.140:8181/' + that.$store.state.currentUserId_ID)
 
-        // 当数据从服务器服务中心发送后，继续向下运行过程
         ws.onmessage = function (evt) {
           console.log('..我收到了')
 
@@ -635,19 +494,14 @@
           }
         };
 
-        // 当链接对象找到服务端成功对接后，提示正常打开
         ws.onopen = function () {
           console.log('.. connection open<br/>');
-          // ws.send(that.$store.state.currentUserId_ID)
         };
 
-        // 当链接对象未找找到服务端成功对接后，提示打开失败，别切单项关闭
         ws.onclose = function () {
           console.log('.. connection closed<br/>')
-          // ws.send('/' + that.$store.state.currentUserId_ID)
         }
       }
-      // window.onload = start;
       var myHollowClick = function () {
         var click_cnt = 0;
         var $html = document.getElementsByTagName("html")[0];
@@ -668,50 +522,7 @@
           let click_cnt_text = click_cnt % texts.length;
           let click_cnt_color = click_cnt % colors.length;
           $elem.innerText = texts[click_cnt_text];
-          // $elem.style.color = colors[click_cnt_color];
           click_cnt++;
-          // switch (++click_cnt) {
-          //   case 10:
-          //     $elem.innerText = "OωO";
-          //     break;
-          //   case 20:
-          //     $elem.innerText = "(๑•́ ∀ •̀๑)";
-          //     break;
-          //   case 30:
-          //     $elem.innerText = "(๑•́ ₃ •̀๑)";
-          //     break;
-          //   case 40:
-          //     $elem.innerText = "(๑•̀_•́๑)";
-          //     break;
-          //   case 50:
-          //     $elem.innerText = "（￣へ￣）";
-          //     break;
-          //   case 60:
-          //     $elem.innerText = "(╯°口°)╯(┴—┴";
-          //     break;
-          //   case 70:
-          //     $elem.innerText = "૮( ᵒ̌皿ᵒ̌ )ა";
-          //     break;
-          //   case 80:
-          //     $elem.innerText = "╮(｡>口<｡)╭";
-          //     break;
-          //   case 90:
-          //     $elem.innerText = "( ง ᵒ̌皿ᵒ̌)ง⁼³₌₃";
-          //     break;
-          //   case 100:
-          //   case 101:
-          //   case 102:
-          //   case 103:
-          //   case 104:
-          //   case 105:
-          //     $elem.innerText = "(ꐦ°᷄д°᷅)";
-          //     break;
-          //   default:
-          //     // 手动更换下面这行双引号里面的内容 如"😀"
-          //     $elem.innerText = "❤";
-          //     break;
-          // }
-          // $elem.style.fontSize = Math.random() * 10 + 8 + "px";
           $elem.style.fontSize = '16px'
           var increase = 0;
           var anim;
@@ -728,30 +539,9 @@
           $body.appendChild($elem);
         };
       };
-      // window.addEventListener('load', start)
-      // window.addEventListener('load', myHollowClick)
       start();
       myHollowClick();
     }
-
-    // mounted: function () {
-    //   this.$nextTick(function () {
-    //     // Code that will run only after the
-    //     // entire view has been rendered
-    //     console.log('mouted')
-    //     setTimeout(this.backgroundHandler(), 1000);
-    //   })
-    // },
-    // beforeRouteEnter(from, to, next) {
-    //   next(vm => {
-    //     vm.$nextTick(function () {
-    //       // Code that will run only after the
-    //       // entire view has been rendered
-    //       console.log('mouted')
-    //       setTimeout(vm.backgroundHandler(), 1000);
-    //     })
-    //   })
-    // }
 
   };
 </script>

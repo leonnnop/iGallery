@@ -37,21 +37,10 @@
                             </el-form-item>
                         </el-form>
                     </el-row>
-                    <!-- <el-row type="flex" :justify="'center'">
-                        <el-input placeholder="密码" v-model="keyword" clearable>
-                        </el-input>
-                    </el-row> -->
-                    <!-- <el-row type="flex" :justify="'center'" style="margin-top:20px;" class="manuallyDown"> -->
                     <el-row type="flex" :justify="'center'" v-if="emailValid" style="margin-top:40px">
 
                         <el-button type="primary" plain size="medium" style="width:60%" @click="registerButtonClick">注册</el-button>
                     </el-row>
-                    <!-- <el-row type="flex" :justify="'center'" :class="{manuallyDown:(!emailValid)&&(!emailCodeSent),manuallyUp:emailValid&&(!emailCodeSent),manuallyMiddle:emailCodeSent}">
-                        - 或 -
-                    </el-row>
-                    <el-row type="flex" :justify="'center'" style="margin-top:10px;color:#9b9b9b;font-size:12px;">
-                        <el-button size="small" type="text">随便看看</el-button>
-                    </el-row> -->
                     <el-row type="flex" :justify="'center'" :class="{manuallyDown:(!emailValid)&&(!emailCodeSent),manuallyUp:emailValid&&(!emailCodeSent),manuallyMiddle:emailCodeSent}">
                         <p style="font-size:14px; margin:18px 20px 20px 20px;">
                             注册即表示你同意接受我们的条款、数据使用政策和 Cookie 政策 。
@@ -164,7 +153,7 @@
 </style>
 
 <script>
-import md5 from 'js-md5';
+    import md5 from 'js-md5';
 
     export default {
         data() {
@@ -199,7 +188,7 @@ import md5 from 'js-md5';
 
         methods: {
             sendCodeButtonClick() {
-                this.axios.get('http://10.0.1.8:54468/api/Users/VerifyRegister?Email=' + this.email)
+                this.axios.get('http://192.168.43.249:54468/api/Users/VerifyRegister?Email=' + this.email)
                     .then((response) => {
                         if (response.data == 1) {
                             this.$message({
@@ -237,15 +226,6 @@ import md5 from 'js-md5';
                 this.$router.push('/login');
             },
             resultHandler(result) {
-                // if (result == 'success') {
-                //     this.$message({
-                //         message: '注册成功！将在三秒后跳转至登录界面！',
-                //         type: 'success'
-                //     });
-                //     setTimeout(jumpLogIn, 1000);
-                // } else {
-                //     this.$message.error('注册失败！请重试！');
-                // }
                 if (result == 0) {
                     this.$message({
                         message: '注册成功！将在三秒后跳转至登录界面！',
@@ -261,8 +241,8 @@ import md5 from 'js-md5';
             registerButtonClick() {
                 if (this.isEmail(this.email)) {
                     // this.axios.get('http://10.0.1.61:50192/api/values/5')
-                    var md5Pass = (md5(this.ruleForm.password)).substr(0,20);
-                    this.axios.post('http://10.0.1.8:54468/api/Users/Register', {
+                    var md5Pass = (md5(this.ruleForm.password)).substr(0, 20);
+                    this.axios.post('http://192.168.43.249:54468/api/Users/Register', {
                             Email: this.email,
                             Username: this.username,
                             Password: md5Pass,

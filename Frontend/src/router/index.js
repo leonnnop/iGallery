@@ -1,12 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
 import mainPage from '@/components/mainPage'
 import leaderBoard from '@/components/leaderBoard'
-import blogs from '@/components/blogs'
 import user from '@/components/user'
-import users from '@/components/users'
-import topic from '@/components/topic'
 import register from '@/components/register'
 import Login from '@/components/Login'
 import photoWall from '@/components/photoWall'
@@ -15,7 +11,6 @@ import personalpage from '@/components/personalpage'
 import set from '@/components/set'
 import MomentDetail from '@/components/MomentDetail'
 import tag from '@/components/tag'
-import userpage from '@/components/userpage'
 import SearchResult from '@/components/SearchResult'
 import Message from '@/components/Message'
 
@@ -51,22 +46,10 @@ export default new Router({
         name: 'leaderBoard',
         component: leaderBoard
       }, {
-        path: 'blogs',
-        name: 'blogs',
-        component: blogs
-      }, {
-        path: 'users',
-        name: 'users',
-        component: users
-      }, {
         path: 'user/:id',
         name: 'user',
         component: user
-      }, {
-        path: 'topic',
-        name: 'topic',
-        component: topic
-      }, {
+      },{
         path: 'photowall',
         name: 'photowall',
         component: photoWall
@@ -86,10 +69,6 @@ export default new Router({
         path: 'tag/:id',
         name: 'tag',
         component: tag
-      },{
-        path:'userpage/:id',
-        name:'userpage',
-        component:userpage
       },{
         path:'searchResult/:keyword',
         name:'searchResult',

@@ -4,7 +4,6 @@
       <div :style="fixStyle" class="filter">
         <div style="text-align:center;position:relative">
 
-
           <el-card class="box-card LoginForm" style="width:400px;">
             <el-row style="margin-top:30px;">
               <img src="../image/iga_exa.png" alt="logo" height="60">
@@ -24,8 +23,9 @@
                       <el-button type="text" @click="toForgetPsw">忘记密码?</el-button>
                     </el-col>
                   </el-row>
-                  <el-button type="primary" @click="handleLogin('ruleForm')" style="margin-top:20px;width:80%" plain>登陆</el-button>
-                  <el-row></el-row>
+                  <el-row>
+                    <el-button type="primary" @click="handleLogin('ruleForm')" style="margin-top:20px;width:80%" plain>登陆</el-button>
+                  </el-row>
                   <el-row type="flex" justify="center" align="middle" style="margin-top:20px">
                     <el-col :span="6">
                       <div style="height:30px;line-height:30px">没有账户?</div>
@@ -54,7 +54,7 @@
 
 <script>
   import qs from 'qs'
-import md5 from 'js-md5';
+  import md5 from 'js-md5';
 
   export default {
     name: 'Login',
@@ -101,10 +101,11 @@ import md5 from 'js-md5';
         console.log(this.ruleForm);
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.ruleForm.email + "&Password=" +
-                (md5(this.ruleForm.password)).substr(0,20))
+            this.axios.get("http://192.168.43.249:54468/api/Users/Login?Email=" + this.ruleForm.email +
+                "&Password=" +
+                (md5(this.ruleForm.password)).substr(0, 20))
               .then((response) => {
-                if (response.data == 'Not Found') {
+                if (response.data == 'NotFound') {
                   this.$message.error('邮箱不存在！请先注册一个账户！');
                 } else if (response.data == 'Error') {
                   this.$message.error('密码错误！');
@@ -114,7 +115,7 @@ import md5 from 'js-md5';
                   console.log(this.$store.state.currentUserId_ID)
                   this.$router.push('/main/user/' + this.ruleForm.email);
 
-                  this.axios.get("http://10.0.1.8:54468/api/Users/GetUserInfo?email=" + this.$store.state.currentUserId)
+                  this.axios.get("http://192.168.43.249:54468/api/Users/GetUserInfo?email=" + this.$store.state.currentUserId)
                     .then((response) => {
                       this.$store.commit('addCurrentUsername', response.data.Username);
                       this.$store.commit('addCurrentUserPassword', response.data.Password);
@@ -123,7 +124,8 @@ import md5 from 'js-md5';
 
                       var exp = new Date();
                       exp.setTime(exp.getTime() + 1000 * 60 * 60 * 24); //这里表示保存24小时
-                      this.document.cookie = "Username=" + response.data.Username + ";Password=" + response.data.Password +
+                      this.document.cookie = "Username=" + response.data.Username + ";Password=" + response.data
+                        .Password +
                         ";Bio=" + response.data.Bio + ";Photo=" + response.data.Photo + ";expires=" + exp.toGMTString();
 
                       console.log(this.$store.state)
@@ -135,7 +137,6 @@ import md5 from 'js-md5';
                 console.log(error);
               })
           } else {
-            //this.$message.error('不合法的输入！');
             return false;
           }
         });
@@ -180,7 +181,6 @@ import md5 from 'js-md5';
 </script>
 
 <style scoped>
-
   .form {
     margin: 50px 0;
   }

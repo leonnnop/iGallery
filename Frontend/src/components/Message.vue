@@ -93,7 +93,6 @@
                     <el-row v-if="messageFollow.length" v-for="(user,index) in messageFollow" :key="index" class="like-list" @click.native="jumpToUser(user.ID)">
                         <el-col :span="2" :offset="1">
                             <div style="width:45px;height:45px;border-radius:45px;background-position:center;background-size:cover;" :style="{backgroundImage:'url('+(user.Photo)+'&Rand=' + Math.random() + ')'}">
-                                <!-- <img :src="user.Photo" alt="" style="width:45px;height:45;border-radius:45px"> -->
                             </div>
                         </el-col>
                         <el-col :span="15">
@@ -116,9 +115,6 @@
                                 <img :src="msgTypeSrc" alt="messageType" class="middle">
                             </div>
                         </el-col>
-                        <!-- <el-col :span="3" style="font-weight:600;line-height:40px;">{{msg.user.Username}}</el-col>
-                        <el-col :span="13" style="color:#6191d5;line-height:40px;" class="message-pre">{{msg.moment.Content}}</el-col>
-                        <el-col :span="6" style="font-size:12px;color:#999;line-height:40px;text-align:end;">{{msg.moment.Time}}</el-col> -->
                         <el-col :span="3" style="font-weight:600;line-height:40px;" class="message-pre">{{msg.user.Username}}</el-col>
                         <el-col :span="13" :offset="1" style="color:#6191d5;line-height:40px;" class="message-pre">{{msg.moment.Content}}</el-col>
                         <el-col :span="5" style="font-size:12px;color:#999;line-height:40px;text-align:end;">{{msg.moment.Time}}</el-col>
@@ -236,7 +232,7 @@
     .dialog {
         height: 450px;
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: scroll;
         padding-right: 30px;
         margin-right: -30px;
         max-height: 450px;
@@ -305,13 +301,7 @@
 </style>
 
 <script>
-    // var msg_end=document.getElementById('msg_end');
     import Vue from 'vue'
-
-    window.onload = function () {
-        var dialog = document.getElementById('dialog');
-        dialog.scrollTop = dialog.scrollHeight;
-    }
 
     export default {
         data() {
@@ -340,87 +330,32 @@
                 bubbleRight: require('../image/bubble-right.png'),
                 //私信列表
                 messageUserList: [
-                    //     {
-                    //     ID: '1',
-                    //     Username: 'user1',
-                    //     Photo: require('../image/a.jpg'),
-                    //     message: '肝不动了嘤嘤嘤我要回家',
-                    //     selected: false
-                    // }, {
-                    //     ID: '2',
-                    //     Username: 'user2',
-                    //     Photo: require('../image/a.jpg'),
-                    //     message: '辣鸡代码了解一下',
-                    //     selected: false
-                    // }
+
                 ],
                 // 两人的私信
                 messages: [
-                    //     {
-                    //     identity: 0,
-                    //     content: '肝度太强，最近感觉头上有点冷，霸王生姜洗发水了解一下'
-                    // }, {
-                    //     identity: 1,
-                    //     content: '我是不是要变强了'
-                    // }, {
-                    //     identity: 0,
-                    //     content: '哈哈哈你变秃了，也变强了'
-                    // }, {
-                    //     identity: 1,
-                    //     content: '恭喜数据库课设喜提我狗命'
-                    // }, {
-                    //     identity: 0,
-                    //     content: '怕了怕了'
-                    // }, {
-                    //     identity: 1,
-                    //     content: '肝不动了嘤嘤嘤我要回家'
-                    // }
+
                 ],
                 //其他通知列表
                 messageMoment: [
-                    //     {
-                    //     moment: {
-                    //         ID: '1',
-                    //         Content: '打扰了',
-                    //         Time: '07/25/2018 12:53:13'
-                    //     },
-                    //     user: {
-                    //         ID: '1',
-                    //         Username: 'loststars'
-                    //     }
-                    // }, {
-                    //     moment: {
-                    //         ID: '2',
-                    //         Content: '不打扰',
-                    //         Time: '07/25/2018 12:53:13'
-                    //     },
-                    //     user: {
-                    //         ID: '2',
-                    //         Username: 'loststars'
-                    //     }
-                    // }
+
                 ],
                 //关注通知列表
                 messageFollow: [
-                    //     {
-                    //     ID: '1',
-                    //     Username: '友逹',
-                    //     Photo: require('../image/hex.jpeg'),
-                    //     Bio: '恭喜生活喜提我狗命，恭喜小学期喜提我狗命，恭喜数据库课设喜提我狗命，恭喜后端喜提我狗命'
-                    // }, {
-                    //     ID: '2',
-                    //     Username: 'lex',
-                    //     Photo: require('../image/hex.jpeg'),
-                    //     Bio: ''
-                    // }
+
                 ]
             }
         },
         created() {
-            this.photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
+            this.photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' + this.$store.state.currentUserId_ID +
                 '&type=2';
             //一开始只请求私信的相关数据
             this.messageInit();
+
+        },
+        mounted() {
+            var dialog = document.getElementById('dialog');
+            dialog.scrollTop = dialog.scrollHeight;
         },
         methods: {
             init: function () {
@@ -440,8 +375,6 @@
                 if (key == 'message') {
                     this.isMessage = true;
                     this.messageIcon = require('../image/active-message-icon.png');
-                    // this.questUsers();
-                    // this.questMessages();
                 } else if (key == 'follow') {
                     this.isFollow = true;
                     this.followIcon = require('../image/active-follow-icon.png');
@@ -468,7 +401,7 @@
                 // console.log(this.currentTalker.ID)
             },
             sendMessage() {
-                this.axios.post('http://10.0.1.8:54468/api/Message/SendMessage', {
+                this.axios.post('http://192.168.43.249:54468/api/Message/SendMessage', {
                         Sender_ID: this.$store.state.currentUserId_ID,
                         Receiver_ID: this.currentTalker.ID,
                         Send_Time: this.getNowFormatDate(),
@@ -478,7 +411,6 @@
                         if (response.data == 0) {
                             var dialogInner = document.getElementById('dialog-inner');
                             var dialog = document.getElementById('dialog');
-                            // console.log(dialog.scrollTop);
                             dialogInner.innerHTML = dialogInner.innerHTML +
                                 '<div class="content">' +
                                 '<div>' +
@@ -532,7 +464,8 @@
                 this.questMessages();
 
                 var dialog = document.getElementById('dialog');
-                dialog.scrollTop = dialog.scrollHeight;
+                dialog[0].scrollTop = dialog[0].scrollHeight;
+                console.log(dialog.scrollTop)
                 this.messageInput = '';
             },
             getNowFormatDate() {
@@ -566,18 +499,18 @@
                 return currentdate;
             },
             messageInit: function () {
-                // this.questUsers();
                 //请求私信用户列表
-                this.axios.get('http://10.0.1.8:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://192.168.43.249:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
                             Vue.set(element, 'selected', false);
-                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                            var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo);
                             //最后一条私信内容
-                            this.axios.get('http://10.0.1.8:54468/api/Message/GetMessage', {
+                            this.axios.get('http://192.168.43.249:54468/api/Message/GetMessage', {
                                     params: {
                                         Sender_ID: this.$store.state.currentUserId_ID,
                                         Receiver_ID: element.ID
@@ -605,21 +538,19 @@
                                 //在历史私信列表中，直接选中
                                 if (element.ID == currentTalkerId) {
                                     element.selected = true;
-                                    // let temp = element;
                                     this.currentTalker = element;
                                     if (!("message" in this.currentTalker)) {
-                                        Vue.set(this.currentTalker,'message',"")
+                                        Vue.set(this.currentTalker, 'message', "")
                                     }
-                            
+
                                     index--;
-                                    // break;
                                 }
                                 index++;
                             });
                             //不在历史私信用户列表中
                             if (index == this.messageUserList.length) {
                                 //插入新的私信用户
-                                this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID', {
+                                this.axios.get('http://192.168.43.249:54468/api/Users/GetUserInfobyID', {
                                         params: {
                                             id: currentTalkerId
                                         }
@@ -628,7 +559,7 @@
                                         let user = response.data;
                                         Vue.set(user, 'selected', true);
                                         var photo =
-                                            'http://10.0.1.8:54468/api/Picture/FirstGet?id=' +
+                                            'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
                                             user.ID +
                                             '&type=2';
                                         Vue.set(user, 'Photo', photo);
@@ -653,48 +584,6 @@
                     .catch((error) => {
                         console.log(error);
                     });
-                // var currentTalkerId = this.$route.params.id;
-                // if (currentTalkerId != 'self') { //从私信按钮进来
-                //     let index = 0;
-                //     this.messageUserList.forEach(element => {
-                //         //在历史私信列表中，直接选中
-                //         if (element.ID == currentTalkerId) {
-                //             element.selected = true;
-                //             this.currentTalker = element;
-                //         }
-                //         index++;
-                //     });
-                //     //不在历史私信用户列表中
-                //     if (index == this.messageUserList.length) {
-                //         //插入新的私信用户
-                //         this.axios.get('http://10.0.1.8:54468/api/Users/GetUserInfobyID', {
-                //                 params: {
-                //                     id: currentTalkerId
-                //                 }
-                //             })
-                //             .then((response) => {
-                //                 let user = response.data;
-                //                 Vue.set(user, 'selected', true);
-                //                 var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + user.ID +
-                //                     '&type=2';
-                //                 Vue.set(user, 'Photo', photo);
-                //                 Vue.set(user, 'message', '');
-                //                 this.messageUserList.unshift(user);
-                //                 this.currentTalker = user;
-                //             })
-                //             .catch((error) => {
-                //                 console.log(error);
-                //             })
-                //     }
-                // } else {
-                //     //默认选择第一个
-                //     console.log(this.currentTalker.ID);
-                //     if (this.currentTalker.ID == '') {
-                //         this.messageUserList[0].selected = true;
-                //         this.currentTalker = this.messageUserList[0];
-                //     }
-                // }
-                // this.questMessages();
             },
             messageWebsocketHandler(path, state, content = "") {
                 // 0 关注 1 点赞 2 评论 3 转发 4 私信
@@ -702,16 +591,17 @@
             },
             questUsers: function () {
                 //请求私信用户列表
-                this.axios.get('http://10.0.1.8:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://192.168.43.249:54468/api/Message/GetUser?Sender_ID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         this.messageUserList = response.data;
                         this.messageUserList.forEach(element => {
                             Vue.set(element, 'selected', false);
-                            var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                            var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                element.ID +
                                 '&type=2';
                             Vue.set(element, 'Photo', photo);
                             //最后一条私信内容
-                            this.axios.get('http://10.0.1.8:54468/api/Message/GetMessage', {
+                            this.axios.get('http://192.168.43.249:54468/api/Message/GetMessage', {
                                     params: {
                                         Sender_ID: this.$store.state.currentUserId_ID,
                                         Receiver_ID: element.ID
@@ -737,7 +627,7 @@
                     });
             },
             questMessages: function () {
-                this.axios.get('http://10.0.1.8:54468/api/Message/GetMessage', {
+                this.axios.get('http://192.168.43.249:54468/api/Message/GetMessage', {
                         params: {
                             Sender_ID: this.$store.state.currentUserId_ID,
                             Receiver_ID: this.currentTalker.ID
@@ -754,7 +644,7 @@
                                 });
                                 index++;
                             });
-                            
+
                         } else {
                             this.messages = [];
                         }
@@ -766,12 +656,13 @@
                 dialog.scrollTop = dialog.scrollHeight;
             },
             questFollows: function () {
-                this.axios.get('http://10.0.1.8:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://192.168.43.249:54468/api/Users/FollowList?userID=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         if (response.data.length) {
                             this.messageFollow = response.data;
                             this.messageFollow.forEach(element => {
-                                var photo = 'http://10.0.1.8:54468/api/Picture/FirstGet?id=' + element.ID +
+                                var photo = 'http://192.168.43.249:54468/api/Picture/FirstGet?id=' +
+                                    element.ID +
                                     '&type=2';
                                 console.log(photo)
                                 Vue.set(element, 'Photo', photo);
@@ -785,7 +676,7 @@
                     });
             },
             questOthers: function (api) {
-                this.axios.get('http://10.0.1.8:54468/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
+                this.axios.get('http://192.168.43.249:54468/api/' + api + '?user_id=' + this.$store.state.currentUserId_ID)
                     .then((response) => {
                         if (response.data.m_Item1 != null) {
                             let moments = response.data.m_Item1;

@@ -161,7 +161,7 @@
       onSubmit: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://10.0.1.8:54468/api/Users/ModifyUserInfo', {
+            this.axios.post('http://192.168.43.249:54468/api/Users/ModifyUserInfo', {
                 UserName: this.ruleForm.name,
                 Bio: this.ruleForm.desc,
                 ID: this.$store.state.currentUserId_ID,
@@ -211,13 +211,13 @@
           if (valid) {
             console.log('adsfaadfgadsgs')
             //this.opassForm.opass='';
-            this.axios.get("http://10.0.1.8:54468/api/Users/Login?Email=" + this.$store.state.currentUserId +
+            this.axios.get("http://192.168.43.249:54468/api/Users/Login?Email=" + this.$store.state.currentUserId +
                 "&Password=" +
                 this.ruleForm2.opass
               )
               .then((response) => {
                 if (response.data != 'Error' || esponse.data != 'NotFound') {
-                  this.axios.put('http://10.0.1.8:54468/api/Users/ChangePassword?email=' + this.$store.state.currentUserId +
+                  this.axios.put('http://192.168.43.249:54468/api/Users/ChangePassword?email=' + this.$store.state.currentUserId +
                       '&NewPassword=' + this.ruleForm2.checkPass
                     )
                     .then((response) => {
@@ -279,13 +279,6 @@
 
 
     created() {
-      // this.$axios.get('/')
-      //   .then((response) => {
-      //     // this.ruleForm = response.data.ruleForm;
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
       this.ruleForm.name = this.$store.state.currentUsername;
       this.ruleForm.desc = this.$store.state.currentUserBio;
       window.scroll(0, 0);
