@@ -15,25 +15,25 @@ iGallery: imitating Instagram Demo created with Vue2.x + Vuex + Vue-router + Ele
 
 ## Screenshots
 
-![login](/Users/leonliang/Developer/iGallery/screenshot/login.png)
+![login](./screenshot/login.png)
 
-![register](/Users/leonliang/Developer/iGallery/screenshot/register.png)
+![register](./screenshot/register.png)
 
-![动态详情页](/Users/leonliang/Developer/iGallery/screenshot/动态详情页.png)
+![动态详情页](./screenshot/动态详情页.png)
 
-![带评论动态详情页](/Users/leonliang/Developer/iGallery/screenshot/带评论动态详情页.png)
+![带评论动态详情页](./screenshot/带评论动态详情页.png)
 
-![发表新动态](/Users/leonliang/Developer/iGallery/screenshot/发表新动态.png)
+![发表新动态](./screenshot/发表新动态.png)
 
-![发现页](/Users/leonliang/Developer/iGallery/screenshot/发现页.png)
+![发现页](./screenshot/发现页.png)
 
-![个人页](/Users/leonliang/Developer/iGallery/screenshot/个人页.png)
+![个人页](./screenshot/个人页.png)
 
-![私信](/Users/leonliang/Developer/iGallery/screenshot/私信.png)
+![私信](./screenshot/私信.png)
 
-![搜索](/Users/leonliang/Developer/iGallery/screenshot/搜索.jpg)
+![搜索](./screenshot/搜索.jpg)
 
-![通知-消息](/Users/leonliang/Developer/iGallery/screenshot/通知-消息.png)
+![通知-消息](./screenshot/通知-消息.png)
 
 ## Features
 
