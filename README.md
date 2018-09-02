@@ -8,12 +8,15 @@
 iGallery: imitating Instagram Demo created with Vue2.x + Vuex + Vue-router + Element + Fleck(websocket)
 </p>
 <p align="center">
-    基本抄了一个Instagram，其中还“致敬”了一些其他项目的界面，再加上基于websocket实现的聊天功能。算是前端练习产品吧。
+    基本抄了Instagram(挺全的（小声bb）)，其中还“致敬”了一些其他项目的界面，再加上基于websocket实现的聊天功能。算是前端练习产品吧。
 </p>
+
 
 </br>
 
 ## Screenshots
+
+最后有一些后端删库跑路之后的界面截图，很尴尬，但我实在懒得再补假图片数据...
 
 ![login](./screenshot/login.png)
 
@@ -34,6 +37,14 @@ iGallery: imitating Instagram Demo created with Vue2.x + Vuex + Vue-router + Ele
 ![搜索](./screenshot/搜索.jpg)
 
 ![通知-消息](./screenshot/通知-消息.png)
+
+#### 删库跑路后截图
+
+已经到了今天我才发现居然没有首页的图…我也很绝望啊…
+
+![image-20180902183342508](./screenshot/首页.png)
+
+![image-20180902183442847](./screenshot/首页-2.png)
 
 ## Features
 
