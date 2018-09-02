@@ -88,7 +88,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 ## Change log
 
--  2 Sep, 2018:
+- 2 Sep, 2018:
   - Merged master
   - Project final update
 - 26 Jul, 2018:
