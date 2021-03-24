@@ -85,4 +85,3 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 ## License
 
 [MIT](https://github.com/jeneser/douban/blob/master/LICENSE) Copyright (c) 2018 [leonnnop](https://leonnnop.github.io/)
-# iGallery
